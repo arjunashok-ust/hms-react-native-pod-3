@@ -1,0 +1,128 @@
+import BgImage from "../../assets/img/cover.jpg";
+import {
+  ImageBackground,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
+import { LinearGradient } from "expo-linear-gradient";
+import { DoctorCard } from "../components/home/doctor-card.component";
+
+export default function HomeScreen() {
+  return (
+    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+      <View style={styles.overlay}>
+        <WelcomeTextContainer
+          text1="Find Experienced,"
+          text2="DOCTORS"
+          text3="Ready to care for you."
+          isHome={true}
+        />
+        <ScrollView contentContainerStyle={styles.container}>
+          <DoctorCard
+            prefix="AYU"
+            name="Ayush Kumar Dash"
+            designation="Head Doctor"
+            department="Cardiology"
+          />
+          <DoctorCard
+            prefix="MER"
+            name="Merin Sara Mathew"
+            designation="Junior Doctor"
+            department="Dermatology"
+          />
+          <DoctorCard
+            prefix="MER"
+            name="Aswin A.S"
+            designation="Senior Doctor"
+            department="Neurology"
+          />
+          <DoctorCard
+            prefix="ASW"
+            name="Aswin A.S"
+            designation="Senior Doctor"
+            department="Neurology"
+          />
+          <DoctorCard
+            prefix="MER"
+            name="Aswin A.S"
+            designation="Senior Doctor"
+            department="Neurology"
+          />
+          <DoctorCard
+            prefix="MER"
+            name="Aswin A.S"
+            designation="Senior Doctor"
+            department="Neurology"
+          />
+        </ScrollView>
+        <LinearGradient style={styles.appointmentContainer} colors={["rgba(255, 61, 77, 0.3)", "rgba(20, 4, 30,0.3)"]}
+            >
+          <Text style={[styles.text,styles.appointmentText]}>A healthier you,</Text>
+          <Text style={[styles.text,styles.appointmentText]}>Begins today!</Text>
+          <TouchableOpacity style={styles.bookButton}>
+            <Text style={[styles.text,styles.bookText]}>Book Now</Text>
+          </TouchableOpacity>
+      </LinearGradient>
+      </View>
+    </ImageBackground>
+  );
+}
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  container: {
+    marginHorizontal: 20,
+    marginTop:10,
+    marginBottom: 10,
+  },
+  appointmentContainer: {
+    height: 235,
+    padding:20,
+    marginTop:20,
+    marginBottom:10,
+    borderWidth:1,
+    borderColor:"rgba(215, 32, 247, 0.2)",
+    marginHorizontal:20,
+    borderRadius:10,
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  text: {
+    fontFamily:'Sans',
+  },
+  appointmentText:{
+    fontSize:20,
+    lineHeight:25,
+    color:"white",
+  },
+  appointmentSubText:{
+    fontSize:23,
+    lineHeight:23,
+    color:"white",
+  },
+  bookButton: {
+    padding:10,
+    width:200,
+    borderRadius:8,
+    marginVertical:20,
+    borderWidth:1,
+    borderColor:"white",
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  bookText: {
+    fontSize:14,
+    lineHeight:14,
+    color:"white",
+  }
+});
