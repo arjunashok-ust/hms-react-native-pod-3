@@ -1,30 +1,32 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
 export const TimeSlotHolder = (props:any) => {
   return (
-    <View style={styles.slotHolder}>
-      <Ionicons name="alarm-outline" color={"rgb(207, 75, 255)"} size={20} />
+    <TouchableOpacity style={[styles.slotHolder,props.isSelected && styles.slotHolderSelected]} onPress={()=>props.onAction(props.slot)}>
+      <Ionicons name="alarm-outline" color={"rgb(207, 75, 255)"} size={22} />
       <Text style={[styles.text, styles.timeSlot]}>{props.slot}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   slotHolder: {
-    flexDirection: "row",
-    padding: 10,
-    margin: 5,
-    width: "30.4%",
-    borderRadius: 8,
-    backgroundColor: "rgba(207, 75, 255,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection:"row",
+    justifyContent:"center",
+    alignItems:"center",
+    padding:10,
+    backgroundColor: "rgba(106, 106, 106, 0.5)",
+    borderRadius:10,
+    margin:5,
+  },
+  slotHolderSelected:{
+    backgroundColor: "rgba(229, 35, 255, 0.5)",
   },
   timeSlot: {
     color: "white",
-    fontSize: 10,
-    lineHeight: 12,
+    fontSize: 14,
+    lineHeight: 14,
     marginLeft: 3,
   },
   text:{

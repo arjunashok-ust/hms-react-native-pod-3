@@ -1,3 +1,4 @@
+const BgImage = require("../../assets/img/cover.jpg");
 import {
   StyleSheet,
   View,
@@ -5,80 +6,125 @@ import {
   Text,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
-import BgImage from "../../assets/img/cover.jpg";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { InfoCard } from "../components/profile/info-card.component";
 import { ProfileCard } from "../components/profile/profile-card.component";
-import { TimeSlotHolder } from "../components/profile/time-slot-holder";
+import { clearSecureStorage, deleteToken } from "../services/auth.service";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigationModel } from "../types/navigation.types";
+import { useEffect, useState } from "react";
+import { PatientModel } from "../types/user.types";
+import { getPatientProfile } from "../services/user.service";
+import * as SecureStore from "expo-secure-store";
+import ProfileButton from "../components/profile/profile-button.component";
 
 export default function ProfileScreen() {
+  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+  const [patientData, setPatientData] = useState<PatientModel>();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const logout = () => {
+    deleteToken();
+    clearSecureStorage();
+    navigator.navigate("login");
+  };
+
+  const fetchData = async () => {
+    try {
+      const email = await SecureStore.getItemAsync("email");
+      const data = await getPatientProfile(email ?? "");
+      setPatientData(data);
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Failed", "Error fetching profile data");
+    }
+  };
+
+  const formatDate = (date: string) => {
+    const inputDate = new Date(date);
+    if (!inputDate) return "";
+    const formattedDate = new Date(inputDate).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    return formattedDate;
+  };
+
   return (
     <ImageBackground source={BgImage} style={styles.wrapper} resizeMode="cover">
       <View style={styles.overlay}>
         <ProfileCard
-          prefix="AYU"
-          name="Ayush Kumar Dash"
-          designation="Head Doctor"
-          id="EMP-000001"
+          prefix={patientData?.name.slice(0, 3).toUpperCase()}
+          name={patientData?.name}
+          designation={patientData?.role}
+          id={patientData?.uhid}
         />
         <LinearGradient
           style={styles.container}
           colors={["rgba(255, 61, 77, 0.05)", "rgba(20, 4, 30, 0.9)"]}
         >
           <ScrollView>
-            <SectionDivider
-              iconName="briefcase-outline"
-              title="PROFESSIONAL INFO"
+            <SectionDivider iconName="person-outline" title="PERSONAL INFO" />
+            <InfoCard
+              iconName="person-outline"
+              title="NAME"
+              value={patientData?.name}
             />
             <InfoCard
-              iconName="mail-outline"
-              title="EMAIL ADDRESS"
-              value="ayush@gmail.com"
-            />
-            <InfoCard
-              iconName="medal-outline"
-              title="MEDICAL REG NO."
-              value="MED-000001"
-            />
-            <InfoCard
-              iconName="business-outline"
-              title="DEPARTMENT"
-              value="IPD"
-            />
-            <InfoCard
-              iconName="school-outline"
-              title="QUALIFICATION"
-              value="MBBS, MD(Cardiology)"
-            />
-            <InfoCard
-              iconName="medkit-outline"
-              title="SPECIALIZATION"
-              value="Cardiology"
+              iconName="male-outline"
+              title="GENDER"
+              value={patientData?.gender}
             />
             <InfoCard
               iconName="calendar-outline"
-              title="JOINING DATE"
-              value="22 May, 2026"
+              title="DOB"
+              value={formatDate(patientData?.dob || "")}
             />
-            <SectionDivider
-              iconName="chatbubble-outline"
-              title="CONSULTATION"
+            <SectionDivider iconName="call-outline" title="CONTACT INFO" />
+            <InfoCard
+              iconName="call-outline"
+              title="PHONE"
+              value={patientData?.phone}
             />
             <InfoCard
-              iconName="cash-outline"
-              title="CONSULTATION FEE"
-              value="$799"
+              iconName="mail-outline"
+              title="EMAIL"
+              value={patientData?.email}
             />
-            <SectionDivider iconName="time-outline" title="TIME SLOT" />
-            <View style={styles.slotContainer}>
-              <TimeSlotHolder slot="10 : 00 - 10 : 30"></TimeSlotHolder>
-              <TimeSlotHolder slot="10 : 00 - 10 : 30"></TimeSlotHolder>
-              <TimeSlotHolder slot="10 : 00 - 10 : 30"></TimeSlotHolder>
-              <TimeSlotHolder slot="10 : 00 - 10 : 30"></TimeSlotHolder>
-            </View>
+            <InfoCard
+              iconName="location-outline"
+              title="ADDRESS"
+              value={patientData?.address}
+            />
+            <InfoCard
+              iconName="alert-circle-outline"
+              title="EMERGENCY CONTACT"
+              value={patientData?.emergencyContact || "No Emergency Contact"}
+            />
+            <SectionDivider
+              iconName="settings-outline"
+              title="ACCOUNT SETTINGS"
+            />
+            <ProfileButton
+              iconName="pencil-outline"
+              title="EDIT PROFILE"
+              onAction={()=>{}}
+            />
+            <ProfileButton
+              iconName="exit-outline"
+              title="LOGOUT"
+              onAction={logout}
+            />
           </ScrollView>
         </LinearGradient>
       </View>
@@ -139,12 +185,5 @@ const styles = StyleSheet.create({
     borderColor: "rgba(207, 75, 255, 0.2)",
     borderWidth: 1,
     marginBottom: 30,
-  },
-
-  slotContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    margin:20,
-    marginBottom:50,
   },
 });

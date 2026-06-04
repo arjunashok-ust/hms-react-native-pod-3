@@ -1,3 +1,4 @@
+const BgImage = require("../../assets/img/cover.jpg");
 import { useState } from "react";
 import {
   View,
@@ -10,7 +11,6 @@ import {
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
-import BgImage from "../../assets/img/cover.jpg";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker, {
@@ -51,7 +51,7 @@ export default function SignUpScreen() {
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const nameRegex = /^[a-z ]+( [a-z])*$/i;
+  const nameRegex = /^[a-z ]*$/i;
   const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
   const phoneRegex = /^\d*$/;
 
@@ -136,33 +136,6 @@ export default function SignUpScreen() {
     return isValid;
   };
 
-  const resetForm = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setPhone("");
-    setGender("");
-    setDob(new Date());
-    setAddress("");
-    setIsDobSet(false);
-    setEmergencyContact("");
-    setStatus("");
-    setShow(false);
-    setErrors({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-      gender: "",
-      address: "",
-      dob: "",
-      emergencyContact: "",
-    });
-    setIsFormValid(false);
-  };
-
   const sendSignUp = () => {
     const validForm = validateSignUp();
     if (validForm) {
@@ -208,6 +181,7 @@ export default function SignUpScreen() {
             <AuthInputText
               innerText="Name"
               getData={(value: string) => setName(value)}
+              iconName="person-outline"
             />
             {!!errors.name && (
               <Text style={styles.errorText}>{errors.name}</Text>
@@ -215,6 +189,7 @@ export default function SignUpScreen() {
             <AuthInputText
               innerText="Email"
               getData={(value: string) => setEmail(value)}
+              iconName="mail-outline"
             />
             {!!errors.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
@@ -223,6 +198,7 @@ export default function SignUpScreen() {
               innerText="Password"
               isPassword={true}
               getData={(value: string) => setPassword(value)}
+              iconName="key-outline"
             />
             {!!errors.password && (
               <Text style={styles.errorText}>{errors.password}</Text>
@@ -231,6 +207,7 @@ export default function SignUpScreen() {
               innerText="Confirm Password"
               isPassword={true}
               getData={(value: string) => setConfirmPassword(value)}
+              iconName="lock-closed-outline"
             />
             {!!errors.confirmPassword && (
               <Text style={styles.errorText}>{errors.confirmPassword}</Text>
@@ -238,6 +215,7 @@ export default function SignUpScreen() {
             <AuthInputText
               innerText="Phone"
               getData={(value: string) => setPhone(value)}
+              iconName="call-outline"
             />
             {!!errors.phone && (
               <Text style={styles.errorText}>{errors.phone}</Text>
@@ -262,6 +240,7 @@ export default function SignUpScreen() {
             <AuthInputText
               innerText="Address"
               getData={(value: string) => setAddress(value)}
+              iconName="location-outline"
             />
             {!!errors.address && (
               <Text style={styles.errorText}>{errors.address}</Text>
@@ -285,6 +264,7 @@ export default function SignUpScreen() {
             <AuthInputText
               innerText="Emergency Contact"
               getData={(value: string) => setEmergencyContact(value)}
+              iconName="call-outline"
             />
             {!!errors.emergencyContact && (
               <Text style={styles.errorText}>{errors.emergencyContact}</Text>
@@ -347,10 +327,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "rgb(255, 255, 255,0.2)",
+    backgroundColor: "rgba(238, 238, 238, 0.9)",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    padding: 30,
+    paddingTop: 40,
     alignItems: "center",
   },
   errorText: {
@@ -363,29 +343,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   dropdownHolder: {
-    borderBottomWidth: 3,
-    borderColor: "rgb(255, 215, 215)",
+    borderBottomWidth: 2,
+    borderColor: "black",
     width: "80%",
     height: 50,
     marginVertical: 10,
     borderRadius: 2,
   },
   picker: {
-    color: "white",
+    color: "black",
+    fontFamily: "Sans",
     marginTop: -12,
   },
   dobText: {
     fontFamily: "Sans",
     fontSize: 16,
-    color: "white",
+    color: "black",
     paddingHorizontal: 12,
   },
   signUpFooter: {
     marginTop: 40,
+    marginBottom: 20,
     flexDirection: "row",
   },
   signUpFooterText: {
-    color: "white",
+    color: "black",
     fontFamily: "Sans",
     fontSize: 14,
   },

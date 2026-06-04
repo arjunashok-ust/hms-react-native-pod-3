@@ -1,17 +1,31 @@
-import BgImage from "../../assets/img/cover.jpg";
+const BgImage = require("../../assets/img/cover.jpg");
 import {
   ImageBackground,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
+  FlatList
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { LinearGradient } from "expo-linear-gradient";
 import { DoctorCard } from "../components/home/doctor-card.component";
+import { useEffect, useState } from "react";
+import { UserModel } from "../types/user.types";
+import { getDoctors } from "../services/user.service";
 
 export default function HomeScreen() {
+  const [doctors,setDoctors] = useState<UserModel[]>([]);
+
+  useEffect(()=>{
+    fetchDoctors();
+  },[]);
+
+  const fetchDoctors = async () => {
+    const data = await getDoctors();
+    setDoctors(data);
+  }
+
   return (
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
@@ -21,52 +35,33 @@ export default function HomeScreen() {
           text3="Ready to care for you."
           isHome={true}
         />
-        <ScrollView contentContainerStyle={styles.container}>
-          <DoctorCard
-            prefix="AYU"
-            name="Ayush Kumar Dash"
-            designation="Head Doctor"
-            department="Cardiology"
+        <FlatList
+        style={styles.container}
+        data={doctors}
+        keyExtractor={(item)=>item.employeeCode}
+        renderItem={({item})=>{
+          return <DoctorCard
+            prefix={item.name.slice(0,3).toUpperCase()}
+            name={item.name}
+            designation={item.designation}
+            department={item.department}
           />
-          <DoctorCard
-            prefix="MER"
-            name="Merin Sara Mathew"
-            designation="Junior Doctor"
-            department="Dermatology"
-          />
-          <DoctorCard
-            prefix="MER"
-            name="Aswin A.S"
-            designation="Senior Doctor"
-            department="Neurology"
-          />
-          <DoctorCard
-            prefix="ASW"
-            name="Aswin A.S"
-            designation="Senior Doctor"
-            department="Neurology"
-          />
-          <DoctorCard
-            prefix="MER"
-            name="Aswin A.S"
-            designation="Senior Doctor"
-            department="Neurology"
-          />
-          <DoctorCard
-            prefix="MER"
-            name="Aswin A.S"
-            designation="Senior Doctor"
-            department="Neurology"
-          />
-        </ScrollView>
-        <LinearGradient style={styles.appointmentContainer} colors={["rgba(255, 61, 77, 0.3)", "rgba(20, 4, 30,0.3)"]}
-            >
-          <Text style={[styles.text,styles.appointmentText]}>A healthier you,</Text>
-          <Text style={[styles.text,styles.appointmentText]}>Begins today!</Text>
+        }}
+        />
+        <LinearGradient
+          style={styles.appointmentContainer}
+          colors={["rgba(255, 61, 77, 0.3)", "rgba(20, 4, 30,0.3)"]}
+        >
+          <Text style={[styles.text, styles.appointmentText]}>
+            A healthier you,
+          </Text>
+          <Text style={[styles.text, styles.appointmentText]}>
+            Begins today!
+          </Text>
           <TouchableOpacity style={styles.bookButton}>
-            <Text style={[styles.text,styles.bookText]}>Book Now</Text>
+            <Text style={[styles.text, styles.bookText]}>Book Now</Text>
           </TouchableOpacity>
-      </LinearGradient>
+        </LinearGradient>
       </View>
     </ImageBackground>
   );
@@ -82,47 +77,47 @@ const styles = StyleSheet.create({
   },
   container: {
     marginHorizontal: 20,
-    marginTop:10,
+    marginTop: 10,
     marginBottom: 10,
   },
   appointmentContainer: {
     height: 235,
-    padding:20,
-    marginTop:20,
-    marginBottom:10,
-    borderWidth:1,
-    borderColor:"rgba(215, 32, 247, 0.2)",
-    marginHorizontal:20,
-    borderRadius:10,
-    justifyContent:"center",
-    alignItems:"center",
+    padding: 20,
+    marginTop: 20,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "rgba(215, 32, 247, 0.2)",
+    marginHorizontal: 20,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    fontFamily:'Sans',
+    fontFamily: "Sans",
   },
-  appointmentText:{
-    fontSize:20,
-    lineHeight:25,
-    color:"white",
+  appointmentText: {
+    fontSize: 20,
+    lineHeight: 25,
+    color: "white",
   },
-  appointmentSubText:{
-    fontSize:23,
-    lineHeight:23,
-    color:"white",
+  appointmentSubText: {
+    fontSize: 23,
+    lineHeight: 23,
+    color: "white",
   },
   bookButton: {
-    padding:10,
-    width:200,
-    borderRadius:8,
-    marginVertical:20,
-    borderWidth:1,
-    borderColor:"white",
-    justifyContent:"center",
-    alignItems:"center",
+    padding: 10,
+    width: 200,
+    borderRadius: 8,
+    marginVertical: 20,
+    borderWidth: 1,
+    borderColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
   bookText: {
-    fontSize:14,
-    lineHeight:14,
-    color:"white",
-  }
+    fontSize: 14,
+    lineHeight: 14,
+    color: "white",
+  },
 });

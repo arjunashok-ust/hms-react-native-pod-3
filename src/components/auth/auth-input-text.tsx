@@ -1,28 +1,37 @@
-import { TextInput,StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { TextInput, StyleSheet, View } from "react-native";
 
-export const AuthInputText = (props:any) => {
+export const AuthInputText = (props: any) => {
   return (
-    <TextInput
-      placeholder={props.innerText}
-      placeholderTextColor="white"
-      style={styles.textInput}
-      onChangeText={props.getData}
-      secureTextEntry={props.isPassword ?? false}
-    ></TextInput>
+    <View style={styles.container}>
+      <Ionicons name={props.iconName} size={20} color="black" />
+      <TextInput
+        placeholder={props.innerText}
+        placeholderTextColor="black"
+        style={styles.textInput}
+        onChangeText={props.getData}
+        secureTextEntry={props.isPassword ?? false}
+      ></TextInput>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  textInput: {
-    fontFamily: 'Sans',
-    fontSize:16,
-    width: "85%",
-    height: 58,
+  container: {
+    width:"80%",
+    flexDirection:"row",
+    alignItems:"center",
     borderBottomWidth:1,
-    borderColor: "#ffffff",
+    borderColor:"black",
+  },
+  textInput: {
+    fontFamily: "Sans",
+    fontSize: 16,
+    width: "80%",
+    height: 58,
     borderRadius: 16,
-    paddingHorizontal: 18,
-    color: "#fbfbfb",
+    color: "black",
     marginVertical: 10,
+    marginLeft:10,
   },
 });

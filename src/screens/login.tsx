@@ -1,10 +1,17 @@
+const BgImage = require("../../assets/img/cover.jpg");
 import { useState } from "react";
 import { LoginRequestModel } from "../types/auth.types";
 import { login } from "../services/auth.service";
-import { Alert, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
-import BgImage from "../../assets/img/cover.jpg";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -12,6 +19,7 @@ import { NavigationModel } from "../types/navigation.types";
 
 export default function LoginScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email, password });
@@ -33,20 +41,36 @@ export default function LoginScreen() {
       error.password = "Minimum 8 characters required";
     }
 
-    !error.email && !error.password
-      ? setFormStatus(true)
-      : setFormStatus(false);
+    if(!error.email && !error.password){
+      setFormStatus(true);
+      return true;
+    }
+    else{
+      return false;
+      setFormStatus(false);
+    }
+  
     setErrors(error);
   };
 
-  const sendLogin = () => {
-    validateForm();
-    if (isFormValid) {
+  const sendLogin = async () => {
+    const valid = validateForm();
+    if (valid) {
       const payload: LoginRequestModel = {
         email: email,
         password: password,
       };
-      login(payload);
+
+      const isValid = await login(payload);
+
+      setTimeout(() => {
+        if (isValid) {
+          Alert.alert("Success", "Login Sucessfull");
+          navigator.replace("tabs");
+        } else {
+          Alert.alert("Failed", "Invalid Credentials");
+        }
+      },500);
     } else {
       Alert.alert("Server error during login");
     }
@@ -67,6 +91,7 @@ export default function LoginScreen() {
             getData={(value: string) => {
               setEmail(value);
             }}
+            iconName="mail-outline"
           />
           {!!errors.email && (
             <Text style={styles.errorText}>{errors.email}</Text>
@@ -77,14 +102,18 @@ export default function LoginScreen() {
               setPassword(value);
             }}
             isPassword={true}
+            iconName="key-outline"
           />
           {!!errors.password && (
             <Text style={styles.errorText}>{errors.password}</Text>
           )}
           <AuthSubmitButton titleText="Login" onSubmit={sendLogin} />
-          <TouchableOpacity style={styles.loginFooter} onPress={()=>navigator.navigate("signup")}>
+          <TouchableOpacity
+            style={styles.loginFooter}
+            onPress={() => navigator.navigate("signup")}
+          >
             <Text style={styles.loginFooterText}>Don't have an account?</Text>
-            <Text style={[styles.loginFooterText,styles.signUp]}> Signup</Text>
+            <Text style={[styles.loginFooterText, styles.signUp]}> Signup</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -112,10 +141,10 @@ const styles = StyleSheet.create({
   },
   container: {
     height: "50%",
-    backgroundColor: "rgb(255, 255, 255,0.2)",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    padding: 30,
+    paddingTop: 40,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -130,14 +159,14 @@ const styles = StyleSheet.create({
   },
   loginFooter: {
     marginTop: 40,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   loginFooterText: {
-    color: "white",
+    color: "black",
     fontFamily: "Sans",
     fontSize: 14,
   },
   signUp: {
     color: "rgb(255, 107, 107)",
-  }
+  },
 });

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height:40,
     marginTop: 30,
-    borderColor:'white',
+    borderColor:'black',
     borderWidth:1,
     borderRadius: 30,
     overflow: "hidden",
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Sans',
-    color: 'white',
+    color: 'black',
     fontSize: 16,
   }
 });

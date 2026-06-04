@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/home";
 import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "../screens/profile";
+import AppointmentScreen from "../screens/appointment";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,20 @@ export default function TabNavigator() {
             />
           ),
           tabBarLabel: "PROFILE",
+        }}
+      ></Tab.Screen>
+      <Tab.Screen
+        name="appointment"
+        component={AppointmentScreen}
+        options={{
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "calendar" : "calendar-outline"}
+              color={color}
+              size={size}
+            />
+          ),
+          tabBarLabel: "APPOINTMENT",
         }}
       ></Tab.Screen>
     </Tab.Navigator>
