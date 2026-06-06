@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,9 +21,18 @@ import { getAvailableTimeSlots, getDoctors } from "../services/user.service";
 import { UserModel } from "../types/user.types";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
+import { createAppointment } from "../services/appointment.service";
+import { AppointmentModel } from "../types/appointment.types";
+import { showError } from "../utils/error.utils";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigationModel } from "../types/navigation.types";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AppointmentScreen() {
-  const [doctors, setDoctors] = useState([]);
+  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+
+  const [doctors, setDoctors] = useState<UserModel[]>([]);
 
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isDateSet, setIsDateSet] = useState<boolean>(false);
@@ -33,6 +43,11 @@ export default function AppointmentScreen() {
   const [availableSlots, setAvailableSlots] = useState([]);
 
   const [timeSlot, setTimeSlot] = useState("");
+  const [errors, setErrors] = useState({
+    date: "",
+    doctorEmployeeId: "",
+    timeSlot: "",
+  });
 
   useEffect(() => {
     const setData = async () => {
@@ -50,7 +65,7 @@ export default function AppointmentScreen() {
   }, [doctorId, date, isDateSet]);
 
   const getPatientId = async () => {
-    const patientId = await SecureStore.getItemAsync("patientId");
+    const patientId = await AsyncStorage.getItem("patientId");
     return patientId;
   };
 
@@ -75,13 +90,79 @@ export default function AppointmentScreen() {
     setAvailableSlots(data);
   };
 
-  const clearFields = ()=>{
+  const clearFields = () => {
     setTimeSlot("");
     setAvailableSlots([]);
     setIsDateSet(false);
     setDoctorId("");
     setDate(new Date());
+  };
+
+  const validateDoctorEmployeeId = (doctorEmployeeId: string) => {
+    if (!doctorEmployeeId) {
+      return "Doctor ID is required";
+    }
+  };
+
+  const validateDate = (dob: Date) => {
+    const inputDate = new Date(dob);
+    const today = new Date();
+
+    inputDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (inputDate <= today) {
+      return "You can't book appointments in past";
+    }
+  };
+
+  const validateTimeSlot = (slot: string) => {
+    if (!slot) {
+      return "Time slot is required";
+    }
+  };
+
+  const validateAppointment = () => {
+    let newErrors = {
+      doctorEmployeeId: validateDoctorEmployeeId(doctorId) ?? "",
+      date: validateDate(date) ?? "",
+      timeSlot: validateTimeSlot(timeSlot) ?? "",
+    };
+
+    setErrors(newErrors);
+    const isValid = Object.values(newErrors).every((error) => error === "");
+    if (isValid) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const goToAppointments = () => {
+    navigator.navigate("viewAppointment");
   }
+
+  const sendAppointment = async () => {
+    const isValid = validateAppointment();
+    if (!isValid) return;
+    try {
+      const payload: AppointmentModel = {
+        appointmentId: "",
+        status: "",
+        patientId: patientId,
+        doctorEmployeeId: doctorId,
+        timeSlot: timeSlot,
+        date: date,
+        createdByEmployeeId: patientId,
+      };
+      await createAppointment(payload);
+      Alert.alert("Appointment Created Sucessfully.");
+      clearFields();
+    } catch (err) {
+      console.error(err);
+      showError(err);
+    }
+  };
 
   return (
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
@@ -195,7 +276,7 @@ export default function AppointmentScreen() {
                 <ProfileButton
                   title="CREATE"
                   iconName="add-outline"
-                  onAction={() => {}}
+                  onAction={sendAppointment}
                 />
                 <ProfileButton
                   title="CLEAR"
@@ -209,7 +290,7 @@ export default function AppointmentScreen() {
         <ProfileButton
           title="VIEW APPOINTMENTS"
           iconName="eye-outline"
-          onAction={() => {}}
+          onAction={goToAppointments}
         />
         {isShow && (
           <DateTimePicker

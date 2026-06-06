@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginRequestModel, SignUpRequestModel } from "../types/auth.types";
 import { getPatientId } from "./user.service";
 
@@ -11,18 +12,18 @@ export const login = async (data: LoginRequestModel): Promise<boolean> => {
     const token = response.data.token;
     const email = response.data.email;
 
-    SecureStore.setItemAsync("token", token);
-    SecureStore.setItemAsync("email", email);
+    await SecureStore.setItemAsync("token", token);
+    await AsyncStorage.setItem("email", email);
 
     setTimeout(async () => {
       const patientId = await getPatientId(email);
-      SecureStore.setItemAsync("patientId", patientId);
+      await AsyncStorage.setItem("patientId",patientId);
     }, 500);
 
     return true;
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(err);
-    return false;
+    throw err;
   }
 };
 
@@ -33,8 +34,8 @@ export const signUp = (data: SignUpRequestModel) => {
       Alert.alert("Success", "Account created sucessfully.");
     })
     .catch((err) => {
-      console.log(err);
-      Alert.alert("Failed", "Server error occured while creating account.");
+      console.error(err);
+      throw err;
     });
 };
 
@@ -43,6 +44,7 @@ export const setToken = async (token: string) => {
     await SecureStore.setItemAsync("token", token);
   } catch (err) {
     console.error(err);
+    throw err;
   }
 };
 
@@ -52,6 +54,7 @@ export const getToken = async () => {
     return token;
   } catch (err) {
     console.error(err);
+    throw err;
   }
 };
 

@@ -41,15 +41,12 @@ export default function LoginScreen() {
       error.password = "Minimum 8 characters required";
     }
 
-    if(!error.email && !error.password){
+    if (!error.email && !error.password) {
       setFormStatus(true);
       return true;
-    }
-    else{
-      return false;
-      setFormStatus(false);
-    }
-  
+    } 
+
+    setFormStatus(false);
     setErrors(error);
   };
 
@@ -66,11 +63,11 @@ export default function LoginScreen() {
       setTimeout(() => {
         if (isValid) {
           Alert.alert("Success", "Login Sucessfull");
-          navigator.replace("tabs");
-        } else {
-          Alert.alert("Failed", "Invalid Credentials");
+          navigator.replace("tabs",{
+            screen: 'home',
+          });
         }
-      },500);
+      }, 500);
     } else {
       Alert.alert("Server error during login");
     }

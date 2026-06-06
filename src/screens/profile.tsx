@@ -21,8 +21,8 @@ import { NavigationModel } from "../types/navigation.types";
 import { useEffect, useState } from "react";
 import { PatientModel } from "../types/user.types";
 import { getPatientProfile } from "../services/user.service";
-import * as SecureStore from "expo-secure-store";
 import ProfileButton from "../components/profile/profile-button.component";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -40,7 +40,7 @@ export default function ProfileScreen() {
 
   const fetchData = async () => {
     try {
-      const email = await SecureStore.getItemAsync("email");
+      const email = await AsyncStorage.getItem("email");
       const data = await getPatientProfile(email ?? "");
       setPatientData(data);
     } catch (err) {
