@@ -1,21 +1,72 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Alert } from "react-native";
 import ProfileButton from "../profile/profile-button.component";
 import { Ionicons } from "@expo/vector-icons";
 import { UserModel } from "../../types/user.types";
 import { useEffect, useState } from "react";
-import { getDoctorByEmployeeId } from "../../services/appointment.service";
+import {
+  deleteAppointment,
+  getDoctorByEmployeeId,
+} from "../../services/appointment.service";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigationModel } from "../../types/navigation.types";
+import { useNavigation } from "@react-navigation/native";
+import { showError } from "../../utils/error.utils";
 
 export const AppointmentCard = (props: any) => {
+  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+
   const [doctor, setDoctor] = useState<UserModel | null>();
 
   const fetchDoctor = async () => {
-    const data = await getDoctorByEmployeeId(props.employeeId);
+    const data = await getDoctorByEmployeeId(props.doctorEmployeeId);
     setDoctor(data);
   };
 
-  useEffect(()=>{
+  const goToEdit = () => {
+    navigator.navigate("editAppointment", {
+      appointment: {
+        appointmentId: props.appointmentId,
+        patientId: props.patientId,
+        doctorEmployeeId: props.doctorEmployeeId,
+        date: props.date,
+        timeSlot: props.timeSlot,
+        status: props.status,
+        createdByEmployeeId: "",
+      },
+    });
+  };
+
+  useEffect(() => {
     fetchDoctor();
-  },[props.employeeId]);
+  }, [props.employeeId]);
+
+  const deleteAppointmentByPatient = async () => {
+    Alert.alert(
+      "Delete Appointment",
+      "Are you sure you want to delete this appointment",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const appointmentId: string = props.appointmentId;
+              await deleteAppointment(appointmentId);
+              props.onDelete?.();
+              Alert.alert("Success", "Appointment deleted sucessfully");
+            } catch (err) {
+              console.error(err);
+              showError(err);
+            }
+          },
+        },
+      ],
+    );
+  };
 
   return (
     <View style={styles.appointmentContainer}>
@@ -23,14 +74,14 @@ export const AppointmentCard = (props: any) => {
         <View style={styles.appointmentIconAndText}>
           <View style={styles.avatarIcon}>
             <Text style={[styles.avatarText, styles.text]}>
-              {doctor?.name.slice(0, 3).toUpperCase()}
+              {doctor?.name?.slice(0, 3).toUpperCase()}
             </Text>
           </View>
 
           <View style={styles.appointmentTextHolder}>
             <Text style={[styles.text, styles.doctorText]}>{doctor?.name}</Text>
             <Text style={[styles.text, styles.doctorSubTitle]}>
-              {`${doctor?.specialization} ${props.employeeId}`}
+              {`${doctor?.specialization} ${props.doctorEmployeeId}`}
             </Text>
           </View>
         </View>
@@ -58,7 +109,9 @@ export const AppointmentCard = (props: any) => {
             style={styles.appointmentIcon}
             size={20}
           />
-          <Text style={[styles.footerText, styles.text]}>{props.date}</Text>
+          <Text style={[styles.footerText, styles.text]}>
+            {new Date(props.date).toDateString()}
+          </Text>
           <Ionicons
             name="time-outline"
             style={styles.appointmentIcon}
@@ -66,9 +119,20 @@ export const AppointmentCard = (props: any) => {
           />
           <Text style={[styles.footerText, styles.text]}>{props.timeSlot}</Text>
         </View>
+
         <View>
-          <ProfileButton iconName="create-outline" title="Edit" />
-          <ProfileButton iconName="trash-outline" title="Delete" />
+          {props.status === "Booked" && (
+            <ProfileButton
+              iconName="create-outline"
+              title="Edit"
+              onAction={goToEdit}
+            />
+          )}
+          <ProfileButton
+            iconName="trash-outline"
+            title="Delete"
+            onAction={deleteAppointmentByPatient}
+          />
         </View>
       </View>
     </View>

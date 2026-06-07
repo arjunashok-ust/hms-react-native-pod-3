@@ -4,6 +4,7 @@ import LoginScreen from "../screens/login";
 import SignUpScreen from "../screens/signup";
 import TabNavigator from "./TabNavigator";
 import ViewAppointmentScreen from "../screens/view-appointment";
+import EditAppointmentScreen from "../screens/edit-appointment";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ export default function AppNavigator() {
         <Stack.Screen name="signup" component={SignUpScreen} />
         <Stack.Screen name="tabs" component={TabNavigator} />
         <Stack.Screen name="viewAppointment" component={ViewAppointmentScreen} />
+        <Stack.Screen name="editAppointment" component={EditAppointmentScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

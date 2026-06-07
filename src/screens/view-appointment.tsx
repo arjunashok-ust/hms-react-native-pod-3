@@ -3,7 +3,6 @@ import {
   ImageBackground,
   View,
   StyleSheet,
-  ScrollView,
   Text,
   FlatList,
 } from "react-native";
@@ -55,11 +54,13 @@ export default function ViewAppointmentScreen() {
           text2="APPOINTMENTS"
           text3="here."
         ></WelcomeTextContainer>
+
         <ProfileButton
           title="GO BACK"
           iconName="arrow-back-outline"
           onAction={goToHome}
         />
+
         <LinearGradient
           style={styles.container}
           colors={["rgba(165, 35, 45, 0.2)", "rgba(20, 4, 30, 0.9)"]}
@@ -80,24 +81,30 @@ export default function ViewAppointmentScreen() {
               </Text>
             </View>
           </View>
+
+          {appointments.length === 0 && (
+            <Text style={[styles.noAppointmentsText, styles.text]}>
+              No appointments scheduled.
+            </Text>
+          )}
+
           <FlatList
             data={appointments}
             keyExtractor={(item) => item.appointmentId}
             renderItem={({ item }) => {
               return (
                 <AppointmentCard
-                  employeeId={item.doctorEmployeeId}
+                  doctorEmployeeId={item.doctorEmployeeId}
                   status={item.status}
                   date={item.date}
                   timeSlot={item.timeSlot}
                   appointmentId={item.appointmentId}
+                  onDelete={fetchAppointments}
                 />
               );
             }}
           ></FlatList>
-          {
-            appointments.length === 0 && (<Text style={{color:"white",fontSize:24}}>No appointments</Text>)
-          }
+
         </LinearGradient>
       </View>
     </ImageBackground>
@@ -150,5 +157,13 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Sans",
+  },
+  noAppointmentsText: {
+    color: "white",
+    fontSize: 12,
+    lineHeight: 12,
+    textAlign: "center",
+    backgroundColor: "rgba(255, 0, 221, 0.3)",
+    padding: 10,
   },
 });

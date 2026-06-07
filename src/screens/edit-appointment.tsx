@@ -16,20 +16,26 @@ import { SectionDivider } from "../components/profile/section-divider.component"
 import { Picker } from "@react-native-picker/picker";
 import { TimeSlotHolder } from "../components/profile/time-slot-holder";
 import { useEffect, useState } from "react";
-import * as SecureStore from "expo-secure-store";
 import { getAvailableTimeSlots, getDoctors } from "../services/user.service";
 import { UserModel } from "../types/user.types";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
-import { createAppointment } from "../services/appointment.service";
+import {
+  createAppointment,
+  editAppointmentData,
+  editAppointmentStatus,
+} from "../services/appointment.service";
 import { AppointmentModel } from "../types/appointment.types";
 import { showError } from "../utils/error.utils";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function AppointmentScreen() {
+export default function EditAppointmentScreen() {
+  const route = useRoute<RouteProp<NavigationModel, "editAppointment">>();
+  const { appointment } = route.params;
+
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
   const [doctors, setDoctors] = useState<UserModel[]>([]);
@@ -40,9 +46,9 @@ export default function AppointmentScreen() {
   const [patientId, setPatientId] = useState("");
   const [doctorId, setDoctorId] = useState("");
   const [date, setDate] = useState(new Date());
-  const [availableSlots, setAvailableSlots] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
 
-  const [timeSlot, setTimeSlot] = useState("");
+  const [timeSlot, setTimeSlot] = useState(appointment.timeSlot);
   const [errors, setErrors] = useState({
     date: "",
     doctorEmployeeId: "",
@@ -54,9 +60,20 @@ export default function AppointmentScreen() {
       await fetchDoctors();
       const patientId = await getPatientId();
       setPatientId(patientId ?? "");
+      if (appointment) {
+        setTimeSlot(appointment.timeSlot);
+        setDate(new Date(appointment.date));
+        setIsDateSet(true);
+      }
     };
     setData();
   }, []);
+
+  useEffect(() => {
+    if (doctors.length > 0 && appointment) {
+      setDoctorId(appointment.doctorEmployeeId);
+    }
+  }, [doctors]);
 
   useEffect(() => {
     if (doctorId && isDateSet) {
@@ -72,6 +89,7 @@ export default function AppointmentScreen() {
   const fetchDoctors = async () => {
     const doctors = await getDoctors();
     setDoctors(doctors);
+    return doctors;
   };
 
   const onDateChange = (date: Date) => {
@@ -81,7 +99,7 @@ export default function AppointmentScreen() {
       setDate(date);
       setIsDateSet(true);
       setIsShow(false);
-      setErrors((prev) => ({ ...prev, date:"" }));
+      setErrors((prev) => ({ ...prev, date: "" }));
     } else {
       setErrors((prev) => ({ ...prev, date: errorMessage ?? "" }));
       setIsShow(false);
@@ -95,20 +113,19 @@ export default function AppointmentScreen() {
 
   const fetchAvailableTimeSlots = async () => {
     const data = await getAvailableTimeSlots(doctorId, date);
-    setAvailableSlots(data);
-  };
-
-  const clearFields = () => {
-    setTimeSlot("");
-    setErrors({
-      date: "",
-      doctorEmployeeId: "",
-      timeSlot: "",
-    });
-    setAvailableSlots([]);
-    setIsDateSet(false);
-    setDoctorId("");
-    setDate(new Date());
+    const isSameDoctor: boolean = appointment.doctorEmployeeId === doctorId;
+    const isSameDate: boolean =
+      new Date(appointment.date).toDateString() === date.toDateString();
+    // add booked slot back to doctor time slot and make it selected
+    if (isSameDoctor && isSameDate) {
+      const slot = data.includes(appointment.timeSlot)
+        ? data
+        : setAvailableSlots([...data, appointment.timeSlot]);
+      setTimeSlot(appointment.timeSlot);
+    } else {
+      setAvailableSlots(data);
+      setTimeSlot("");
+    }
   };
 
   const validateDoctorEmployeeId = (doctorEmployeeId: string) => {
@@ -122,8 +139,8 @@ export default function AppointmentScreen() {
     const inputDate = new Date(dob);
     const today = new Date();
 
-    inputDate.setHours(0,0,0,0);
-    today.setHours(0,0,0,0);
+    inputDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
     if (inputDate <= today) {
       return "Appointments cannot be booked for today or past dates.";
@@ -157,27 +174,39 @@ export default function AppointmentScreen() {
   const goToAppointments = () => {
     navigator.navigate("viewAppointment");
   };
-  // send appointment
-  const sendAppointment = async () => {
-    const isValid = validateAppointment();
-    if (!isValid)
-      return Alert.alert("Validation failed,please check your inputs.");
+
+  const cancelAppointment = async () => {
+    const payload = {
+      appointmentId: appointment.appointmentId,
+      status: "Cancelled",
+    };
+    try {
+      await editAppointmentStatus(payload);
+      Alert.alert("Success", "Appointment cancelled sucessfully");
+      navigator.navigate("viewAppointment");
+    } catch (err) {
+      console.log(err);
+      showError(err);
+    }
+  };
+
+  const editAppointment = async () => {
+    const valid = validateAppointment();
+
+    if (!valid)
+      return Alert.alert("Validation failed", "please check your inputs.");
 
     try {
-      const payload: AppointmentModel = {
-        appointmentId: "",
-        status: "",
+      const payload = {
+        appointmentId: appointment.appointmentId,
         patientId: patientId,
         doctorEmployeeId: doctorId,
         timeSlot: timeSlot,
         date: date,
-        createdByEmployeeId: patientId,
       };
-
-      await createAppointment(payload);
-
-      Alert.alert("Success", "Appointment Created Sucessfully.");
-      clearFields();
+      await editAppointmentData(payload);
+      Alert.alert("Success", "Appointment Edited Successfully");
+      navigator.navigate("viewAppointment");
     } catch (err) {
       console.error(err);
       showError(err);
@@ -188,10 +217,17 @@ export default function AppointmentScreen() {
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
         <WelcomeTextContainer
-          text1="Create your,"
+          text1="Edit your,"
           text2="APPOINTMENT"
           text3="here."
         ></WelcomeTextContainer>
+
+        <ProfileButton
+          title="GO BACK"
+          iconName="arrow-back-outline"
+          onAction={goToAppointments}
+        />
+
         <ScrollView style={styles.scrollView}>
           <LinearGradient
             style={styles.container}
@@ -206,10 +242,10 @@ export default function AppointmentScreen() {
               />
               <View style={styles.formHeaderTextHolder}>
                 <Text style={[styles.text, styles.formHeaderTitle]}>
-                  NEW ENTRY
+                  MODIFY ENTRY
                 </Text>
                 <Text style={[styles.text, styles.formHeaderValue]}>
-                  Book Appointment
+                  Edit Appointment
                 </Text>
               </View>
             </View>
@@ -244,91 +280,93 @@ export default function AppointmentScreen() {
                   {isDateSet ? date.toDateString() : "Date"}
                 </Text>
               </View>
-              <Ionicons name="chevron-down-outline" size={22} color={"white"} />
+              <View style={styles.dateFooter}>
+                <Text style={[styles.changeText, styles.text]}>Change</Text>
+                <Ionicons name="repeat-outline" size={22} color={"white"} />
+              </View>
             </TouchableOpacity>
 
             {!!errors.date && (
               <Text style={[styles.text, styles.errorText]}>{errors.date}</Text>
             )}
 
-            {isDateSet && (
-              <View>
-                <SectionDivider
-                  title="DOCTOR"
-                  iconName="heart-outline"
-                ></SectionDivider>
+            <View>
+              <SectionDivider
+                title="DOCTOR"
+                iconName="heart-outline"
+              ></SectionDivider>
 
-                <View style={styles.dropdownHolder}>
-                  <Ionicons
-                    name="medkit-outline"
-                    color="white"
-                    size={22}
-                    style={styles.dropDownIcon}
-                  />
-                  <Picker
-                    style={styles.picker}
-                    dropdownIconColor="white"
-                    onValueChange={(value: string) => setDoctor(value)}
-                  >
-                    <Picker.Item label="Doctor" value="" />
-                    {doctors.map((doctor: UserModel) => (
-                      <Picker.Item
-                        key={doctor.employeeCode}
-                        label={doctor.name}
-                        value={doctor.employeeCode}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-
-                {!!errors.doctorEmployeeId && (
-                  <Text style={[styles.text, styles.errorText]}>
-                    {errors.doctorEmployeeId}
-                  </Text>
-                )}
-
-                <SectionDivider iconName="flash-outline" title="TIME SLOT" />
-                <View style={styles.timeSlotContainer}>
-                  {availableSlots.length === 0 ? (
-                    <Text style={[styles.text, styles.slotText]}>
-                      No slot available at this moment
-                    </Text>
-                  ) : (
-                    availableSlots.map((slot, index) => {
-                      return (
-                        <TimeSlotHolder
-                          slot={slot}
-                          onAction={(value: string) => {
-                            setTimeSlot(value);
-                          }}
-                          id={slot}
-                          key={slot}
-                          isSelected={timeSlot === slot}
-                        />
-                      );
-                    })
-                  )}
-                </View>
-                {!!errors.timeSlot && (
-                  <Text style={[styles.text, styles.errorText]}>
-                    {errors.timeSlot}
-                  </Text>
-                )}
-
-                <ProfileButton
-                  title="CREATE"
-                  iconName="add-outline"
-                  onAction={sendAppointment}
+              <View style={styles.dropdownHolder}>
+                <Ionicons
+                  name="medkit-outline"
+                  color="white"
+                  size={22}
+                  style={styles.dropDownIcon}
                 />
-                <ProfileButton
-                  title="CLEAR"
-                  iconName="close-outline"
-                  onAction={clearFields}
-                />
+                <Picker
+                  style={styles.picker}
+                  dropdownIconColor="white"
+                  selectedValue={doctorId}
+                  onValueChange={(value: string) => setDoctor(value)}
+                >
+                  <Picker.Item label="Doctor" value="" />
+                  {doctors.map((doctor: UserModel) => (
+                    <Picker.Item
+                      key={doctor.employeeCode}
+                      label={doctor.name}
+                      value={doctor.employeeCode}
+                    />
+                  ))}
+                </Picker>
               </View>
-            )}
+
+              {!!errors.doctorEmployeeId && (
+                <Text style={[styles.text, styles.errorText]}>
+                  {errors.doctorEmployeeId}
+                </Text>
+              )}
+
+              <SectionDivider iconName="flash-outline" title="TIME SLOT" />
+              <View style={styles.timeSlotContainer}>
+                {availableSlots.length === 0 ? (
+                  <Text style={[styles.text, styles.slotText]}>
+                    No slot available at this moment
+                  </Text>
+                ) : (
+                  availableSlots.map((slot, index) => {
+                    return (
+                      <TimeSlotHolder
+                        slot={slot}
+                        onAction={(value: string) => {
+                          setTimeSlot(value);
+                        }}
+                        id={slot}
+                        key={slot}
+                        isSelected={timeSlot === slot}
+                      />
+                    );
+                  })
+                )}
+              </View>
+              {!!errors.timeSlot && (
+                <Text style={[styles.text, styles.errorText]}>
+                  {errors.timeSlot}
+                </Text>
+              )}
+
+              <ProfileButton
+                title="SAVE"
+                iconName="add-outline"
+                onAction={editAppointment}
+              />
+            </View>
           </LinearGradient>
         </ScrollView>
+        <ProfileButton
+          title="CANCEL APPOINTMENT"
+          iconName="close-outline"
+          onAction={cancelAppointment}
+        />
         <ProfileButton
           title="VIEW APPOINTMENTS"
           iconName="eye-outline"
@@ -482,5 +520,20 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 10,
     marginHorizontal: 20,
+  },
+  dateFooter: {
+    backgroundColor: "rgba(232, 61, 255, 0.3)",
+    borderRadius: 8,
+    flexDirection: "row",
+    marginRight: 20,
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  changeText: {
+    color: "white",
+    fontSize: 12,
+    lineHeight: 12,
+    padding: 5,
   },
 });

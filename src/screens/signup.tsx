@@ -154,7 +154,7 @@ export default function SignUpScreen() {
       };
       // api call to server
       signUp(payload);
-      Alert.alert("Success", "Account created sucessfully.");
+      Alert.alert("Success", "Account created successfully.");
       navigator.navigate("login");
     } else {
       Alert.alert(

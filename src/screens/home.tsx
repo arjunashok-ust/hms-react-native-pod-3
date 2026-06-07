@@ -5,7 +5,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList
+  FlatList,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,18 +13,28 @@ import { DoctorCard } from "../components/home/doctor-card.component";
 import { useEffect, useState } from "react";
 import { UserModel } from "../types/user.types";
 import { getDoctors } from "../services/user.service";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationModel } from "../types/navigation.types";
 
 export default function HomeScreen() {
-  const [doctors,setDoctors] = useState<UserModel[]>([]);
+  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+  const [doctors, setDoctors] = useState<UserModel[]>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchDoctors();
-  },[]);
+  }, []);
 
   const fetchDoctors = async () => {
     const data = await getDoctors();
     setDoctors(data);
-  }
+  };
+
+  const goToAppointments = () => {
+    navigator.navigate("tabs", {
+      screen: "appointment",
+    });
+  };
 
   return (
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
@@ -36,17 +46,19 @@ export default function HomeScreen() {
           isHome={true}
         />
         <FlatList
-        style={styles.container}
-        data={doctors}
-        keyExtractor={(item)=>item.employeeCode}
-        renderItem={({item})=>{
-          return <DoctorCard
-            prefix={item.name.slice(0,3).toUpperCase()}
-            name={item.name}
-            designation={item.designation}
-            department={item.department}
-          />
-        }}
+          style={styles.container}
+          data={doctors}
+          keyExtractor={(item) => item.employeeCode}
+          renderItem={({ item }) => {
+            return (
+              <DoctorCard
+                prefix={item.name.slice(0, 3).toUpperCase()}
+                name={item.name}
+                designation={item.designation}
+                department={item.department}
+              />
+            );
+          }}
         />
         <LinearGradient
           style={styles.appointmentContainer}
@@ -58,7 +70,7 @@ export default function HomeScreen() {
           <Text style={[styles.text, styles.appointmentText]}>
             Begins today!
           </Text>
-          <TouchableOpacity style={styles.bookButton}>
+          <TouchableOpacity style={styles.bookButton} onPress={goToAppointments}>
             <Text style={[styles.text, styles.bookText]}>Book Now</Text>
           </TouchableOpacity>
         </LinearGradient>
