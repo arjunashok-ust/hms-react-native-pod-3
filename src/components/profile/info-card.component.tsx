@@ -11,8 +11,8 @@ export const InfoCard = (props: any) => {
         style={styles.infoIcon}
       />
       <View style={styles.infoData}>
-        <Text style={[styles.text, styles.infoText]}>{props.title}</Text>
-        <Text style={[styles.text, styles.infoValue]}>{props.value}</Text>
+        <Text style={[styles.text, styles.infoText]} numberOfLines={1} ellipsizeMode="tail">{props.title}</Text>
+        <Text style={[styles.text, styles.infoValue]} numberOfLines={1} ellipsizeMode="tail">{props.value}</Text>
       </View>
     </View>
   );

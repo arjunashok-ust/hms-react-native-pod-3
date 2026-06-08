@@ -60,6 +60,10 @@ export default function ProfileScreen() {
     return formattedDate;
   };
 
+  const goToEditProfile = () => {
+    navigator.navigate("editProfile");
+  }
+
   return (
     <ImageBackground source={BgImage} style={styles.wrapper} resizeMode="cover">
       <View style={styles.overlay}>
@@ -118,7 +122,7 @@ export default function ProfileScreen() {
             <ProfileButton
               iconName="pencil-outline"
               title="EDIT PROFILE"
-              onAction={()=>{}}
+              onAction={goToEditProfile}
             />
             <ProfileButton
               iconName="exit-outline"

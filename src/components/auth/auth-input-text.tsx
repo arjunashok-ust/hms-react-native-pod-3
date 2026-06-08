@@ -11,6 +11,7 @@ export const AuthInputText = (props: any) => {
         style={styles.textInput}
         onChangeText={props.getData}
         secureTextEntry={props.isPassword ?? false}
+        numberOfLines={1}
       ></TextInput>
     </View>
   );

@@ -53,3 +53,12 @@ export const getAvailableTimeSlots = async (employeeId: string, date: Date) => {
     throw error;
   }
 };
+
+export const updatePatientProfile = async (payload: any) => {
+  try {
+    const response = await api.post("user/updatePatientProfile",payload);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

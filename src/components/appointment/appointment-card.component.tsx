@@ -79,8 +79,8 @@ export const AppointmentCard = (props: any) => {
           </View>
 
           <View style={styles.appointmentTextHolder}>
-            <Text style={[styles.text, styles.doctorText]}>{doctor?.name}</Text>
-            <Text style={[styles.text, styles.doctorSubTitle]}>
+            <Text style={[styles.text, styles.doctorText]} numberOfLines={1} ellipsizeMode="tail">{doctor?.name}</Text>
+            <Text style={[styles.text, styles.doctorSubTitle]} numberOfLines={1} ellipsizeMode="tail">
               {`${doctor?.specialization} ${props.doctorEmployeeId}`}
             </Text>
           </View>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   appointmentIcon: {
-    color: "rgb(225, 56, 255,0.9)",
+    color: "rgba(225, 56, 255,0.9)",
   },
   footerText: {
     fontSize: 12,
