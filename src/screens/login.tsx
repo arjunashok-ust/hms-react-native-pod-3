@@ -22,8 +22,9 @@ export default function LoginScreen() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [errors, setErrors] = useState({ email, password });
-  const [isFormValid, setFormStatus] = useState<boolean>(false);
+  const [isLoading,setIsLoading] = useState(false);
 
   const validateForm = () => {
     let error = { email: "", password: "" };
@@ -42,11 +43,9 @@ export default function LoginScreen() {
     }
 
     if (!error.email && !error.password) {
-      setFormStatus(true);
       return true;
-    } 
+    }
 
-    setFormStatus(false);
     setErrors(error);
   };
 
@@ -58,18 +57,20 @@ export default function LoginScreen() {
         password: password,
       };
 
-      const isValid = await login(payload);
-
-      setTimeout(() => {
-        if (isValid) {
-          Alert.alert("Success", "Login Sucessfull");
-          navigator.replace("tabs",{
-            screen: 'home',
-          });
-        }
-      }, 500);
+      try {
+        setIsLoading(true);
+        await login(payload);
+        Alert.alert("Success", "Login Sucessfull");
+        navigator.replace("tabs", {
+          screen: "home",
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      Alert.alert("Server error during login");
+      Alert.alert("Validation Failed", "Please check the input fields");
     }
   };
 
@@ -104,7 +105,7 @@ export default function LoginScreen() {
           {!!errors.password && (
             <Text style={styles.errorText}>{errors.password}</Text>
           )}
-          <AuthSubmitButton titleText="Login" onSubmit={sendLogin} />
+          <AuthSubmitButton titleText={isLoading?"Logging In...":"Login"} onSubmit={sendLogin} />
           <TouchableOpacity
             style={styles.loginFooter}
             onPress={() => navigator.navigate("signup")}

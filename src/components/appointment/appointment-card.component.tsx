@@ -10,7 +10,6 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
-import { showError } from "../../utils/error.utils";
 
 export const AppointmentCard = (props: any) => {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -60,7 +59,6 @@ export const AppointmentCard = (props: any) => {
               Alert.alert("Success", "Appointment deleted sucessfully");
             } catch (err) {
               console.error(err);
-              showError(err);
             }
           },
         },
@@ -81,7 +79,7 @@ export const AppointmentCard = (props: any) => {
           <View style={styles.appointmentTextHolder}>
             <Text style={[styles.text, styles.doctorText]} numberOfLines={1} ellipsizeMode="tail">{doctor?.name}</Text>
             <Text style={[styles.text, styles.doctorSubTitle]} numberOfLines={1} ellipsizeMode="tail">
-              {`${doctor?.specialization} ${props.doctorEmployeeId}`}
+              {`${doctor?.specialization}`}
             </Text>
           </View>
         </View>

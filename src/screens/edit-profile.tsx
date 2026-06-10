@@ -14,19 +14,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { Picker } from "@react-native-picker/picker";
-import { TimeSlotHolder } from "../components/profile/time-slot-holder";
 import { useEffect, useState } from "react";
 import {
-  getAvailableTimeSlots,
-  getDoctors,
   getPatientProfile,
   updatePatientProfile,
 } from "../services/user.service";
-import { PatientModel, UserModel } from "../types/user.types";
+import { PatientModel} from "../types/user.types";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
-import { AppointmentModel } from "../types/appointment.types";
-import { showError } from "../utils/error.utils";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -34,9 +29,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditProfileScreen() {
   const route = useRoute<RouteProp<NavigationModel, "editAppointment">>();
-
   const [patientData, setPatientData] = useState<PatientModel>();
-
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -45,6 +38,10 @@ export default function EditProfileScreen() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
+
+  
+  const [isShow, setIsShow] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [errors, setErrors] = useState({
     name: "",
@@ -58,10 +55,8 @@ export default function EditProfileScreen() {
 
   const nameRegex = /^[a-z ]*$/i;
   const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
-  const phoneRegex = /^\d+$/;
+  const phoneRegex = /^(\+91[\s-]?)?[6789]\d{9}$/;
   const addressRegex = /^[\w\s.,#/-]{2,200}$/;
-
-  const [isShow, setIsShow] = useState<boolean>(false);
 
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
@@ -77,7 +72,6 @@ export default function EditProfileScreen() {
       setData(data);
     } catch (err) {
       console.error(err);
-      Alert.alert("Failed", "Error fetching profile data");
     }
   };
 
@@ -94,7 +88,6 @@ export default function EditProfileScreen() {
       setEmergencyContact(data?.emergencyContact ?? "Emergency Contact");
     } catch (err) {
       console.error(err);
-      Alert.alert("Failed", "Error setting profile data");
     }
   };
 
@@ -114,9 +107,7 @@ export default function EditProfileScreen() {
   const validatePhone = (value: string, isConfirmPhone: boolean) => {
     if (isConfirmPhone && !value) return "";
     if (!value) return "Phone is required.";
-    if (!phoneRegex.test(value)) return "Only digits are allowed.";
-    if (value.length > 10) return "Maximum 10 digits are allowed.";
-    if (value.length < 10) return "Please enter a valid 10 digit number.";
+    if (!phoneRegex.test(value)) return "Invalid number format.";
     if (value === phone && isConfirmPhone)
       return "Emergency contact must be different from the primary contact number.";
     return "";
@@ -197,6 +188,7 @@ export default function EditProfileScreen() {
     };
 
     try {
+      setIsLoading(true);
       await updatePatientProfile(payload);
       Alert.alert("Success", "Patient profile updated successfully");
       navigator.navigate("tabs", {
@@ -204,7 +196,8 @@ export default function EditProfileScreen() {
       });
     } catch (err) {
       console.error(err);
-      showError(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -327,8 +320,8 @@ export default function EditProfileScreen() {
               }}
               isDisabled={true}
             />
-            {!!errors.name && (
-              <Text style={[styles.text, styles.errorText]}>{errors.name}</Text>
+            {!!errors.email && (
+              <Text style={[styles.text, styles.errorText]}>{errors.email}</Text>
             )}
             <AppointmentInputCard
               iconName="location-outline"
@@ -371,7 +364,7 @@ export default function EditProfileScreen() {
               </Text>
             )}
             <ProfileButton
-              title="UPDATE PROFILE"
+              title={isLoading?"UPDATING...":"UPDATE PROFILE"}
               iconName="arrow-back-outline"
               onAction={updateProfile}
             />

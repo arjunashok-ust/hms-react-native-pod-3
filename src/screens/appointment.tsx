@@ -23,7 +23,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import { createAppointment } from "../services/appointment.service";
 import { AppointmentModel } from "../types/appointment.types";
-import { showError } from "../utils/error.utils";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
@@ -36,6 +35,7 @@ export default function AppointmentScreen() {
 
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isDateSet, setIsDateSet] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [patientId, setPatientId] = useState("");
   const [doctorId, setDoctorId] = useState("");
@@ -70,8 +70,12 @@ export default function AppointmentScreen() {
   };
 
   const fetchDoctors = async () => {
-    const doctors = await getDoctors();
-    setDoctors(doctors);
+    try {
+      const doctors = await getDoctors();
+      setDoctors(doctors);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const onDateChange = (date: Date) => {
@@ -81,7 +85,7 @@ export default function AppointmentScreen() {
       setDate(date);
       setIsDateSet(true);
       setIsShow(false);
-      setErrors((prev) => ({ ...prev, date:"" }));
+      setErrors((prev) => ({ ...prev, date: "" }));
     } else {
       setErrors((prev) => ({ ...prev, date: errorMessage ?? "" }));
       setIsShow(false);
@@ -94,8 +98,12 @@ export default function AppointmentScreen() {
   };
 
   const fetchAvailableTimeSlots = async () => {
-    const data = await getAvailableTimeSlots(doctorId, date);
-    setAvailableSlots(data);
+    try {
+      const data = await getAvailableTimeSlots(doctorId, date);
+      setAvailableSlots(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const clearFields = () => {
@@ -122,8 +130,8 @@ export default function AppointmentScreen() {
     const inputDate = new Date(dob);
     const today = new Date();
 
-    inputDate.setHours(0,0,0,0);
-    today.setHours(0,0,0,0);
+    inputDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
     if (inputDate <= today) {
       return "Appointments cannot be booked for today or past dates.";
@@ -164,9 +172,11 @@ export default function AppointmentScreen() {
       return Alert.alert("Validation failed,please check your inputs.");
 
     try {
+      setIsLoading(true);
+
       const payload: AppointmentModel = {
         appointmentId: "",
-        status: "",
+        status: "Pending",
         patientId: patientId,
         doctorEmployeeId: doctorId,
         timeSlot: timeSlot,
@@ -174,13 +184,14 @@ export default function AppointmentScreen() {
         createdByEmployeeId: patientId,
       };
 
-      await createAppointment(payload);
+      const response = await createAppointment(payload);
 
-      Alert.alert("Success", "Appointment Created Sucessfully.");
+      Alert.alert("Success", response?.data?.message);
       clearFields();
     } catch (err) {
       console.error(err);
-      showError(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -316,7 +327,7 @@ export default function AppointmentScreen() {
                 )}
 
                 <ProfileButton
-                  title="CREATE"
+                  title={isLoading?"CREATING...":"CREATE"}
                   iconName="add-outline"
                   onAction={sendAppointment}
                 />

@@ -1,42 +1,30 @@
-import axios from "axios";
-import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginRequestModel, SignUpRequestModel } from "../types/auth.types";
 import { getPatientId } from "./user.service";
+import api from "./interceptor.service";
 
-export const login = async (data: LoginRequestModel): Promise<boolean> => {
-  try {
-    const response = await axios.post("http://10.0.2.2:8080/auth/login", data);
+export const login = async (data: LoginRequestModel) => {
+  const response = await api.post("auth/login", data);
 
-    const token = response.data.token;
-    const email = response.data.email;
+  const token = response.data.token;
+  const email = response.data.email;
 
-    await SecureStore.setItemAsync("token", token);
-    await AsyncStorage.setItem("email", email);
+  await SecureStore.setItemAsync("token", token);
+  await AsyncStorage.setItem("email", email);
 
-    setTimeout(async () => {
-      const patientId = await getPatientId(email);
-      await AsyncStorage.setItem("patientId",patientId);
-    }, 500);
+  const patientId = await getPatientId(email);
+  await AsyncStorage.setItem("patientId", patientId);
 
-    return true;
-  } catch (err: unknown) {
-    console.error(err);
-    throw err;
-  }
+  return response;
 };
 
-export const signUp = (data: SignUpRequestModel) => {
-  axios
-    .post("http://10.0.2.2:8080/auth/patientSignUp", data)
-    .then((res) => {
-      Alert.alert("Success", "Account created sucessfully.");
-    })
-    .catch((err) => {
-      console.error(err);
-      throw err;
-    });
+export const signUp = async (data: SignUpRequestModel) => {
+  const response = await api.post(
+    "auth/patientSignUp",
+    data,
+  );
+  return response;
 };
 
 export const setToken = async (token: string) => {

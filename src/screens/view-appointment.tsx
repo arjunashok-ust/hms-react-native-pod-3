@@ -16,7 +16,6 @@ import ProfileButton from "../components/profile/profile-button.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
-import { showError } from "../utils/error.utils";
 import { getAppointmentsByPatientId } from "../services/appointment.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -42,7 +41,6 @@ export default function ViewAppointmentScreen() {
       setAppointments(data);
     } catch (err) {
       console.error(err);
-      return showError(err);
     }
   };
 

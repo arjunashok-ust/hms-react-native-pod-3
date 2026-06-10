@@ -37,6 +37,7 @@ export default function SignUpScreen() {
   const [status, setStatus] = useState("Pending");
 
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -49,11 +50,9 @@ export default function SignUpScreen() {
     emergencyContact: "",
   });
 
-  const [isFormValid, setIsFormValid] = useState(false);
-
   const nameRegex = /^[a-z ]*$/i;
   const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
-  const phoneRegex = /^\d*$/;
+  const phoneRegex = /^(\+91[\s-]?)?[6789]\d{9}$/;
 
   const onDateChange = (event: DateTimePickerEvent, selectedDob?: any) => {
     setShow(false);
@@ -89,9 +88,7 @@ export default function SignUpScreen() {
   const validatePhone = (value: string, isConfirmPhone: boolean) => {
     if (isConfirmPhone && !value) return "";
     if (!value) return "Phone is required.";
-    if (!phoneRegex.test(value)) return "Only digits are allowed.";
-    if (value.length > 10) return "Maximum 10 digits are allowed.";
-    if (value.length < 10) return "Please enter a valid 10 digit number.";
+    if (!phoneRegex.test(value)) return "Invalid number format.";
     if (value === phone && isConfirmPhone)
       return "Emergency contact must be different from the primary contact number.";
     return "";
@@ -130,16 +127,15 @@ export default function SignUpScreen() {
     };
 
     setErrors(newErrors);
-    // check for no errors
+
     const isValid = Object.values(newErrors).every((error) => error === "");
-    setIsFormValid(isValid);
     return isValid;
   };
 
-  const sendSignUp = () => {
+  const sendSignUp = async () => {
     const validForm = validateSignUp();
     if (validForm) {
-      setStatus("Pending");
+      setStatus("Active");
       const payload: SignUpRequestModel = {
         name: name,
         email: email,
@@ -152,10 +148,18 @@ export default function SignUpScreen() {
         dob: dob,
         emergencyContact: emergencyContact,
       };
-      // api call to server
-      signUp(payload);
-      Alert.alert("Success", "Account created successfully.");
-      navigator.navigate("login");
+
+      try {
+        setIsLoading(true);
+        await signUp(payload);
+
+        Alert.alert("Success", "Account created successfully.");
+        navigator.navigate("login");
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       Alert.alert(
         "Validation failed.",
@@ -269,7 +273,7 @@ export default function SignUpScreen() {
             {!!errors.emergencyContact && (
               <Text style={styles.errorText}>{errors.emergencyContact}</Text>
             )}
-            <AuthSubmitButton titleText="Signup" onSubmit={sendSignUp} />
+            <AuthSubmitButton titleText={isLoading?"Signing In...":"Signup"} onSubmit={sendSignUp} />
             <TouchableOpacity
               style={styles.signUpFooter}
               onPress={() => navigator.navigate("login")}
@@ -277,7 +281,10 @@ export default function SignUpScreen() {
               <Text style={styles.signUpFooterText}>
                 Already have an account?
               </Text>
-              <Text style={[styles.signUpFooterText, styles.login]}> Login</Text>
+              <Text style={[styles.signUpFooterText, styles.login]}>
+                {" "}
+                Login
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

@@ -26,7 +26,6 @@ import {
   editAppointmentStatus,
 } from "../services/appointment.service";
 import { AppointmentModel } from "../types/appointment.types";
-import { showError } from "../utils/error.utils";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -42,6 +41,9 @@ export default function EditAppointmentScreen() {
 
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isDateSet, setIsDateSet] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCancelLoading, setIsCancelLoading] = useState<boolean>(false);
 
   const [patientId, setPatientId] = useState("");
   const [doctorId, setDoctorId] = useState("");
@@ -181,12 +183,14 @@ export default function EditAppointmentScreen() {
       status: "Cancelled",
     };
     try {
-      await editAppointmentStatus(payload);
-      Alert.alert("Success", "Appointment cancelled sucessfully");
+      setIsCancelLoading(true);
+      const response = await editAppointmentStatus(payload);
+      Alert.alert("Success", response?.data?.message);
       navigator.navigate("viewAppointment");
     } catch (err) {
-      console.log(err);
-      showError(err);
+      console.error(err);
+    } finally{
+      setIsCancelLoading(false);
     }
   };
 
@@ -197,6 +201,7 @@ export default function EditAppointmentScreen() {
       return Alert.alert("Validation failed", "please check your inputs.");
 
     try {
+      setIsLoading(true);
       const payload = {
         appointmentId: appointment.appointmentId,
         patientId: patientId,
@@ -204,12 +209,13 @@ export default function EditAppointmentScreen() {
         timeSlot: timeSlot,
         date: date,
       };
-      await editAppointmentData(payload);
-      Alert.alert("Success", "Appointment Edited Successfully");
+      const response = await editAppointmentData(payload);
+      Alert.alert("Success", response?.data?.message);
       navigator.navigate("viewAppointment");
     } catch (err) {
       console.error(err);
-      showError(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -355,7 +361,7 @@ export default function EditAppointmentScreen() {
               )}
 
               <ProfileButton
-                title="SAVE"
+                title={isLoading?"SAVING...":"SAVE"}
                 iconName="add-outline"
                 onAction={editAppointment}
               />
@@ -363,7 +369,7 @@ export default function EditAppointmentScreen() {
           </LinearGradient>
         </ScrollView>
         <ProfileButton
-          title="CANCEL APPOINTMENT"
+          title={isCancelLoading?"CANCELING...":"CANCEL APPOINTMENT"}
           iconName="close-outline"
           onAction={cancelAppointment}
         />
