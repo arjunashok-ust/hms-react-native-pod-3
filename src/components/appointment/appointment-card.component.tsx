@@ -5,6 +5,7 @@ import { UserModel } from "../../types/user.types";
 import { useEffect, useState } from "react";
 import {
   deleteAppointment,
+  editAppointmentStatus,
   getDoctorByEmployeeId,
 } from "../../services/appointment.service";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -55,8 +56,39 @@ export const AppointmentCard = (props: any) => {
             try {
               const appointmentId: string = props.appointmentId;
               await deleteAppointment(appointmentId);
-              props.onDelete?.();
+              props.onAppointmentChange?.();
               Alert.alert("Success", "Appointment deleted sucessfully");
+            } catch (err) {
+              console.error(err);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const editAppointmentStatusByPatient = async () => {
+    Alert.alert(
+      "Cancel Appointment",
+      "Are you sure you want to cancel this appointment",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const appointmentId: string = props.appointmentId;
+              const payload = {
+                appointmentId,
+                status: "Cancelled",
+              };
+              await editAppointmentStatus(payload);
+              props.onAppointmentChange?.();
+              Alert.alert("Success", "Appointment Cancelled Successfully");
             } catch (err) {
               console.error(err);
             }
@@ -77,8 +109,18 @@ export const AppointmentCard = (props: any) => {
           </View>
 
           <View style={styles.appointmentTextHolder}>
-            <Text style={[styles.text, styles.doctorText]} numberOfLines={1} ellipsizeMode="tail">{doctor?.name}</Text>
-            <Text style={[styles.text, styles.doctorSubTitle]} numberOfLines={1} ellipsizeMode="tail">
+            <Text
+              style={[styles.text, styles.doctorText]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {doctor?.name}
+            </Text>
+            <Text
+              style={[styles.text, styles.doctorSubTitle]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {`${doctor?.specialization}`}
             </Text>
           </View>
@@ -90,6 +132,7 @@ export const AppointmentCard = (props: any) => {
             props.status === "Booked" && styles.booked,
             props.status === "Cancelled" && styles.cancelled,
             props.status === "Completed" && styles.completed,
+            props.status === "Pending" && styles.pending,
           ]}
         >
           <Text style={[styles.text, styles.appointmentStatusText]}>
@@ -126,6 +169,15 @@ export const AppointmentCard = (props: any) => {
               onAction={goToEdit}
             />
           )}
+          {
+            props.status === "Pending" && (
+              <ProfileButton
+              iconName="close-outline"
+              title="Cancel"
+              onAction={editAppointmentStatusByPatient}
+            />
+            )
+          }
           <ProfileButton
             iconName="trash-outline"
             title="Delete"
@@ -190,6 +242,10 @@ const styles = StyleSheet.create({
   completed: {
     backgroundColor: "rgba(67, 30, 255, 0.3)",
     borderColor: "rgba(168, 168, 255, 0.6)",
+  },
+  pending: {
+    backgroundColor: "rgba(250, 191, 28, 0.3)",
+    borderColor: "rgba(254, 255, 168, 0.6)",
   },
   appointmentStatusText: {
     color: "rgba(171, 255, 224)",

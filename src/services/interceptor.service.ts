@@ -10,17 +10,14 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     // skipping token for login and signup
-    if (
-      config.url?.includes("/auth/login") ||
-      config.url?.includes("auth/patientSignUp")
-    ) {
+    if (config.url === "auth/login" || config.url === "auth/patientSignUp") {
       return config;
     }
 
     const token = await SecureStore.getItemAsync("token");
 
     if (!token) {
-      throw Promise.reject(new Error("No Authentication Found"));
+      return Promise.reject(new Error("No Authentication Found"));
     }
 
     config.headers.Authorization = `Bearer ${token}`;

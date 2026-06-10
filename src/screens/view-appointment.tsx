@@ -97,7 +97,7 @@ export default function ViewAppointmentScreen() {
                   date={item.date}
                   timeSlot={item.timeSlot}
                   appointmentId={item.appointmentId}
-                  onDelete={fetchAppointments}
+                  onAppointmentChange={fetchAppointments}
                 />
               );
             }}
