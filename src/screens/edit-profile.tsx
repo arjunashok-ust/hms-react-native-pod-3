@@ -6,10 +6,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
 import { SectionDivider } from "../components/profile/section-divider.component";
@@ -24,12 +22,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 export default function EditProfileScreen() {
-  const route = useRoute<RouteProp<NavigationModel, "editAppointment">>();
-  const [patientData, setPatientData] = useState<PatientModel>();
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -67,7 +64,6 @@ export default function EditProfileScreen() {
     try {
       const email = await AsyncStorage.getItem("email");
       const data = await getPatientProfile(email ?? "");
-      setPatientData(data);
       setData(data);
     } catch (err) {
       console.error(err);
@@ -175,7 +171,11 @@ export default function EditProfileScreen() {
     const isValid = validateUpdateProfile();
 
     if (!isValid)
-      return Alert.alert("Validation Failed", "Please check your input fields");
+      return Toast.show({
+        type: "error",
+        text1: "Validation Failed",
+        text2: "Please check the input fields",
+      });
 
     const payload = {
       patientId: patientId,
@@ -189,7 +189,11 @@ export default function EditProfileScreen() {
     try {
       setIsLoading(true);
       await updatePatientProfile(payload);
-      Alert.alert("Success", "Patient profile updated successfully");
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Patient profile updated successfully",
+      });
       navigator.navigate("tabs", {
         screen: "profile",
       });
@@ -263,7 +267,7 @@ export default function EditProfileScreen() {
                   setGender(value);
                 }}
                 style={styles.picker}
-                dropdownIconColor="white"
+                dropdownIconColor="#000000"
               >
                 <Picker.Item label="Gender" value="" />
                 <Picker.Item label="Male" value="Male" />

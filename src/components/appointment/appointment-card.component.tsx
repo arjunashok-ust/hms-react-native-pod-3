@@ -52,15 +52,17 @@ export const AppointmentCard = (props: any) => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: async () => {
-            try {
-              const appointmentId: string = props.appointmentId;
-              await deleteAppointment(appointmentId);
-              props.onAppointmentChange?.();
-              Alert.alert("Success", "Appointment deleted sucessfully");
-            } catch (err) {
-              console.error(err);
-            }
+          onPress: () => {
+            void (async () => {
+              try {
+                const appointmentId: string = props.appointmentId;
+                await deleteAppointment(appointmentId);
+                props.onAppointmentChange?.();
+                Alert.alert("Success", "Appointment deleted sucessfully");
+              } catch (err) {
+                console.error(err);
+              }
+            })();
           },
         },
       ],
@@ -79,19 +81,21 @@ export const AppointmentCard = (props: any) => {
         {
           text: "Yes",
           style: "destructive",
-          onPress: async () => {
-            try {
-              const appointmentId: string = props.appointmentId;
-              const payload = {
-                appointmentId,
-                status: "Cancelled",
-              };
-              await editAppointmentStatus(payload);
-              props.onAppointmentChange?.();
-              Alert.alert("Success", "Appointment Cancelled Successfully");
-            } catch (err) {
-              console.error(err);
-            }
+          onPress: () => {
+            void (async () => {
+              try {
+                const appointmentId: string = props.appointmentId;
+                const payload = {
+                  appointmentId,
+                  status: "Cancelled",
+                };
+                await editAppointmentStatus(payload);
+                props.onAppointmentChange?.();
+                Alert.alert("Success", "Appointment Cancelled Successfully");
+              } catch (err) {
+                console.error(err);
+              }
+            })();
           },
         },
       ],
@@ -217,7 +221,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
   doctorSubTitle: {
-     color: "#7b7b7b",
+    color: "#7b7b7b",
     fontSize: 12,
     lineHeight: 12,
   },
@@ -242,7 +246,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(168, 168, 255, 0.6)",
   },
   pending: {
-   backgroundColor: "rgb(117, 69, 14)",
+    backgroundColor: "rgb(117, 69, 14)",
     borderColor: "rgba(254, 255, 168, 0.6)",
   },
   appointmentStatusText: {

@@ -3,14 +3,9 @@ import {
   StyleSheet,
   View,
   ImageBackground,
-  Text,
   ScrollView,
-  StatusBar,
-  TouchableOpacity,
   Alert,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { InfoCard } from "../components/profile/info-card.component";
 import { ProfileCard } from "../components/profile/profile-card.component";

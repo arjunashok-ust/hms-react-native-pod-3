@@ -5,18 +5,11 @@ import {
   ImageBackground,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Alert,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
-import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
 import { SectionDivider } from "../components/profile/section-divider.component";
-import { Picker } from "@react-native-picker/picker";
-import { TimeSlotHolder } from "../components/profile/time-slot-holder";
 import { useEffect, useState } from "react";
-import * as SecureStore from "expo-secure-store";
 import { getAvailableTimeSlots, getDoctors } from "../services/user.service";
 import { UserModel } from "../types/user.types";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -27,6 +20,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
+import DoctorHolder from "../components/appointment/doctor-holder.component";
+import TimeSlotComponent from "../components/appointment/time-slot.component";
+import { DateHolder } from "../components/appointment/date-holder.component";
+import { FormHeader } from "../components/appointment/form-header.component";
 
 export default function AppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -80,7 +78,6 @@ export default function AppointmentScreen() {
 
   const onDateChange = (date: Date) => {
     const errorMessage = validateDate(date);
-
     if (errorMessage === "") {
       setDate(date);
       setIsDateSet(true);
@@ -169,7 +166,11 @@ export default function AppointmentScreen() {
   const sendAppointment = async () => {
     const isValid = validateAppointment();
     if (!isValid)
-      return Alert.alert("Validation failed,please check your inputs.");
+      Toast.show({
+        type: "error",
+        text1: "Validation Failed",
+        text2: "Please check the input fields",
+      });
 
     try {
       setIsLoading(true);
@@ -186,7 +187,11 @@ export default function AppointmentScreen() {
 
       const response = await createAppointment(payload);
 
-      Alert.alert("Success", response?.data?.message);
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: response?.data?.message,
+      });
       clearFields();
     } catch (err) {
       console.error(err);
@@ -204,25 +209,8 @@ export default function AppointmentScreen() {
           text3="here."
         ></WelcomeTextContainer>
         <ScrollView style={styles.scrollView}>
-          <View
-            style={styles.container}
-          >
-            <View style={styles.formHeader}>
-              <Ionicons
-                name="calendar-outline"
-                color={"white"}
-                size={25}
-                style={styles.formHeaderIcon}
-              />
-              <View style={styles.formHeaderTextHolder}>
-                <Text style={[styles.text, styles.formHeaderTitle]}>
-                  NEW ENTRY
-                </Text>
-                <Text style={[styles.text, styles.formHeaderValue]}>
-                  Book Appointment
-                </Text>
-              </View>
-            </View>
+          <View style={styles.container}>
+            <FormHeader title="NEW ENTRY" value="Book Appointment"/>
 
             <AppointmentInputCard
               iconName="card-outline"
@@ -237,26 +225,11 @@ export default function AppointmentScreen() {
               iconName="calendar-outline"
             ></SectionDivider>
 
-            <TouchableOpacity
-              onPress={() => {
-                setIsShow(true);
-              }}
-              style={styles.dateHolder}
-            >
-              <View style={styles.dateHeader}>
-                <Ionicons
-                  name="alarm-outline"
-                  size={22}
-                  color={"#cfcfcf"}
-                  style={styles.dateIcon}
-                />
-                <Text style={[styles.dateTitle, styles.text]}>
-                  {isDateSet ? date.toDateString() : "Date"}
-                </Text>
-              </View>
-              <Ionicons name="chevron-down-outline" size={22} color={"white"} />
-            </TouchableOpacity>
-
+            <DateHolder
+              date={date}
+              isDateSet={isDateSet}
+              setIsShow={setIsShow}
+            />
             {!!errors.date && (
               <Text style={[styles.text, styles.errorText]}>{errors.date}</Text>
             )}
@@ -268,29 +241,7 @@ export default function AppointmentScreen() {
                   iconName="heart-outline"
                 ></SectionDivider>
 
-                <View style={styles.dropdownHolder}>
-                  <Ionicons
-                    name="medkit-outline"
-                    color="#cfcfcf"
-                    size={22}
-                    style={styles.dropDownIcon}
-                  />
-                  <Picker
-                    style={styles.picker}
-                    dropdownIconColor="white"
-                    onValueChange={(value: string) => setDoctor(value)}
-                  >
-                    <Picker.Item label="Doctor" value="" />
-                    {doctors.map((doctor: UserModel) => (
-                      <Picker.Item
-                        key={doctor.employeeCode}
-                        label={doctor.name}
-                        value={doctor.employeeCode}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-
+                <DoctorHolder doctors={doctors} setDoctor={setDoctor} />
                 {!!errors.doctorEmployeeId && (
                   <Text style={[styles.text, styles.errorText]}>
                     {errors.doctorEmployeeId}
@@ -298,27 +249,12 @@ export default function AppointmentScreen() {
                 )}
 
                 <SectionDivider iconName="flash-outline" title="TIME SLOT" />
-                <View style={styles.timeSlotContainer}>
-                  {availableSlots.length === 0 ? (
-                    <Text style={[styles.text, styles.slotText]}>
-                      No slot available at this moment
-                    </Text>
-                  ) : (
-                    availableSlots.map((slot, index) => {
-                      return (
-                        <TimeSlotHolder
-                          slot={slot}
-                          onAction={(value: string) => {
-                            setTimeSlot(value);
-                          }}
-                          id={slot}
-                          key={slot}
-                          isSelected={timeSlot === slot}
-                        />
-                      );
-                    })
-                  )}
-                </View>
+
+                <TimeSlotComponent
+                  availableSlots={availableSlots}
+                  timeSlot={timeSlot}
+                  setTimeSlot={setTimeSlot}
+                />
                 {!!errors.timeSlot && (
                   <Text style={[styles.text, styles.errorText]}>
                     {errors.timeSlot}
@@ -326,7 +262,7 @@ export default function AppointmentScreen() {
                 )}
 
                 <ProfileButton
-                  title={isLoading?"CREATING...":"CREATE"}
+                  title={isLoading ? "CREATING..." : "CREATE"}
                   iconName="add-outline"
                   onAction={sendAppointment}
                 />
@@ -378,31 +314,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingBottom: 20,
   },
-  formHeader: {
-    padding: 20,
-    flexDirection: "row",
-  },
-  formHeaderIcon: {
-    padding: 15,
-    backgroundColor: "rgb(108, 19, 109)",
-    borderRadius: 100,
-  },
-  formHeaderTextHolder: {
-    flexDirection: "column",
-    marginLeft: 10,
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  formHeaderTitle: {
-    fontSize: 10,
-    lineHeight: 18,
-    color: "#909090",
-  },
-  formHeaderValue: {
-    fontSize: 18,
-    lineHeight: 18,
-    color: "#505050",
-  },
   text: {
     fontFamily: "Sans",
   },
@@ -411,81 +322,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "white",
   },
-  dropdownHolder: {
-    backgroundColor: "rgb(222, 222, 222)",
-    borderWidth: 1,
-    borderColor: "rgba(83, 11, 107, 0.3)",
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 10,
-    margin: 20,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  picker: {
-    flex: 1,
-    marginLeft: 3,
-    color: "rgb(39, 39, 39)",
-    fontFamily: "Sans",
-  },
-  dropDownIcon: {
-    padding: 10,
-    backgroundColor: "rgb(108, 19, 109)",
-    borderWidth: 1,
-    borderColor: "rgba(198, 53, 255, 0.2)",
-    borderRadius: 10,
-  },
-  timeSlotContainer: {
-    marginHorizontal: 20,
-    marginVertical: 10,
-    flexWrap: "wrap",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dateHolder: {
-    flexDirection: "row",
-    backgroundColor: "rgb(222, 222, 222)",
-    borderWidth: 1,
-    borderColor: "rgba(83, 11, 107, 0.3)",
-    borderRadius: 10,
-    padding: 8,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dateHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  dateTitle: {
-    color: "rgb(39, 39, 39)",
-    fontFamily: "Sans",
-    fontSize: 14,
-    lineHeight: 14,
-    marginLeft: 13,
-  },
-  dateIcon: {
-    backgroundColor: "rgb(108, 19, 109)",
-    borderWidth: 1,
-    borderColor: "rgba(198, 53, 255, 0.2)",
-    borderRadius: 10,
-    padding: 10,
-  },
-  slotText: {
-    color: "#767676",
-    backgroundColor: "rgb(222, 222, 222)",
-    borderWidth: 1,
-    borderColor: "rgba(83, 11, 107, 0.3)",
-    borderRadius: 10,
-    padding: 5,
-    paddingHorizontal: 20,
-    fontSize: 15,
-    lineHeight: 15,
-    marginTop: 20,
-  },
   errorText: {
     color: "#3b3b3b",
     fontSize: 13,
@@ -493,8 +329,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderColor: "#4c1c77",
     borderRadius: 4,
-    marginTop:5,
+    marginTop: 5,
     paddingHorizontal: 10,
-    marginHorizontal:20,
+    marginHorizontal: 20,
   },
 });

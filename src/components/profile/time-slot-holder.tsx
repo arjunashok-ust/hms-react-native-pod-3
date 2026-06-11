@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     margin:5,
   },
   slotHolderSelected:{
-    backgroundColor: "rgb(254, 224, 255)",
+    backgroundColor: "rgb(255, 246, 255)",
   },
   timeSlot: {
     color: "#343434",
