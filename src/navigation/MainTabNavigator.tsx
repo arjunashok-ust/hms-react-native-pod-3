@@ -35,7 +35,6 @@ function AppointmentNavigator() {
   );
 }
 
-// 🟢 Custom Animated Icon Component
 const AnimatedTabIcon = ({
   focused,
   iconName,
@@ -47,7 +46,6 @@ const AnimatedTabIcon = ({
 
   useEffect(() => {
     if (focused) {
-      // Spring animation when selected
       Animated.spring(scaleValue, {
         toValue: 1,
         friction: 5,
@@ -55,7 +53,6 @@ const AnimatedTabIcon = ({
         useNativeDriver: true,
       }).start();
     } else {
-      // Smooth fade out when unselected
       Animated.timing(scaleValue, {
         toValue: 0,
         duration: 150,
@@ -75,7 +72,6 @@ const AnimatedTabIcon = ({
           },
         ]}
       />
-      {/* 🟢 Removed the <Text> wrapper and applied dynamic colors */}
       <Feather
         name={iconName}
         size={24}
@@ -86,16 +82,28 @@ const AnimatedTabIcon = ({
   );
 };
 
+const HomeIcon = ({ focused }: { focused: boolean }) => (
+  <AnimatedTabIcon focused={focused} iconName="home" />
+);
+
+const CalendarIcon = ({ focused }: { focused: boolean }) => (
+  <AnimatedTabIcon focused={focused} iconName="calendar" />
+);
+
+const UserIcon = ({ focused }: { focused: boolean }) => (
+  <AnimatedTabIcon focused={focused} iconName="user" />
+);
+
 export default function MainTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false, // 🟢 Hidden labels so the circles look clean
+        tabBarShowLabel: false,
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 10,
-          height: 90, // 🟢 Taller to accommodate the circles comfortably
+          height: 90,
           backgroundColor: "#FFFFFF",
           shadowColor: "#000",
           shadowOpacity: 0.1,
@@ -108,9 +116,7 @@ export default function MainTabNavigator() {
         name="HomeTab"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <AnimatedTabIcon focused={focused} iconName="home" />
-          ),
+          tabBarIcon: HomeIcon,
         }}
       />
 
@@ -118,9 +124,7 @@ export default function MainTabNavigator() {
         name="AppointmentsTab"
         component={AppointmentNavigator}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <AnimatedTabIcon focused={focused} iconName="calendar" />
-          ),
+          tabBarIcon: CalendarIcon,
         }}
       />
 
@@ -128,9 +132,7 @@ export default function MainTabNavigator() {
         name="ProfileTab"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <AnimatedTabIcon focused={focused} iconName="user" />
-          ),
+          tabBarIcon: UserIcon,
         }}
       />
     </Tab.Navigator>
@@ -141,20 +143,17 @@ const styles = StyleSheet.create({
   iconContainer: {
     justifyContent: "center",
     alignItems: "center",
-    width: 80,  // 🟢 Increased width of the active highlight
-    height: 60, // 🟢 Gave the container more height to fit the new shape
+    width: 80,
+    height: 60,
   },
   circleBackground: {
     position: "absolute",
-    // top: -10, // Uncomment this line if you want the shape to stick flush to the top ceiling of the tab bar
-    width: 200,   // Matches container width
-    height: 35,  // Controls how far down the semicircle hangs
+    width: 200,
+    height: 35,
     backgroundColor: "rgba(108, 78, 219, 0.15)",
-    
-    // 🟢 Upside-down semicircle geometry
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
-    borderBottomLeftRadius: 100,  // Exactly half of the width (80 / 2)
-    borderBottomRightRadius: 100, // Exactly half of the width (80 / 2)
+    borderBottomLeftRadius: 100,
+    borderBottomRightRadius: 100,
   },
 });

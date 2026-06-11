@@ -61,7 +61,7 @@ export function useAppointmentData(isEditMode: boolean, appointmentData: any) {
         try {
             const formattedDate = selectedDate.toISOString().split("T")[0];
             const data = await appointmentService.getAvailableSlots(selectedDoctor, formattedDate);
-            if (isEditMode && appointmentData && selectedSlot === appointmentData.timeSlot) {
+            if (isEditMode && selectedSlot === appointmentData?.timeSlot) {
                 if (!data.includes(appointmentData.timeSlot)) data.unshift(appointmentData.timeSlot);
             }
             setSlots(data);

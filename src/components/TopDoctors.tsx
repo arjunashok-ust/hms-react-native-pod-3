@@ -32,7 +32,6 @@ interface DoctorCardProps {
 }
 
 const DoctorCard = ({ doctor }: DoctorCardProps) => {
-  // 🟢 Console log the exact object React is receiving for each card
   console.log(`Data for ${doctor.name}:`, {
     designation: doctor.designation,
     specialization: doctor.specialization,
@@ -44,7 +43,6 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
         <Text style={styles.doctorName} numberOfLines={2}>
           {doctor.name}
         </Text>
-        {/* 🟢 Removed the hiding logic. If it's missing, it will clearly say so on screen. */}
         <Text style={styles.designation} numberOfLines={1}>
           {doctor.designation ? doctor.designation : "⚠️ No Designation Data"}
         </Text>
@@ -64,6 +62,9 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
   );
 };
 
+// 🟢 FIXED: Extracted out of the parent component to keep identity stable across renders
+const ListSpacer = () => <View style={styles.separator} />;
+
 export default function TopDoctors({ doctors }: Readonly<Props>) {
   return (
     <View style={styles.container}>
@@ -78,7 +79,7 @@ export default function TopDoctors({ doctors }: Readonly<Props>) {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
-        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+        ItemSeparatorComponent={ListSpacer} // 🟢 FIXED: Reference the static reference directly
       />
     </View>
   );
@@ -89,27 +90,41 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   doctorHeader: {
-    paddingHorizontal: 20, // Aligned with the sectionTitle padding
+    paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
+    backgroundColor: "#e6e6fb",
+    marginHorizontal: 20,
+    padding: 24,
+    borderRadius: 20,
+  
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
+    gap: 8,
   },
   sectionTitle: {
     color: "#1E1E3F",
     fontSize: 20,
     fontWeight: "bold",
-    marginLeft: 10, // Adds space between the icon and the title
+    marginLeft: 10,
   },
   listContainer: {
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
+  separator: {
+    width: 16, // 🟢 Cleanly bundled into styles object
+  },
   card: {
     backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 20,
-    width: 170,  // Increased slightly to fit longer text
-    height: 130, // Increased height to accommodate the 2 new rows
+    width: 170,
+    height: 130,
     justifyContent: "space-between",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },

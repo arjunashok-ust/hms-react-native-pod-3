@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import * as SecureStore from "expo-secure-store";
 
 export const attachAuthInterceptor = (client: AxiosInstance) => {

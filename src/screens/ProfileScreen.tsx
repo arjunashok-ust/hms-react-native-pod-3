@@ -10,7 +10,11 @@ import {
   ImageBackground,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, NavigationProp, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  NavigationProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { PatientProfile } from "../features/auth/types";
 import ProfileField from "../components/ProfileField";
@@ -99,28 +103,29 @@ export default function ProfileScreen() {
     }
   };
 
-  // 🟢 NEW: Secure Logout Handler
+  const executeLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync("patient_jwt");
+      await SecureStore.deleteItemAsync("patient_profile");
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } catch (error) {
+      console.error("Error clearing session:", error);
+      Alert.alert("Error", "Failed to clear session data safely.");
+    }
+  };
+
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to log out of your account?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Logout",
         style: "destructive",
-        onPress: async () => {
-          try {
-            // 1. Wipe all local session data
-            await SecureStore.deleteItemAsync("patient_jwt");
-            await SecureStore.deleteItemAsync("patient_profile");
-
-            // 2. Reset navigation stack completely to Login
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Login" }],
-            });
-          } catch (error) {
-            console.error("Error clearing session:", error);
-            Alert.alert("Error", "Failed to clear session data safely.");
-          }
+        onPress: () => {
+          executeLogout();
         },
       },
     ]);
@@ -159,7 +164,6 @@ export default function ProfileScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-
             <View style={styles.avatarPlaceholder}>
               <Text style={styles.avatarIcon}>
                 <Ionicons name="person-outline" size={50} color="black" />
@@ -180,7 +184,9 @@ export default function ProfileScreen() {
           {isEditing ? (
             <PatientForm
               initialValues={getInitialEditValues()}
-              onSubmit={handleUpdateProfile}
+              onSubmit={(data) => {
+                handleUpdateProfile(data);
+              }}
               isLoading={isSaving}
               buttonText="Save Changes"
               isEditMode={true}
@@ -237,7 +243,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F5F6FA" },
+  container: { flex: 1, backgroundColor: "transparent" },
   backgroundImage: {
     flex: 1,
     backgroundColor: "#E6F0F2",

@@ -23,7 +23,7 @@ export default function SelectablePill({
       <Text style={[styles.pillText, isSelected && styles.pillTextSelected]}>
         {title}
       </Text>
-      {subtitle && (
+      {!!(subtitle) && (
         <Text
           style={[styles.pillSubText, isSelected && styles.pillSubTextSelected]}
         >

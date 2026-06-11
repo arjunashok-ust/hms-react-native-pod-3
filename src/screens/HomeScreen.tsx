@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  ImageBackground
+  ImageBackground,
+  ActivityIndicator, // 🟢 Added missing import
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -19,7 +20,7 @@ import { appointmentService } from "../services/appointmentService";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
-   const backgroundImage = require("../../assets/images/hospital3.jpg");
+  const backgroundImage = require("../../assets/images/hospital3.jpg");
   const navigation = useNavigation<NavigationProp<any>>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -64,45 +65,57 @@ export default function HomeScreen() {
       imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.container}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <View style={styles.header}>
-            <View>
-              <Text style={styles.patientName}>{profile?.name}</Text>
-              <Text style={styles.uhid}>{profile?.UHID}</Text>
-            </View>
+        {/* 🟢 FIXED: Actively using isLoading to show a loading screen */}
+        {isLoading ? (
+          <View style={[styles.container, styles.center]}>
+            <ActivityIndicator size="large" color="#6C4EDB" />
+            <Text style={styles.loadingText}>Loading your dashboard...</Text>
           </View>
-
-          <HealthSummaryCard profile={profile} />
-
-          <View style={styles.sectionHeader}>
-            <Ionicons name="calendar-clear-outline" size={20} color="blue" />
-            <Text style={styles.sectionTitle}>My Appointments</Text>
-          </View>
-
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() =>
-              navigation.navigate("AppointmentsTab", {
-                screen: "ViewAppointments",
-              })
-            }
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
           >
-            {appointments.length > 0 ? (
-              <AppointmentCard appointment={appointments[0]} />
-            ) : (
-              <View style={styles.emptyCard}>
-                <Text style={styles.emptyText}>
-                  No upcoming appointments. Tap to schedule.
-                </Text>
+            <View style={styles.header}>
+              <View>
+                <Text style={styles.patientName}>{profile?.name}</Text>
+                <Text style={styles.uhid}>{profile?.UHID}</Text>
               </View>
-            )}
-          </TouchableOpacity>
+            </View>
 
-          <TopDoctors doctors={doctors} />
-        </ScrollView>
+            <HealthSummaryCard profile={profile} />
+
+            <View style={styles.sectionHeader}>
+              <Ionicons
+                name="calendar-clear-outline"
+                size={20}
+                color="#6C4EDB"
+              />
+              <Text style={styles.sectionTitle}>My Appointments</Text>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() =>
+                navigation.navigate("AppointmentsTab", {
+                  screen: "ViewAppointments",
+                })
+              }
+            >
+              {appointments.length > 0 ? (
+                <AppointmentCard appointment={appointments[0]} />
+              ) : (
+                <View style={styles.emptyCard}>
+                  <Text style={styles.emptyText}>
+                    No upcoming appointments. Tap to schedule.
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TopDoctors doctors={doctors} />
+          </ScrollView>
+        )}
       </SafeAreaView>
     </ImageBackground>
   );
@@ -111,11 +124,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F6FA",
+    backgroundColor: "transparent", // 🟢 Fixed so background image shows through correctly
   },
   backgroundImage: {
     flex: 1,
-    backgroundColor: "#E6F0F2",
+    backgroundColor: "#F5F6FA",
   },
   center: {
     justifyContent: "center",
@@ -125,6 +138,7 @@ const styles = StyleSheet.create({
     color: "#6B7280",
     marginTop: 12,
     fontSize: 16,
+    fontWeight: "500",
   },
   scrollContent: {
     paddingVertical: 20,
@@ -167,11 +181,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   sectionHeader: {
-    paddingHorizontal: 20,
-    marginBottom: 12,
-    flexDirection: "row",
+    backgroundColor: "#e6e6fb",
+    marginHorizontal: 20,
+    padding: 24,
+    borderRadius: 20,
     alignItems: "center",
-    gap: 8
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    gap: 8,
   },
   sectionTitle: {
     color: "#1E1E3F",

@@ -15,7 +15,6 @@ import {
   NavigationProp,
   useIsFocused,
 } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import { appointmentService } from "../services/appointmentService";
 import ManageAppointmentCard from "../components/ManageAppointmentCard";
 
@@ -55,6 +54,21 @@ export default function ViewAppointmentsScreen() {
     });
   };
 
+  const executeDeletion = async (appointment: any) => {
+    try {
+      await appointmentService.deleteAppointment(appointment.appointmentCode);
+      Alert.alert("Success", "Appointment cancelled successfully.");
+      fetchAppointments();
+    } catch (err: any) {
+      console.error("Delete Appointment Failed:", err);
+      Alert.alert(
+        "Cancellation Failed",
+        err.response?.data?.message ||
+          "Could not connect to the server to cancel the appointment.",
+      );
+    }
+  };
+
   const handleDelete = (appointment: any) => {
     Alert.alert(
       "Cancel Appointment",
@@ -64,22 +78,8 @@ export default function ViewAppointmentsScreen() {
         {
           text: "Yes, Cancel",
           style: "destructive",
-          onPress: async () => {
-            try {
-              await appointmentService.deleteAppointment(
-                appointment.appointmentCode,
-              );
-
-              Alert.alert("Success", "Appointment cancelled successfully.");
-              fetchAppointments();
-            } catch (err: any) {
-              console.error("Delete Appointment Failed:", err);
-              Alert.alert(
-                "Cancellation Failed",
-                err.response?.data?.message ||
-                  "Could not connect to the server to cancel the appointment.",
-              );
-            }
+          onPress: () => {
+            executeDeletion(appointment);
           },
         },
       ],

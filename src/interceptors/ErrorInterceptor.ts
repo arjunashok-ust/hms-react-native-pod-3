@@ -27,7 +27,7 @@ export const attachErrorInterceptor = (client: AxiosInstance) => {
             }
 
             error.message = customErrorMessage;
-            return Promise.reject(error);
+            throw error;
         }
     );
 };

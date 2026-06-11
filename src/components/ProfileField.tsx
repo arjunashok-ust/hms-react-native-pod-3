@@ -11,7 +11,7 @@ export default function ProfileField({
   label,
   value,
   hideBorder = false,
-}: ProfileFieldProps) {
+}: Readonly<ProfileFieldProps>) {
   return (
     <View style={[styles.container, !hideBorder && styles.borderBottom]}>
       <Text style={styles.label}>{label.toUpperCase()}</Text>

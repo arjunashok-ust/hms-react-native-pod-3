@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
 import PhoneInput from "react-native-phone-number-input";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+
+import FormInput from "../components/FormInput";
+import { getPatientValidationSchema } from "../validations/patientValidations";
 
 interface PatientFormProps {
   initialValues: any;
@@ -21,111 +22,6 @@ interface PatientFormProps {
   buttonText: string;
   isEditMode?: boolean;
 }
-
-const getValidationSchema = (isEditMode: boolean) => {
-  const nameRegex = /^[A-Za-z\s.\-']+$/;
-  const stateRegex = /^[A-Za-z\s]+$/;
-  const indianPhoneRegex = /^(?:\+91)?\s*[6-9]\d{9}$/;
-
-  let baseSchema = {
-    name: Yup.string()
-      .trim()
-      .required("Full name is required")
-      .min(2, "Name must be at least 2 characters long")
-      .max(50, "Name cannot exceed 50 characters")
-      .matches(
-        nameRegex,
-        "Name can only contain alphabets, spaces, dots, hyphens, and apostrophes",
-      ),
-
-    email: Yup.string()
-      .trim()
-      .lowercase()
-      .email("Please enter a valid email address")
-      .required("Email is required"),
-
-    phone: Yup.string()
-      .required("Phone number is required")
-      .matches(
-        indianPhoneRegex,
-        "Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9",
-      ),
-
-    gender: Yup.string()
-      .oneOf(["Male", "Female", "Other"], "Please select a valid gender option")
-      .required("Gender is required"),
-
-    dob: Yup.date()
-      .required("Date of Birth is required")
-      .min(new Date("1926-01-01"), "Date of Birth cannot be earlier than 1926")
-      .max(new Date(), "Date of Birth cannot be in the future"),
-
-    bloodGroup: Yup.string()
-      .oneOf(
-        ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-        "Invalid Blood Group",
-      )
-      .optional()
-      .nullable(),
-
-    allergies: Yup.string()
-      .trim()
-      .max(200, "Allergies descriptions cannot exceed 200 characters")
-      .optional()
-      .nullable(),
-
-    emergencyContact: Yup.string()
-      .trim()
-      .optional()
-      .nullable()
-      .transform((value) => (value === "" ? null : value))
-      .test(
-        "is-valid-emergency",
-        "Enter a valid 10-digit emergency number starting with 6-9",
-        (value) => !value || indianPhoneRegex.test(value),
-      ),
-
-    line1: Yup.string()
-      .trim()
-      .required("Address Line 1 is required")
-      .min(5, "Address must be descriptive (min 5 characters)"),
-
-    line2: Yup.string().trim().optional().nullable(),
-
-    state: Yup.string()
-      .trim()
-      .required("State is required")
-      .matches(
-        stateRegex,
-        "State field cannot contain numbers or special characters",
-      ),
-
-    pincode: Yup.string()
-      .trim()
-      .matches(/^\d{6}$/, "Pincode must be exactly 6 numeric digits")
-      .required("Pincode is required"),
-  };
-
-  if (!isEditMode) {
-    Object.assign(baseSchema, {
-      password: Yup.string()
-        .required("Password is required")
-        .min(8, "Password must be at least 8 characters long")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/\d/, "Password must contain at least one digit")
-        .matches(
-          /[\W_]/,
-          "Password must contain at least one special character",
-        ),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password")], "Passwords must match")
-        .required("Please confirm your password"),
-    });
-  }
-
-  return Yup.object().shape(baseSchema);
-};
 
 export default function PatientForm(props: Readonly<PatientFormProps>) {
   const {
@@ -142,61 +38,31 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(getValidationSchema(isEditMode)),
+    resolver: yupResolver(getPatientValidationSchema(isEditMode)),
     defaultValues: initialValues,
   });
 
   return (
     <View style={styles.formContainer}>
-      {/* 1. Name Field */}
-      <Controller
-        control={control}
+      {/* Text Fields abstracted via FormInput */}
+      <FormInput
         name="name"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Full Name"
-            style={[
-              styles.input,
-              errors.name && styles.inputError,
-              isEditMode && styles.disabledInput,
-            ]}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            editable={!isEditMode}
-          />
-        )}
-      />
-      {errors.name && (
-        <Text style={styles.errorText}>{errors.name.message as string}</Text>
-      )}
-
-      {/* 2. Email Field */}
-      <Controller
+        placeholder="Full Name"
         control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Email Address"
-            style={[
-              styles.input,
-              errors.email && styles.inputError,
-              isEditMode && styles.disabledInput,
-            ]}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            editable={!isEditMode}
-          />
-        )}
+        error={errors.name}
+        isDisabled={isEditMode}
       />
-      {errors.email && (
-        <Text style={styles.errorText}>{errors.email.message as string}</Text>
-      )}
+      <FormInput
+        name="email"
+        placeholder="Email Address"
+        control={control}
+        error={errors.email}
+        isDisabled={isEditMode}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
 
-      {/* 3. Phone Field */}
+      {/* Phone Field */}
       <Controller
         control={control}
         name="phone"
@@ -211,69 +77,38 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               value={value ? value.replace(/^\+?91/, "").trim() : ""}
               containerStyle={styles.phoneContainer}
               textContainerStyle={styles.phoneTextContainer}
-              disableArrowIcon={true} 
-              countryPickerProps={{
-                countryCodes: ["IN"], 
-                withFilter: false, 
-              }}
-              textInputProps={{
-                keyboardType: "number-pad",
-                maxLength: 10,
-              }}
+              disableArrowIcon
+              countryPickerProps={{ countryCodes: ["IN"], withFilter: false }}
+              textInputProps={{ keyboardType: "number-pad", maxLength: 10 }}
             />
           </View>
         )}
       />
+      {errors.phone && (
+        <Text style={styles.errorText}>{errors.phone.message as string}</Text>
+      )}
 
-      {/* Password Fields */}
+      {/* Creation Mode Only Fields */}
       {!isEditMode && (
         <>
-          <Controller
-            control={control}
+          <FormInput
             name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Password"
-                style={[styles.input, errors.password && styles.inputError]}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-            )}
-          />
-          {errors.password && (
-            <Text style={styles.errorText}>
-              {errors.password.message as string}
-            </Text>
-          )}
-
-          <Controller
+            placeholder="Password"
             control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Confirm Password"
-                style={[
-                  styles.input,
-                  errors.confirmPassword && styles.inputError,
-                ]}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-            )}
+            error={errors.password}
+            secureTextEntry
           />
-          {errors.confirmPassword && (
-            <Text style={styles.errorText}>
-              {errors.confirmPassword.message as string}
-            </Text>
-          )}
+          <FormInput
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            control={control}
+            error={errors.confirmPassword}
+            secureTextEntry
+          />
         </>
       )}
 
-      {/* 4. Gender Picker */}
+      {/* Gender Picker */}
       <Controller
         control={control}
         name="gender"
@@ -284,7 +119,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               onValueChange={onChange}
               style={styles.picker}
             >
-              <Picker.Item label="Gender" value={undefined} color="#9CA3AF" />
+              <Picker.Item label="Gender" color="#9CA3AF" />
               <Picker.Item label="Male" value="Male" />
               <Picker.Item label="Female" value="Female" />
               <Picker.Item label="Other" value="Other" />
@@ -296,7 +131,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
         <Text style={styles.errorText}>{errors.gender.message as string}</Text>
       )}
 
-      {/* 5. Date of Birth Picker */}
+      {/* Date of Birth Picker */}
       <Controller
         control={control}
         name="dob"
@@ -321,10 +156,9 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
                 display="default"
                 minimumDate={new Date("1926-01-01")}
                 maximumDate={new Date()}
-                onChange={(event, selectedDate) => {
+                onChange={(event, date) => {
                   setIsDatePickerOpen(false);
-                  if (event.type === "set" && selectedDate)
-                    onChange(selectedDate);
+                  if (event.type === "set" && date) onChange(date);
                 }}
               />
             )}
@@ -335,7 +169,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
         <Text style={styles.errorText}>{errors.dob.message as string}</Text>
       )}
 
-      {/* 6. Blood Group Picker */}
+      {/* Blood Group Picker */}
       <Controller
         control={control}
         name="bloodGroup"
@@ -348,7 +182,6 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
             >
               <Picker.Item
                 label="Blood Group (Optional)"
-                value={undefined}
                 color="#9CA3AF"
               />
               <Picker.Item label="A+" value="A+" />
@@ -364,22 +197,14 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
         )}
       />
 
-      {/* 7. Allergies Field */}
-      <Controller
-        control={control}
+      <FormInput
         name="allergies"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Allergies (comma separated)"
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
+        placeholder="Allergies (comma separated)"
+        control={control}
+        error={errors.allergies}
       />
 
-      {/* 8. Emergency Contact Field */}
+      {/* Emergency Contact Field */}
       <Controller
         control={control}
         name="emergencyContact"
@@ -397,91 +222,51 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               value={value ? value.replace(/^\+?91/, "").trim() : ""}
               containerStyle={styles.phoneContainer}
               textContainerStyle={styles.phoneTextContainer}
-              disableArrowIcon={true}
-              countryPickerProps={{
-                countryCodes: ["IN"],
-                withFilter: false,
-              }}
+              disableArrowIcon
+              countryPickerProps={{ countryCodes: ["IN"], withFilter: false }}
               textInputProps={{
                 keyboardType: "number-pad",
                 maxLength: 10,
-                placeholder: "Emergency Contact (Optional)",
+                placeholder: "Emergency Contact",
                 placeholderTextColor: "#9CA3AF",
               }}
             />
           </View>
         )}
       />
-      {/* 9. Address Line 1 */}
-      <Controller
-        control={control}
+      {errors.emergencyContact && (
+        <Text style={styles.errorText}>
+          {errors.emergencyContact.message as string}
+        </Text>
+      )}
+
+      {/* Address Block */}
+      <FormInput
         name="line1"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Address Line 1"
-            style={[styles.input, errors.line1 && styles.inputError]}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
-      {errors.line1 && (
-        <Text style={styles.errorText}>{errors.line1.message as string}</Text>
-      )}
-
-      {/* 10. Address Line 2 */}
-      <Controller
+        placeholder="Address Line 1"
         control={control}
+        error={errors.line1}
+      />
+      <FormInput
         name="line2"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Address Line 2 (Optional)"
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
-
-      {/* 11. State Field */}
-      <Controller
+        placeholder="Address Line 2 (Optional)"
         control={control}
+        error={errors.line2}
+      />
+      <FormInput
         name="state"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="State"
-            style={[styles.input, errors.state && styles.inputError]}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
-      {errors.state && (
-        <Text style={styles.errorText}>{errors.state.message as string}</Text>
-      )}
-
-      {/* 12. Pincode Field */}
-      <Controller
+        placeholder="State"
         control={control}
-        name="pincode"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Pincode (6 digits)"
-            style={[styles.input, errors.pincode && styles.inputError]}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            keyboardType="number-pad"
-            maxLength={6}
-          />
-        )}
+        error={errors.state}
       />
-      {errors.pincode && (
-        <Text style={styles.errorText}>{errors.pincode.message as string}</Text>
-      )}
+      <FormInput
+        name="pincode"
+        placeholder="Pincode (6 digits)"
+        control={control}
+        error={errors.pincode}
+        keyboardType="number-pad"
+        maxLength={6}
+      />
 
       {/* Submit Button */}
       <TouchableOpacity
@@ -532,15 +317,11 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
-  phoneContainer: {
-    width: "100%",
-    backgroundColor: "#ffffff",
-    height: 55, // 🟢 1. Added explicit height to prevent collapse
-  },
+  phoneContainer: { width: "100%", backgroundColor: "#ffffff", height: 55 },
   phoneTextContainer: {
     backgroundColor: "#ffffff",
     paddingVertical: 0,
-    borderLeftWidth: 1, // 🟢 Optional: Adds a nice divider line between the flag and the number
+    borderLeftWidth: 1,
     borderColor: "#F3F4F6",
   },
   pickerWrapper: {
@@ -572,8 +353,4 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: { backgroundColor: "#8b5cf6" },
   buttonText: { color: "#ffffff", fontSize: 16, fontWeight: "bold" },
-  disabledInput: {
-    backgroundColor: "#F3F4F6",
-    color: "#9CA3AF",
-  },
 });
