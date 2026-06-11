@@ -204,9 +204,8 @@ export default function AppointmentScreen() {
           text3="here."
         ></WelcomeTextContainer>
         <ScrollView style={styles.scrollView}>
-          <LinearGradient
+          <View
             style={styles.container}
-            colors={["rgba(255, 61, 77, 0.2)", "rgba(20, 4, 30, 0.9)"]}
           >
             <View style={styles.formHeader}>
               <Ionicons
@@ -248,7 +247,7 @@ export default function AppointmentScreen() {
                 <Ionicons
                   name="alarm-outline"
                   size={22}
-                  color={"white"}
+                  color={"#cfcfcf"}
                   style={styles.dateIcon}
                 />
                 <Text style={[styles.dateTitle, styles.text]}>
@@ -272,7 +271,7 @@ export default function AppointmentScreen() {
                 <View style={styles.dropdownHolder}>
                   <Ionicons
                     name="medkit-outline"
-                    color="white"
+                    color="#cfcfcf"
                     size={22}
                     style={styles.dropDownIcon}
                   />
@@ -338,7 +337,7 @@ export default function AppointmentScreen() {
                 />
               </View>
             )}
-          </LinearGradient>
+          </View>
         </ScrollView>
         <ProfileButton
           title="VIEW APPOINTMENTS"
@@ -365,7 +364,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   scrollView: {
     height: 450,
@@ -374,8 +373,9 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 35,
     margin: 20,
+    backgroundColor: "#f2f2f2",
+    borderColor: "rgba(207, 75, 255, 0.2)",
     borderWidth: 1,
-    borderColor: "rgba(248, 37, 255, 0.3)",
     paddingBottom: 20,
   },
   formHeader: {
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
   },
   formHeaderIcon: {
     padding: 15,
-    backgroundColor: "rgba(247, 17, 255, 0.2)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderRadius: 100,
   },
   formHeaderTextHolder: {
@@ -396,12 +396,12 @@ const styles = StyleSheet.create({
   formHeaderTitle: {
     fontSize: 10,
     lineHeight: 18,
-    color: "white",
+    color: "#909090",
   },
   formHeaderValue: {
     fontSize: 18,
     lineHeight: 18,
-    color: "white",
+    color: "#505050",
   },
   text: {
     fontFamily: "Sans",
@@ -412,12 +412,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   dropdownHolder: {
-    borderBottomWidth: 1,
-    backgroundColor: "rgba(68, 68, 68, 0.8)",
-    borderColor: "black",
+    backgroundColor: "rgb(222, 222, 222)",
+    borderWidth: 1,
+    borderColor: "rgba(83, 11, 107, 0.3)",
+    borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    borderRadius: 10,
     margin: 20,
     flexDirection: "row",
     justifyContent: "center",
@@ -425,15 +425,15 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    marginLeft: 10,
-    color: "white",
+    marginLeft: 3,
+    color: "rgb(39, 39, 39)",
     fontFamily: "Sans",
   },
   dropDownIcon: {
     padding: 10,
-    backgroundColor: "rgba(119, 119, 119, 0.4)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+    borderColor: "rgba(198, 53, 255, 0.2)",
     borderRadius: 10,
   },
   timeSlotContainer: {
@@ -446,10 +446,10 @@ const styles = StyleSheet.create({
   },
   dateHolder: {
     flexDirection: "row",
-    backgroundColor: "rgba(62, 62, 62, 0.8)",
+    backgroundColor: "rgb(222, 222, 222)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-    borderRadius: 8,
+    borderColor: "rgba(83, 11, 107, 0.3)",
+    borderRadius: 10,
     padding: 8,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -461,37 +461,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dateTitle: {
-    color: "white",
+    color: "rgb(39, 39, 39)",
     fontFamily: "Sans",
     fontSize: 14,
     lineHeight: 14,
-    marginLeft: 10,
+    marginLeft: 13,
   },
   dateIcon: {
-    backgroundColor: "rgb(255,255,255,0.1)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+    borderColor: "rgba(198, 53, 255, 0.2)",
     borderRadius: 10,
     padding: 10,
   },
   slotText: {
-    color: "white",
-    backgroundColor: "rgba(101, 101, 101, 0.3)",
+    color: "#767676",
+    backgroundColor: "rgb(222, 222, 222)",
+    borderWidth: 1,
+    borderColor: "rgba(83, 11, 107, 0.3)",
+    borderRadius: 10,
     padding: 5,
     paddingHorizontal: 20,
-    borderRadius: 10,
     fontSize: 15,
     lineHeight: 15,
     marginTop: 20,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#3b3b3b",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#4c1c77",
     borderRadius: 4,
+    marginTop:5,
     paddingHorizontal: 10,
-    marginHorizontal: 20,
+    marginHorizontal:20,
   },
 });

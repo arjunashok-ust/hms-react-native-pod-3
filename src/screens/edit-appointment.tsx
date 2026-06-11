@@ -9,7 +9,6 @@ import {
   Alert,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
 import { SectionDivider } from "../components/profile/section-divider.component";
@@ -21,11 +20,9 @@ import { UserModel } from "../types/user.types";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import {
-  createAppointment,
   editAppointmentData,
   editAppointmentStatus,
 } from "../services/appointment.service";
-import { AppointmentModel } from "../types/appointment.types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -120,9 +117,11 @@ export default function EditAppointmentScreen() {
       new Date(appointment.date).toDateString() === date.toDateString();
     // add booked slot back to doctor time slot and make it selected
     if (isSameDoctor && isSameDate) {
-      const slot = data.includes(appointment.timeSlot)
-        ? data
-        : setAvailableSlots([...data, appointment.timeSlot]);
+      if (data.includes(appointment.timeSlot)) {
+        setAvailableSlots(data);
+      } else {
+        setAvailableSlots([...data, appointment.timeSlot]);
+      }
       setTimeSlot(appointment.timeSlot);
     } else {
       setAvailableSlots(data);
@@ -189,7 +188,7 @@ export default function EditAppointmentScreen() {
       navigator.navigate("viewAppointment");
     } catch (err) {
       console.error(err);
-    } finally{
+    } finally {
       setIsCancelLoading(false);
     }
   };
@@ -208,6 +207,7 @@ export default function EditAppointmentScreen() {
         doctorEmployeeId: doctorId,
         timeSlot: timeSlot,
         date: date,
+        status: "Pending",
       };
       const response = await editAppointmentData(payload);
       Alert.alert("Success", response?.data?.message);
@@ -235,10 +235,7 @@ export default function EditAppointmentScreen() {
         />
 
         <ScrollView style={styles.scrollView}>
-          <LinearGradient
-            style={styles.container}
-            colors={["rgba(255, 61, 77, 0.2)", "rgba(20, 4, 30, 0.9)"]}
-          >
+          <View style={styles.container}>
             <View style={styles.formHeader}>
               <Ionicons
                 name="calendar-outline"
@@ -305,13 +302,13 @@ export default function EditAppointmentScreen() {
               <View style={styles.dropdownHolder}>
                 <Ionicons
                   name="medkit-outline"
-                  color="white"
+                  color="rgb(246, 246, 246)"
                   size={22}
                   style={styles.dropDownIcon}
                 />
                 <Picker
                   style={styles.picker}
-                  dropdownIconColor="white"
+                  dropdownIconColor="backgroundColor: 'rgb(108, 19, 109)'"
                   selectedValue={doctorId}
                   onValueChange={(value: string) => setDoctor(value)}
                 >
@@ -361,15 +358,15 @@ export default function EditAppointmentScreen() {
               )}
 
               <ProfileButton
-                title={isLoading?"SAVING...":"SAVE"}
+                title={isLoading ? "SAVING..." : "SAVE"}
                 iconName="add-outline"
                 onAction={editAppointment}
               />
             </View>
-          </LinearGradient>
+          </View>
         </ScrollView>
         <ProfileButton
-          title={isCancelLoading?"CANCELING...":"CANCEL APPOINTMENT"}
+          title={isCancelLoading ? "CANCELING..." : "CANCEL APPOINTMENT"}
           iconName="close-outline"
           onAction={cancelAppointment}
         />
@@ -398,7 +395,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   scrollView: {
     height: 450,
@@ -407,8 +404,9 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 35,
     margin: 20,
+    backgroundColor: "#f2f2f2",
+    borderColor: "rgba(207, 75, 255, 0.2)",
     borderWidth: 1,
-    borderColor: "rgba(248, 37, 255, 0.3)",
     paddingBottom: 20,
   },
   formHeader: {
@@ -417,7 +415,7 @@ const styles = StyleSheet.create({
   },
   formHeaderIcon: {
     padding: 15,
-    backgroundColor: "rgba(247, 17, 255, 0.2)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderRadius: 100,
   },
   formHeaderTextHolder: {
@@ -429,12 +427,12 @@ const styles = StyleSheet.create({
   formHeaderTitle: {
     fontSize: 10,
     lineHeight: 18,
-    color: "white",
+    color: "#909090",
   },
   formHeaderValue: {
     fontSize: 18,
     lineHeight: 18,
-    color: "white",
+    color: "#505050",
   },
   text: {
     fontFamily: "Sans",
@@ -445,26 +443,29 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   dropdownHolder: {
-    borderBottomWidth: 1,
-    backgroundColor: "rgba(68, 68, 68, 0.8)",
-    borderColor: "black",
-    padding: 10,
-    marginVertical: 10,
+    backgroundColor: "rgb(222, 222, 222)",
+    borderWidth: 1,
+    borderColor: "rgba(83, 11, 107, 0.3)",
     borderRadius: 10,
+    marginVertical: 10,
     margin: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   picker: {
     flex: 1,
-    marginLeft: 10,
-    color: "white",
+    color: "rgb(39, 39, 39)",
     fontFamily: "Sans",
+    fontSize: 14,
+    lineHeight: 14,
+    marginLeft: 3,
   },
   dropDownIcon: {
     padding: 10,
-    backgroundColor: "rgba(119, 119, 119, 0.4)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.2)",
     borderRadius: 10,
@@ -479,10 +480,10 @@ const styles = StyleSheet.create({
   },
   dateHolder: {
     flexDirection: "row",
-    backgroundColor: "rgba(62, 62, 62, 0.8)",
+    backgroundColor: "rgb(222, 222, 222)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-    borderRadius: 8,
+    borderColor: "rgba(83, 11, 107, 0.3)",
+    borderRadius: 10,
     padding: 8,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -494,16 +495,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dateTitle: {
-    color: "white",
+    color: "rgb(39, 39, 39)",
     fontFamily: "Sans",
     fontSize: 14,
     lineHeight: 14,
     marginLeft: 10,
   },
   dateIcon: {
-    backgroundColor: "rgb(255,255,255,0.1)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+    borderColor: "rgba(198, 53, 255, 0.2)",
     borderRadius: 10,
     padding: 10,
   },
@@ -518,17 +519,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#3b3b3b",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#4c1c77",
     borderRadius: 4,
+    marginTop: 5,
     paddingHorizontal: 10,
-    marginHorizontal: 20,
   },
   dateFooter: {
-    backgroundColor: "rgba(232, 61, 255, 0.3)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderRadius: 8,
     flexDirection: "row",
     marginRight: 20,

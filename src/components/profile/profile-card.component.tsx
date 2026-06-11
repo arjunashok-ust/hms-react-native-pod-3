@@ -6,11 +6,11 @@ export const ProfileCard = (props: any) => {
   return (
     <LinearGradient
       style={styles.profileHeader}
-      colors={["rgba(20, 4, 30,0.8)", "rgba(106, 27, 34, 0.6)"]}
+      colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
     >
       <LinearGradient
         style={styles.avatar}
-        colors={["rgb(207, 75, 255)", "rgb(255, 27, 110)"]}
+        colors={["rgba(146, 39, 213, 0.9)", "rgb(79, 62, 67)"]}
       >
         <Text style={[styles.text, styles.textPrefix]}>{props.prefix}</Text>
       </LinearGradient>

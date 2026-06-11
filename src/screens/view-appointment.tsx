@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { AppointmentCard } from "../components/appointment/appointment-card.component";
 import { useEffect, useState } from "react";
 import { AppointmentModel } from "../types/appointment.types";
@@ -59,14 +58,11 @@ export default function ViewAppointmentScreen() {
           onAction={goToHome}
         />
 
-        <LinearGradient
-          style={styles.container}
-          colors={["rgba(165, 35, 45, 0.2)", "rgba(20, 4, 30, 0.9)"]}
-        >
+        <View style={styles.container}>
           <View style={styles.formHeader}>
             <Ionicons
               name="calendar-outline"
-              color={"white"}
+              color={"#d6d6d6"}
               size={25}
               style={styles.formHeaderIcon}
             />
@@ -102,8 +98,7 @@ export default function ViewAppointmentScreen() {
               );
             }}
           ></FlatList>
-
-        </LinearGradient>
+        </View>
       </View>
     </ImageBackground>
   );
@@ -115,7 +110,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   scrollView: {
     height: 400,
@@ -124,8 +119,9 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 35,
     margin: 20,
+    borderColor: "rgba(207, 75, 255, 0.2)",
+    backgroundColor: "#f2f2f2",
     borderWidth: 1,
-    borderColor: "rgba(248, 37, 255, 0.3)",
     paddingBottom: 20,
   },
   formHeader: {
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
   },
   formHeaderIcon: {
     padding: 15,
-    backgroundColor: "rgba(247, 17, 255, 0.2)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderRadius: 100,
   },
   formHeaderTextHolder: {
@@ -146,12 +142,12 @@ const styles = StyleSheet.create({
   formHeaderTitle: {
     fontSize: 10,
     lineHeight: 18,
-    color: "white",
+    color: "#909090",
   },
   formHeaderValue: {
     fontSize: 18,
     lineHeight: 18,
-    color: "white",
+    color: "#505050",
   },
   text: {
     fontFamily: "Sans",
@@ -161,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 12,
     textAlign: "center",
-    backgroundColor: "rgba(255, 0, 221, 0.3)",
+    backgroundColor: "rgb(75, 12, 67)",
     padding: 10,
   },
 });

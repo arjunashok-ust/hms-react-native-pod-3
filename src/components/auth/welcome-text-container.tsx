@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontFamily: "Sans",
-    color: "white",
   },
   loginTextWelcome: {
     fontSize: 38,
@@ -42,15 +41,16 @@ const styles = StyleSheet.create({
   loginTextMain: {
     fontSize: 48,
     lineHeight: 48,
-    color: "rgb(255, 27, 110)",
+    color: "#4c1c77",
   },
   loginTextSub: {
     fontSize: 12,
     lineHeight: 10,
     marginVertical: 10,
-    backgroundColor: "rgb(255, 255, 255,0.1)",
+    color: "#e9e9e9",
+    backgroundColor: "#4c1c77",
     borderWidth:1,
-    borderColor:"rgba(255, 20, 224, 0.2)",
+    borderColor:"rgba(75, 11, 81, 0.2)",
     padding: 10,
     borderRadius: 8,
   },

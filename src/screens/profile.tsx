@@ -73,9 +73,8 @@ export default function ProfileScreen() {
           designation={patientData?.role}
           id={patientData?.uhid}
         />
-        <LinearGradient
+        <View
           style={styles.container}
-          colors={["rgba(255, 61, 77, 0.05)", "rgba(20, 4, 30, 0.9)"]}
         >
           <ScrollView>
             <SectionDivider iconName="person-outline" title="PERSONAL INFO" />
@@ -130,7 +129,7 @@ export default function ProfileScreen() {
               onAction={logout}
             />
           </ScrollView>
-        </LinearGradient>
+        </View>
       </View>
     </ImageBackground>
   );
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   text: {
     fontFamily: "Sans",
@@ -186,8 +185,10 @@ const styles = StyleSheet.create({
     borderRadius: 19,
     marginTop: 13,
     marginHorizontal: 20,
+    backgroundColor: "#f2f2f2",
     borderColor: "rgba(207, 75, 255, 0.2)",
     borderWidth: 1,
     marginBottom: 30,
+    padding:20,
   },
 });

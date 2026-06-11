@@ -24,7 +24,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState({ email, password });
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     let error = { email: "", password: "" };
@@ -105,7 +105,10 @@ export default function LoginScreen() {
           {!!errors.password && (
             <Text style={styles.errorText}>{errors.password}</Text>
           )}
-          <AuthSubmitButton titleText={isLoading?"Logging In...":"Login"} onSubmit={sendLogin} />
+          <AuthSubmitButton
+            titleText={isLoading ? "Logging In..." : "Login"}
+            onSubmit={sendLogin}
+          />
           <TouchableOpacity
             style={styles.loginFooter}
             onPress={() => navigator.navigate("signup")}
@@ -122,11 +125,12 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    backgroundColor: "#e1e1e1",
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgb(0,0,0,0.7)",
     justifyContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 
   welcomeTextContainer: {
@@ -139,20 +143,21 @@ const styles = StyleSheet.create({
   },
   container: {
     height: "50%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingTop: 40,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 30,
+    margin: 20,
     justifyContent: "center",
     alignItems: "center",
+    elevation:5,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#3b3b3b",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#4c1c77",
     borderRadius: 4,
+    marginTop:5,
     paddingHorizontal: 10,
   },
   loginFooter: {
@@ -165,6 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signUp: {
-    color: "rgb(255, 107, 107)",
+    color: "#4c1c77",
   },
 });

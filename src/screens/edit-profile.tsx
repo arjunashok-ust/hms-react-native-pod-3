@@ -19,7 +19,7 @@ import {
   getPatientProfile,
   updatePatientProfile,
 } from "../services/user.service";
-import { PatientModel} from "../types/user.types";
+import { PatientModel } from "../types/user.types";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -39,7 +39,6 @@ export default function EditProfileScreen() {
   const [phone, setPhone] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
 
-  
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -217,14 +216,11 @@ export default function EditProfileScreen() {
         />
 
         <ScrollView style={styles.scrollView}>
-          <LinearGradient
-            style={styles.container}
-            colors={["rgba(255, 61, 77, 0.2)", "rgba(20, 4, 30, 0.9)"]}
-          >
+          <View style={styles.container}>
             <View style={styles.formHeader}>
               <Ionicons
                 name="calendar-outline"
-                color={"white"}
+                color={"#d6d6d6"}
                 size={25}
                 style={styles.formHeaderIcon}
               />
@@ -258,7 +254,7 @@ export default function EditProfileScreen() {
               <Ionicons
                 name="person-outline"
                 size={22}
-                color={"white"}
+                color={"#cfcfcf"}
                 style={styles.appointmentIcon}
               />
               <Picker
@@ -290,7 +286,7 @@ export default function EditProfileScreen() {
                 <Ionicons
                   name="alarm-outline"
                   size={22}
-                  color={"white"}
+                  color={"#cfcfcf"}
                   style={styles.dateIcon}
                 />
                 <Text style={[styles.dateTitle, styles.text]}>
@@ -300,7 +296,7 @@ export default function EditProfileScreen() {
               <Ionicons
                 name="chevron-down-outline"
                 size={15}
-                color={"white"}
+                color={"black"}
                 style={{ marginRight: 13 }}
               />
             </TouchableOpacity>
@@ -321,7 +317,9 @@ export default function EditProfileScreen() {
               isDisabled={true}
             />
             {!!errors.email && (
-              <Text style={[styles.text, styles.errorText]}>{errors.email}</Text>
+              <Text style={[styles.text, styles.errorText]}>
+                {errors.email}
+              </Text>
             )}
             <AppointmentInputCard
               iconName="location-outline"
@@ -364,7 +362,7 @@ export default function EditProfileScreen() {
               </Text>
             )}
             <ProfileButton
-              title={isLoading?"UPDATING...":"UPDATE PROFILE"}
+              title={isLoading ? "UPDATING..." : "UPDATE PROFILE"}
               iconName="arrow-back-outline"
               onAction={updateProfile}
             />
@@ -373,7 +371,7 @@ export default function EditProfileScreen() {
               iconName="close-outline"
               onAction={goToProfile}
             />
-          </LinearGradient>
+          </View>
         </ScrollView>
       </View>
       {isShow && (
@@ -395,7 +393,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   scrollView: {
     height: 450,
@@ -404,8 +402,9 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 35,
     margin: 20,
+    backgroundColor: "#f2f2f2",
+    borderColor: "rgba(207, 75, 255, 0.2)",
     borderWidth: 1,
-    borderColor: "rgba(248, 37, 255, 0.3)",
     paddingBottom: 20,
   },
   formHeader: {
@@ -414,7 +413,7 @@ const styles = StyleSheet.create({
   },
   formHeaderIcon: {
     padding: 15,
-    backgroundColor: "rgba(247, 17, 255, 0.2)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderRadius: 100,
   },
   formHeaderTextHolder: {
@@ -426,12 +425,12 @@ const styles = StyleSheet.create({
   formHeaderTitle: {
     fontSize: 10,
     lineHeight: 18,
-    color: "white",
+    color: "#909090",
   },
   formHeaderValue: {
     fontSize: 18,
     lineHeight: 18,
-    color: "white",
+    color: "#505050",
   },
   text: {
     fontFamily: "Sans",
@@ -442,12 +441,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   dropdownHolder: {
+    backgroundColor: "rgb(222, 222, 222)",
     borderWidth: 1,
-    backgroundColor: "rgba(68, 68, 68, 0.8)",
-    borderColor: "rgba(255,255,255,0.2)",
-    padding: 5,
+    borderColor: "rgba(83, 11, 107, 0.3)",
+    borderRadius: 10,
     marginVertical: 10,
-    borderRadius: 8,
     margin: 20,
     flexDirection: "row",
     justifyContent: "center",
@@ -455,10 +453,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    color: "white",
+    color: "rgb(39, 39, 39)",
     fontFamily: "Sans",
     fontSize: 14,
     lineHeight: 14,
+    marginLeft: 3,
   },
   dropDownIcon: {
     padding: 10,
@@ -468,21 +467,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#3b3b3b",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#4c1c77",
     borderRadius: 4,
+    marginTop: 5,
     paddingHorizontal: 10,
-    marginHorizontal: 20,
   },
   dateHolder: {
     flexDirection: "row",
-    backgroundColor: "rgba(62, 62, 62, 0.8)",
+    backgroundColor: "rgb(222, 222, 222)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-    borderRadius: 8,
+    borderColor: "rgba(83, 11, 107, 0.3)",
+    borderRadius: 10,
     padding: 8,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -494,29 +493,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dateTitle: {
-    color: "white",
+    color: "rgb(39, 39, 39)",
     fontFamily: "Sans",
     fontSize: 14,
     lineHeight: 14,
     marginLeft: 10,
   },
   dateIcon: {
-    backgroundColor: "rgb(255,255,255,0.1)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+    borderColor: "rgba(198, 53, 255, 0.2)",
     borderRadius: 10,
     padding: 10,
   },
   placeholderText: {
-    color: "rgb(218, 218, 218)",
+    color: "rgb(139, 139, 139)",
     fontSize: 12,
     lineHeight: 12,
     marginHorizontal: 20,
   },
   appointmentIcon: {
-    backgroundColor: "rgb(255,255,255,0.1)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+    borderColor: "rgba(198, 53, 255, 0.2)",
     borderRadius: 10,
     padding: 10,
     marginLeft: 5,

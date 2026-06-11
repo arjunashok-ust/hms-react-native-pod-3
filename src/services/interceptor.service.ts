@@ -17,7 +17,7 @@ api.interceptors.request.use(
     const token = await SecureStore.getItemAsync("token");
 
     if (!token) {
-      return Promise.reject(new Error("No Authentication Found"));
+      throw new Error("No Authentication Found");
     }
 
     config.headers.Authorization = `Bearer ${token}`;

@@ -11,10 +11,10 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "rgb(255,255,255)",
+        tabBarActiveTintColor: "rgb(84, 20, 134)",
         tabBarInactiveTintColor: "rgb(91, 91, 91)",
         tabBarStyle: {
-          backgroundColor: "rgb(26, 26, 26)",
+          backgroundColor: "rgb(235, 235, 235)",
           height: 70,
           padding: 10,
         },

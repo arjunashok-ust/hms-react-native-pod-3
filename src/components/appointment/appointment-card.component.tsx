@@ -169,15 +169,13 @@ export const AppointmentCard = (props: any) => {
               onAction={goToEdit}
             />
           )}
-          {
-            props.status === "Pending" && (
-              <ProfileButton
+          {props.status === "Pending" && (
+            <ProfileButton
               iconName="close-outline"
               title="Cancel"
               onAction={editAppointmentStatusByPatient}
             />
-            )
-          }
+          )}
           <ProfileButton
             iconName="trash-outline"
             title="Delete"
@@ -192,14 +190,14 @@ export const AppointmentCard = (props: any) => {
 const styles = StyleSheet.create({
   appointmentContainer: {
     margin: 20,
-    backgroundColor: "rgba(179, 17, 168, 0.3)",
+    backgroundColor: "rgba(210, 210, 210, 0.3)",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "rgba(250, 92, 255, 0.4)",
+    borderColor: "rgba(127, 27, 131, 0.2)",
     padding: 20,
   },
   avatarIcon: {
-    backgroundColor: "rgb(194, 80, 247,0.1)",
+    backgroundColor: "rgb(108, 19, 109)",
     borderRadius: 100,
     height: 50,
     width: 50,
@@ -209,17 +207,17 @@ const styles = StyleSheet.create({
     borderColor: "rgb(194, 80, 247,0.4)",
   },
   avatarText: {
-    color: "rgba(218, 175, 255, 0.8)",
+    color: "rgba(205, 148, 255, 0.8)",
     fontSize: 14,
     lineHeight: 14,
   },
   doctorText: {
-    color: "white",
+    color: "#232323",
     fontSize: 16,
     lineHeight: 16,
   },
   doctorSubTitle: {
-    color: "rgba(199, 199, 199, 0.9)",
+     color: "#7b7b7b",
     fontSize: 12,
     lineHeight: 12,
   },
@@ -232,23 +230,23 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   booked: {
-    backgroundColor: "rgba(28, 255, 172, 0.3)",
+    backgroundColor: "rgb(15, 118, 16)",
     borderColor: "rgba(175, 255, 226, 0.6)",
   },
   cancelled: {
-    backgroundColor: "rgba(255, 124, 31, 0.3)",
+    backgroundColor: "rgb(112, 14, 14)",
     borderColor: "rgba(255, 215, 186, 0.6)",
   },
   completed: {
-    backgroundColor: "rgba(67, 30, 255, 0.3)",
+    backgroundColor: "rgb(33, 18, 107)",
     borderColor: "rgba(168, 168, 255, 0.6)",
   },
   pending: {
-    backgroundColor: "rgba(250, 191, 28, 0.3)",
+   backgroundColor: "rgb(117, 69, 14)",
     borderColor: "rgba(254, 255, 168, 0.6)",
   },
   appointmentStatusText: {
-    color: "rgba(171, 255, 224)",
+    color: "#f5f5f5",
     fontSize: 12,
     lineHeight: 12,
   },
@@ -266,11 +264,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   appointmentIcon: {
-    color: "rgba(225, 56, 255,0.9)",
+    color: "rgb(101, 26, 114)",
   },
   footerText: {
     fontSize: 12,
-    color: "rgba(255,255,255,0.8)",
+    color: "rgb(46, 46, 46)",
     lineHeight: 12,
     marginHorizontal: 10,
   },
@@ -288,7 +286,7 @@ const styles = StyleSheet.create({
   divider: {
     flex: 1,
     height: 1,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgb(212, 212, 212)",
     marginVertical: 10,
   },
 });

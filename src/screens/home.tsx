@@ -62,7 +62,7 @@ export default function HomeScreen() {
         />
         <LinearGradient
           style={styles.appointmentContainer}
-          colors={["rgba(255, 61, 77, 0.3)", "rgba(20, 4, 30,0.3)"]}
+          colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
         >
           <Text style={[styles.text, styles.appointmentText]}>
             A healthier you,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   container: {
     marginHorizontal: 20,
