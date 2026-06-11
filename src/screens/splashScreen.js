@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { getToken } from "../storage/authStorage";
 
 const SplashScreen = ({ navigation }) => {
+  
   useEffect(() => {
     checkLogin();
   }, []);

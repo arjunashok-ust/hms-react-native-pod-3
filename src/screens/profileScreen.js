@@ -133,10 +133,10 @@ const ProfileScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.avatarContainer}>
-        <Ionicons name="person-circle" size={120} color="#FF6B6B" />
+        <Ionicons name="person-circle" size={130} color="#6B46C1" />
       </View>
 
-      <Text style={styles.name}>{patient.name}</Text>
+      <Text style={styles.name}>{patient?.name || "Patient Profile"}</Text>
 
       <TouchableOpacity
         style={styles.editButton}
@@ -209,34 +209,35 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#121826",
-    paddingTop: 60,
-    paddingHorizontal: 25,
+    backgroundColor: "#F4F4F7",
+    paddingTop: 40,
+    paddingHorizontal: 20,
     paddingBottom: 40,
   },
 
   center: {
     flex: 1,
-    backgroundColor: "#121826",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F4F4F7",
   },
 
   avatarContainer: {
     alignItems: "center",
-    marginBottom: 15,
+    marginTop: 20,
   },
 
   name: {
     textAlign: "center",
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: "#1C2143",
+    marginTop: 10,
     marginBottom: 20,
   },
 
   editButton: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#6B46C1",
     height: 58,
     borderRadius: 30,
     justifyContent: "center",
@@ -251,48 +252,60 @@ const styles = StyleSheet.create({
   },
 
   cancelButton: {
-    backgroundColor: "#374151",
+    backgroundColor: "#D1D5DB",
     height: 58,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 25,
+    marginBottom: 20,
   },
 
   cancelButtonText: {
-    color: "#FFFFFF",
+    color: "#1C2143",
     fontSize: 16,
     fontWeight: "700",
   },
 
   card: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 30,
     padding: 25,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 4,
   },
 
   row: {
-    marginBottom: 20,
+    marginBottom: 18,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F1F1",
   },
 
   label: {
-    color: "rgba(255,255,255,0.7)",
+    color: "#8B8B8B",
     fontSize: 13,
     marginBottom: 6,
+    textTransform: "uppercase",
+    letterSpacing: 1,
   },
 
   value: {
-    color: "#FFFFFF",
+    color: "#1C2143",
     fontSize: 16,
     fontWeight: "600",
   },
 
   input: {
+    backgroundColor: "#F7F8FC",
+    borderRadius: 15,
+    paddingHorizontal: 15,
     height: 55,
-    color: "#FFFFFF",
+    color: "#1C2143",
     fontSize: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.4)",
-    paddingHorizontal: 0,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
 });

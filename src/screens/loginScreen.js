@@ -5,11 +5,15 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
+  ImageBackground,
+  StatusBar,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { loginPatient } from "../api/patientApi";
 import { saveLoginData } from "../storage/authStorage";
-import { validateEmail, validatePassword } from "../utils/validation";
+import { validateField } from "../utils/validation";
 
 const LoginScreen = ({ navigation }) => {
   const [form, setForm] = useState({
@@ -18,190 +22,268 @@ const LoginScreen = ({ navigation }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: value,
-    });
-  };
-
-  const validators = {
-    email: validateEmail,
-    password: validatePassword,
+    setForm({ ...form, [key]: value });
   };
 
   const validate = () => {
-    let newErrors = {};
-
-    Object.keys(validators).forEach((key) => {
-      newErrors[key] = validators[key](form[key]);
-    });
+    const newErrors = {
+      email: validateField(form.email, "Email", "email"),
+      password: validateField(form.password, "Password", "password"),
+    };
 
     setErrors(newErrors);
 
-    return Object.values(newErrors).every((e) => !e);
+    return Object.values(newErrors).every((error) => !error);
   };
 
   const handleLogin = async () => {
     if (!validate()) return;
 
     setLoading(true);
-
-    const requestBody = {
-      email: form.email,
-      password: form.password,
-    };
-
     try {
-      const response = await loginPatient(requestBody);
-      alert(response.message);
+      const response = await loginPatient(form);
+
       await saveLoginData(response.token, response.user, response.patient);
       navigation.navigate("Main");
     } catch (error) {
-      console.log("STATUS:", error.response?.status);
-      console.log("DATA:", error.response?.data);
       alert(error.response?.data?.message || "Login Failed");
     } finally {
       setLoading(false);
     }
   };
 
+  const isFormValid =
+    validateField(form.email, "Email", "email") === "" &&
+    validateField(form.password, "Password", "password") === "";
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Welcome</Text>
+    <ImageBackground
+      source={require("../../assets/images/loginpng.png")}
+      resizeMode="cover"
+      imageStyle={{
+        opacity: 0.25,
+      }}
+      style={styles.background}
+    >
+      <StatusBar barStyle="dark-content" />
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* HEADER */}
+        <View style={styles.header}>
+          <Text style={styles.welcomeText}>Welcome To,</Text>
+          <Text style={styles.hmsText}>HMS</Text>
 
-      <Text style={styles.headingHighlight}>Back!</Text>
-
-      <Text style={styles.subHeading}>Login to access your HMS account.</Text>
-
-      <View style={styles.card}>
-        <Text style={styles.title}>Patient Login</Text>
-
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={form.email}
-          onChangeText={(value) => handleChange("email", value)}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          style={styles.input}
-        />
-        {errors.email && <Text style={styles.error}>{errors.email}</Text>}
-
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          secureTextEntry
-          value={form.password}
-          onChangeText={(value) => handleChange("password", value)}
-          style={styles.input}
-        />
-        {errors.password && <Text style={styles.error}>{errors.password}</Text>}
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading ? "Logging In..." : "Login"}
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.signupContainer}>
-          <Text style={{ color: "#FFFFFF" }}>Don't have an account?</Text>
-
-          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-            <Text style={styles.signupText}> Sign Up</Text>
-          </TouchableOpacity>
+          <View style={styles.tagContainer}>
+            <Text style={styles.tagText}>Please login to your account</Text>
+          </View>
         </View>
-      </View>
-    </View>
+
+        {/* CARD */}
+        <View style={styles.card}>
+          <View style={styles.inputWrapper}>
+            <Ionicons name="mail-outline" size={24} color="#000" />
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="#555"
+              style={styles.input}
+              value={form.email}
+              onChangeText={(v) => handleChange("email", v)}
+              onBlur={() => {
+                setTouched({
+                  ...touched,
+                  email: true,
+                });
+
+                setErrors({
+                  ...errors,
+                  email: validateField(form.email, "Email", "email"),
+                });
+              }}
+            />
+
+            {touched.email && errors.email ? (
+              <Text style={styles.error}>{errors.email}</Text>
+            ) : null}
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <Ionicons name="key-outline" size={24} color="#000" />
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="#555"
+              style={styles.input}
+              value={form.password}
+              onChangeText={(v) => handleChange("password", v)}
+              secureTextEntry={!showPassword}
+              onBlur={() => {
+                setTouched({
+                  ...touched,
+                  password: true,
+                });
+
+                setErrors({
+                  ...errors,
+                  password: validateField(
+                    form.password,
+                    "Password",
+                    "password",
+                  ),
+                });
+              }}
+            />
+
+            {touched.password && errors.password ? (
+              <Text style={styles.error}>{errors.password}</Text>
+            ) : null}
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Ionicons
+                name={showPassword ? "eye-outline" : "eye-off-outline"}
+                size={22}
+                color="#444"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            style={[
+              styles.loginButton,
+              !isFormValid && {
+                opacity: 0.5,
+              },
+            ]}
+            disabled={!isFormValid || loading}
+            onPress={handleLogin}
+          >
+            <Text style={styles.loginText}>
+              {loading ? "Signing In..." : "Login"}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.signupRow}>
+            <Text style={styles.signupText}>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+              <Text style={styles.signupLink}> Signup</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 export default LoginScreen;
+
+const PRIMARY = "#5A1E96";
+
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: "#121826",
-    justifyContent: "center",
-    paddingHorizontal: 25,
   },
 
-  heading: {
-    color: "#FFFFFF",
-    fontSize: 38,
-    fontWeight: "700",
+  container: {
+    flexGrow: 1,
+    paddingBottom: 40,
   },
 
-  headingHighlight: {
-    color: "#FF6B6B",
-    fontSize: 50,
+  header: {
+    paddingTop: 80,
+    paddingHorizontal: 20,
+  },
+
+  welcomeText: {
+    fontSize: 42,
     fontWeight: "800",
-    marginBottom: 8,
+    color: "#1F1F1F",
   },
 
-  subHeading: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: 14,
-    marginBottom: 25,
+  hmsText: {
+    fontSize: 56,
+    fontWeight: "900",
+    color: PRIMARY,
+    marginBottom: 15,
+  },
+
+  tagContainer: {
+    borderWidth: 1.5,
+    borderColor: PRIMARY,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    alignSelf: "flex-start",
+  },
+
+  tagText: {
+    fontSize: 15,
+    color: "#222",
   },
 
   card: {
-    backgroundColor: "rgba(255,255,255,0.08)",
-    borderRadius: 30,
-    padding: 25,
+    marginTop: 190,
+    backgroundColor: "#EFEFEF",
+    marginHorizontal: 10,
+    borderRadius: 40,
+    paddingHorizontal: 25,
+    paddingTop: 45,
+    paddingBottom: 45,
+    elevation: 12,
   },
 
-  title: {
-    color: "#FFFFFF",
-    fontSize: 26,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 25,
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "#222",
+    paddingBottom: 14,
+    marginBottom: 30,
   },
 
   input: {
-    height: 55,
-    color: "#FFFFFF",
+    flex: 1,
+    marginLeft: 12,
     fontSize: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.4)",
-    marginBottom: 20,
+    color: "#111",
   },
 
-  error: {
-    color: "#FF8A8A",
-    fontSize: 12,
-    marginBottom: 12,
-  },
-
-  button: {
-    backgroundColor: "#FF6B6B",
-    height: 58,
-    borderRadius: 30,
+  loginButton: {
+    backgroundColor: PRIMARY,
+    height: 65,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
 
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
+  loginText: {
+    color: "#fff",
+    fontSize: 20,
     fontWeight: "700",
   },
 
-  signupContainer: {
+  signupRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 25,
+    marginTop: 35,
   },
 
   signupText: {
-    color: "#FF6B6B",
-    fontWeight: "700",
+    fontSize: 15,
+    color: "#222",
+  },
+
+  signupLink: {
+    fontSize: 15,
+    color: PRIMARY,
+    fontWeight: "bold",
+  },
+  error: {
+    color: "red",
+    fontSize: 12,
+    marginTop: -22,
+    marginBottom: 15,
+    marginLeft: 5,
   },
 });

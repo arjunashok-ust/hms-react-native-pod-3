@@ -1,42 +1,75 @@
+export const validateField = (
+  value,
+  fieldName,
+  type
+) => {
+  const val = value?.trim() || "";
 
-//  Common required validator (REUSABLE)
-export const validateRequired = (value, fieldName = "Field") => {
-  if (!value || !value.trim()) return `${fieldName} is required`;
-  return "";
-};
+  switch (type) {
+    case "required":
+      return val ? "" : `${fieldName} is required`;
 
-// ✅ Email
-export const validateEmail = (email) => {
-  if (!email.trim()) return "Email is required";
-  if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email))
-    return "Enter valid email";
-  return "";
-};
+    case "name":
+      if (!val) return "Name is required";
+      return /^[A-Za-z ]+$/.test(val)
+        ? ""
+        : "Only alphabets allowed";
 
-// ✅ Password
-export const validatePassword = (password) => {
-  if (!password.trim()) return "Password is required";
-  if (password.length < 8) return "Min 8 characters";
-  return "";
-};
+    case "email":
+      if (!val) return "Email is required";
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+        val
+      )
+        ? ""
+        : "Invalid email";
 
-// ✅ Name
-export const validateName = (name) => {
-  if (!name.trim()) return "Name is required";
-  if (name.length < 3) return "Min 3 characters";
-  return "";
-};
+    case "password":
+      if (!val) return "Password is required";
+      return /^(?=.*\d).{8,}$/.test(val)
+        ? ""
+        : "Minimum 8 characters and 1 number required";
 
-// ✅ Phone
-export const validatePhone = (phone) => {
-  if (!/^[0-9]{10}$/.test(phone))
-    return "Enter valid 10 digit phone";
-  return "";
-};
+    case "phone":
+      if (!val) return `${fieldName} is required`;
+      return /^\d{10}$/.test(val)
+        ? ""
+        : "Enter valid 10 digit number";
 
-// ✅ Postcode
-export const validatePostcode = (postcode) => {
-  if (!/^[0-9]{6}$/.test(postcode))
-    return "Enter valid 6 digit code";
-  return "";
+    case "optionalPhone":
+      if (!val) return "";
+      return /^\d{10}$/.test(val)
+        ? ""
+        : "Enter valid 10 digit number";
+
+    case "city":
+      if (!val) return "City is required";
+      return /^[A-Za-z ]+$/.test(val)
+        ? ""
+        : "Only alphabets allowed";
+
+    case "address":
+      if (!val) return "Address is required";
+      return /^[A-Za-z0-9\s,.-]+$/.test(val)
+        ? ""
+        : "Invalid address";
+
+    case "postcode":
+      if (!val) return "Postcode is required";
+      return /^\d{6}$/.test(val)
+        ? ""
+        : "Enter valid 6 digit postcode";
+
+    case "dob":
+      if (!value) return "Date of Birth is required";
+
+      const selected = new Date(value);
+      const today = new Date();
+
+      return selected <= today
+        ? ""
+        : "Future date not allowed";
+
+    default:
+      return "";
+  }
 };

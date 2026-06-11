@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -6,11 +6,17 @@ import {
   ScrollView,
   View,
 } from "react-native";
-
+import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-import { getAllDoctors, createAppointment } from "../api/patientApi";
+import {
+  getAllDoctors,
+  createAppointment,
+  getPatientAppointments,
+  cancelAppointment,
+  getAvailableSlots,
+} from "../api/patientApi";
 
 import { getPatient, getToken } from "../storage/authStorage";
 
@@ -25,10 +31,14 @@ const AppointmentScreen = () => {
   const [slots, setSlots] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [appointments, setAppointments] = useState([]);
 
-  useEffect(() => {
-    loadDoctors();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadDoctors();
+      loadAppointments();
+    }, []),
+  );
 
   const handleChange = (key, value) => {
     setForm((prev) => ({
@@ -40,9 +50,6 @@ const AppointmentScreen = () => {
   const loadDoctors = async () => {
     try {
       const response = await getAllDoctors();
-
-     // console.log("DOCTOR RESPONSE:", response);
-
       if (response.doctors) {
         setDoctors(response.doctors);
       } else if (response.data) {
@@ -53,18 +60,56 @@ const AppointmentScreen = () => {
     }
   };
 
-  const handleDoctorChange = (employeeId) => {
-    const selectedDoctor = doctors.find(
-      (doctor) => doctor.employeeId === employeeId,
-    );
+  const loadAvailableSlots = async (doctorEmployeeId, date) => {
+    try {
+      const response = await getAvailableSlots(doctorEmployeeId, date);
 
+      setSlots(response.slots || []);
+    } catch (error) {
+      console.log(error);
+      setSlots([]);
+    }
+  };
+
+  const loadAppointments = async () => {
+    try {
+      const token = await getToken();
+
+      const response = await getPatientAppointments(token);
+
+      setAppointments(response.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDoctorChange = (employeeId) => {
     setForm((prev) => ({
       ...prev,
       doctorEmployeeId: employeeId,
       timeSlot: "",
     }));
 
-    setSlots(selectedDoctor?.availabilitySlots || []);
+    setSlots([]);
+
+    if (form.date) {
+      loadAvailableSlots(employeeId, form.date);
+    }
+  };
+
+  //Cancel Appointment
+  const handleCancelAppointment = async (appointmentId) => {
+    try {
+      const token = await getToken();
+
+      const response = await cancelAppointment(appointmentId, token);
+
+      alert(response.message);
+
+      await loadAppointments();
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed To Cancel");
+    }
   };
 
   const handleBookAppointment = async () => {
@@ -81,7 +126,7 @@ const AppointmentScreen = () => {
 
       console.log(patient);
       console.log(patient.UHID);
-      
+
       const requestBody = {
         patientId: patient.UHID,
         doctorEmployeeId: form.doctorEmployeeId,
@@ -92,8 +137,8 @@ const AppointmentScreen = () => {
       console.log("REQUEST BODY:", requestBody);
 
       const response = await createAppointment(requestBody, token);
-
       alert(response.message);
+      await loadAppointments();
 
       setForm({
         doctorEmployeeId: "",
@@ -112,6 +157,22 @@ const AppointmentScreen = () => {
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "PENDING":
+        return "#F59E0B";
+
+      case "BOOKED":
+        return "#10B981";
+
+      case "CANCELLED":
+        return "#EF4444";
+
+      default:
+        return "#1c5cde";
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Book</Text>
@@ -125,8 +186,10 @@ const AppointmentScreen = () => {
 
         <Text
           style={{
-            color: "#FFFFFF",
-            marginBottom: 10,
+            color: "#6B46C1",
+            marginBottom: 15,
+            fontWeight: "600",
+            fontSize: 15,
           }}
         >
           Doctors Available: {doctors.length}
@@ -136,9 +199,9 @@ const AppointmentScreen = () => {
           <Picker
             selectedValue={form.doctorEmployeeId}
             onValueChange={handleDoctorChange}
-            dropdownIconColor="#FFFFFF"
+            dropdownIconColor="#6B46C1"
             style={{
-              color: "#FFFFFF",
+              color: "#1C2143",
             }}
           >
             <Picker.Item label="Select Doctor" value="" />
@@ -159,7 +222,7 @@ const AppointmentScreen = () => {
         >
           <Text
             style={{
-              color: form.date ? "#FFFFFF" : "rgba(255,255,255,0.6)",
+              color: form.date ? "#1C2143" : "#9CA3AF",
               fontSize: 16,
               lineHeight: 55,
             }}
@@ -180,6 +243,10 @@ const AppointmentScreen = () => {
                 const formattedDate = selectedDate.toISOString().split("T")[0];
 
                 handleChange("date", formattedDate);
+
+                if (form.doctorEmployeeId) {
+                  loadAvailableSlots(form.doctorEmployeeId, formattedDate);
+                }
               }
             }}
           />
@@ -189,9 +256,9 @@ const AppointmentScreen = () => {
           <Picker
             selectedValue={form.timeSlot}
             onValueChange={(value) => handleChange("timeSlot", value)}
-            dropdownIconColor="#FFFFFF"
+            dropdownIconColor="#6B46C1"
             style={{
-              color: "#FFFFFF",
+              color: "#1C2143",
             }}
           >
             <Picker.Item label="Select Time Slot" value="" />
@@ -212,6 +279,59 @@ const AppointmentScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <Text
+        style={{
+          fontSize: 24,
+          fontWeight: "700",
+          color: "#1C2143",
+          marginTop: 25,
+          marginBottom: 15,
+        }}
+      >
+        My Appointments
+      </Text>
+
+      {appointments.map((item) => (
+        <View key={item.appointmentId} style={styles.appointmentCard}>
+          <Text style={styles.doctorName}>Dr. {item.doctorName}</Text>
+
+          <Text style={styles.specialization}>{item.specialization}</Text>
+
+          <Text style={styles.detail}>
+            Date: {new Date(item.date).toLocaleDateString()}
+          </Text>
+
+          <Text style={styles.detail}>Time: {item.timeSlot}</Text>
+
+          <Text
+            style={[
+              styles.status,
+              {
+                color: getStatusColor(item.status),
+              },
+            ]}
+          >
+            {item.status}
+          </Text>
+
+          {item.status === "PENDING" && (
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => handleCancelAppointment(item.appointmentId)}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  fontWeight: "700",
+                }}
+              >
+                Cancel Appointment
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      ))}
     </ScrollView>
   );
 };
@@ -221,71 +341,125 @@ export default AppointmentScreen;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#121826",
-    paddingTop: 60,
-    paddingHorizontal: 25,
+    backgroundColor: "#F4F4F7",
+    paddingTop: 40,
+    paddingHorizontal: 20,
     paddingBottom: 40,
   },
 
   heading: {
-    color: "#FFFFFF",
-    fontSize: 38,
+    fontSize: 34,
     fontWeight: "700",
+    color: "#1C2143",
   },
 
   headingHighlight: {
-    color: "#FF6B6B",
-    fontSize: 50,
+    fontSize: 42,
     fontWeight: "800",
+    color: "#6B46C1",
     marginBottom: 8,
   },
 
   subHeading: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: 14,
+    fontSize: 15,
+    color: "#7B7B93",
     marginBottom: 25,
   },
 
   card: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 30,
     padding: 25,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
   },
 
   title: {
-    color: "#FFFFFF",
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "700",
+    color: "#1C2143",
     textAlign: "center",
     marginBottom: 25,
   },
 
   input: {
+    backgroundColor: "#F7F8FC",
+    borderRadius: 15,
+    paddingHorizontal: 15,
     height: 55,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.4)",
-    marginBottom: 20,
     justifyContent: "center",
+    marginBottom: 18,
+
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
 
   pickerContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.4)",
-    marginBottom: 20,
+    backgroundColor: "#F7F8FC",
+    borderRadius: 15,
+    marginBottom: 18,
+
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    overflow: "hidden",
   },
 
   button: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#6B46C1",
     height: 58,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
+
+    shadowColor: "#6B46C1",
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 4,
   },
 
   buttonText: {
     color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "700",
+  },
+  appointmentCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 15,
+    elevation: 3,
+  },
+
+  doctorName: {
     fontSize: 18,
     fontWeight: "700",
+    color: "#1C2143",
+  },
+
+  specialization: {
+    color: "#6B46C1",
+    marginBottom: 10,
+  },
+
+  detail: {
+    color: "#374151",
+    marginBottom: 4,
+  },
+
+  status: {
+    fontWeight: "700",
+    marginTop: 8,
+    marginBottom: 10,
+  },
+
+  cancelButton: {
+    backgroundColor: "#EF4444",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
   },
 });

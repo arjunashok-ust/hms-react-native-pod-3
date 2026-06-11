@@ -64,3 +64,31 @@ export const getPatientAppointments = async (token) => {
 
   return response.data;
 };
+
+export const cancelAppointment = async (
+  appointmentId,
+  token
+) => {
+  const response = await axiosInstance.put(
+    `/api/patientApp/cancelAppointment/${appointmentId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getAvailableSlots = async (
+  doctorEmployeeId,
+  date
+) => {
+  const response = await axiosInstance.get(
+    `/api/patientApp/availableSlots/${doctorEmployeeId}/${date}`
+  );
+
+  return response.data;
+};

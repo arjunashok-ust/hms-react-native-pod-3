@@ -6,19 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  ImageBackground,
+  StatusBar,
 } from "react-native";
-
-import { registerPatient } from "../api/patientApi";
+import { validateField } from "../utils/validation";
+import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import {
-  validateEmail,
-  validatePassword,
-  validateName,
-  validatePhone,
-  validateRequired,
-  validatePostcode,
-} from "../utils/validation";
+import { registerPatient } from "../api/patientApi";
+
+const PRIMARY = "#5A1E96";
 
 const SignupScreen = ({ navigation }) => {
   const [form, setForm] = useState({
@@ -37,353 +34,473 @@ const SignupScreen = ({ navigation }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (key, value) => {
-    setForm({ ...form, [key]: value });
+    setForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+
+    if (touched[key]) {
+      validateSingleField(key, value);
+    }
   };
 
-  //  Validator map
   const validators = {
-    email: validateEmail,
-    password: validatePassword,
-    name: validateName,
-    phone: validatePhone,
-    gender: (value) => validateRequired(value, "Gender"),
-    dob: (value) => validateRequired(value, "Date of Birth"),
-    bloodGroup: (value) => validateRequired(value, "Blood Group"),
-    line1: (value) => validateRequired(value, "Address"),
-    city: (value) => validateRequired(value, "City"),
-    postcode: validatePostcode,
-    emergencyContact: validatePhone,
+    name: (v) => validateField(v, "Name", "name"),
+    email: (v) => validateField(v, "Email", "email"),
+    password: (v) => validateField(v, "Password", "password"),
+    phone: (v) => validateField(v, "Phone", "phone"),
+    gender: (v) => validateField(v, "Gender", "required"),
+    dob: (v) => validateField(v, "Date of Birth", "dob"),
+    bloodGroup: (v) => validateField(v, "Blood Group", "required"),
+    line1: (v) => validateField(v, "Address", "address"),
+    city: (v) => validateField(v, "City", "city"),
+    postcode: (v) => validateField(v, "Postcode", "postcode"),
+    emergencyContact: (v) =>
+      validateField(v, "Emergency Contact", "optionalPhone"),
   };
 
-  // Validate full form
-  const validate = () => {
+  const validateSingleField = (field, value) => {
+    const error = validators[field] ? validators[field](value) : "";
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: error,
+    }));
+  };
+
+  const validateForm = () => {
     let newErrors = {};
-
-    Object.keys(validators).forEach((key) => {
-      newErrors[key] = validators[key](form[key]);
+    Object.keys(validators).forEach((field) => {
+      newErrors[field] = validators[field](form[field]);
     });
-
     setErrors(newErrors);
-
     return Object.values(newErrors).every((e) => !e);
   };
 
-  const [loading, setLoading] = useState(false);
+  const isFormValid = () => {
+    return Object.keys(validators).every(
+      (field) => validators[field](form[field]) === "",
+    );
+  };
+
   const handleSignup = async () => {
-    if (!validate()) return;
-
-    setLoading(true);
-
-    const requestBody = {
-      email: form.email,
-      password: form.password,
-      name: form.name,
-      phone: form.phone,
-      gender: form.gender,
-      date_of_birth: form.dob,
-      bloodGroup: form.bloodGroup,
-      allergies: form.allergies
-        ? form.allergies.split(",").map((a) => a.trim())
-        : [],
-      address: {
-        line1: form.line1,
-        city: form.city,
-        postcode: form.postcode,
-      },
-      emergencyContact: form.emergencyContact,
-    };
+    setTouched({
+      name: true,
+      email: true,
+      password: true,
+      phone: true,
+      gender: true,
+      dob: true,
+      bloodGroup: true,
+      line1: true,
+      city: true,
+      postcode: true,
+      emergencyContact: true,
+    });
+    if (!validateForm()) return;
 
     try {
-      const response = await registerPatient(requestBody);
-      alert(response.message);
+      setLoading(true);
+
+      const body = {
+        email: form.email,
+        password: form.password,
+        name: form.name,
+        phone: form.phone,
+        gender: form.gender,
+        date_of_birth: form.dob,
+        bloodGroup: form.bloodGroup,
+        allergies: form.allergies
+          ? form.allergies.split(",").map((a) => a.trim())
+          : [],
+        address: {
+          line1: form.line1,
+          city: form.city,
+          postcode: form.postcode,
+        },
+        emergencyContact: form.emergencyContact,
+      };
+      console.log("Request Body:", body);
+      await registerPatient(body);
+      alert("Account created successfully");
       navigation.navigate("Login");
     } catch (error) {
-      console.log("STATUS:", error.response?.status);
-      console.log("DATA:", error.response?.data);
+  console.log("Signup Error:", error);
+  console.log("Response:", error?.response?.data);
 
-      alert(JSON.stringify(error.response?.data));
-    } finally {
+  alert(
+    error?.response?.data?.message ||
+    error?.message ||
+    "Signup Failed"
+  );
+}finally {
       setLoading(false);
     }
   };
 
+  const renderError = (field) =>
+    touched[field] && errors[field] ? (
+      <Text style={styles.error}>{errors[field]}</Text>
+    ) : null;
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>New To,</Text>
+    <ImageBackground
+      source={require("../../assets/images/loginpng.png")}
+      resizeMode="cover"
+      imageStyle={{ opacity: 0.25 }}
+      style={styles.background}
+    >
+      <StatusBar barStyle="dark-content" />
 
-      <Text style={styles.headingHighlight}>HMS?</Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.welcome}>New To,</Text>
+          <Text style={styles.hms}>HMS?</Text>
 
-      <Text style={styles.subHeading}>Create your account to get started.</Text>
-
-      <View style={styles.card}>
-        <Text style={styles.title}>Patient Registration</Text>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={form.email}
-          onChangeText={(value) => handleChange("email", value)}
-          style={styles.input}
-        />
-        {errors.email && <Text style={styles.error}>{errors.email}</Text>}
-
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          secureTextEntry
-          value={form.password}
-          onChangeText={(value) => handleChange("password", value)}
-          style={styles.input}
-        />
-        {errors.password && <Text style={styles.error}>{errors.password}</Text>}
-
-        <TextInput
-          placeholder="Name"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={form.name}
-          onChangeText={(value) => handleChange("name", value)}
-          style={styles.input}
-        />
-        {errors.name && <Text style={styles.error}>{errors.name}</Text>}
-
-        <TextInput
-          placeholder="Phone"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          keyboardType="phone-pad"
-          value={form.phone}
-          onChangeText={(value) => handleChange("phone", value)}
-          style={styles.input}
-        />
-        {errors.phone && <Text style={styles.error}>{errors.phone}</Text>}
-
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={form.gender}
-            onValueChange={(value) => handleChange("gender", value)}
-            dropdownIconColor="#FFFFFF"
-            style={{ color: "#FFFFFF" }}
-          >
-            <Picker.Item label="Select Gender" value="" />
-            <Picker.Item label="Male" value="Male" />
-            <Picker.Item label="Female" value="Female" />
-            <Picker.Item label="Other" value="Other" />
-          </Picker>
+          <View style={styles.tagBox}>
+            <Text style={styles.tagText}>
+              Create your account to get started.
+            </Text>
+          </View>
         </View>
-        {errors.gender && <Text style={styles.error}>{errors.gender}</Text>}
 
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text
-            style={{
-              color: form.dob ? "#FFFFFF" : "rgba(255,255,255,0.6)",
-              fontSize: 16,
-              lineHeight: 55,
-            }}
-          >
-            {form.dob || "Select Date of Birth"}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.card}>
+          {/* NAME */}
+          <View style={styles.inputBox}>
+            <Ionicons name="person-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Full Name"
+              style={styles.input}
+              value={form.name}
+              onChangeText={(v) => handleChange("name", v)}
+              onBlur={() => {
+                setTouched((p) => ({ ...p, name: true }));
+                validateSingleField("name", form.name);
+              }}
+            />
+          </View>
+          {renderError("name")}
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={new Date()}
-            mode="date"
-            display="default"
-            maximumDate={new Date()}
-            onValueChange={(event, selectedDate) => {
-              setShowDatePicker(false);
+          {/* EMAIL */}
+          <View style={styles.inputBox}>
+            <Ionicons name="mail-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+              value={form.email}
+              onChangeText={(v) => handleChange("email", v)}
+              onBlur={() => {
+                setTouched((p) => ({ ...p, email: true }));
+                validateSingleField("email", form.email);
+              }}
+            />
+          </View>
+          {renderError("email")}
 
-              if (selectedDate) {
-                const formattedDate = selectedDate.toISOString().split("T")[0];
+          {/* PASSWORD */}
+          <View style={styles.inputBox}>
+            <Ionicons name="lock-closed-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Password"
+              secureTextEntry
+              autoCapitalize="none"
+              style={styles.input}
+              value={form.password}
+              onChangeText={(v) => handleChange("password", v)}
+              onBlur={() => {
+                setTouched((p) => ({ ...p, password: true }));
+                validateSingleField("password", form.password);
+              }}
+            />
+          </View>
+          {renderError("password")}
 
-                handleChange("dob", formattedDate);
+          {/* PHONE */}
+          <View style={styles.inputBox}>
+            <Ionicons name="call-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Phone"
+              keyboardType="phone-pad"
+              maxLength={10}
+              style={styles.input}
+              value={form.phone}
+              onChangeText={(v) =>
+                handleChange("phone", v.replace(/[^0-9]/g, ""))
               }
-            }}
-          />
-        )}
-        {errors.dob && <Text style={styles.error}>{errors.dob}</Text>}
+              onBlur={() => {
+                setTouched((p) => ({ ...p, phone: true }));
+                validateSingleField("phone", form.phone);
+              }}
+            />
+          </View>
+          {renderError("phone")}
 
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={form.bloodGroup}
-            onValueChange={(value) => handleChange("bloodGroup", value)}
-            dropdownIconColor="#FFFFFF"
-            style={{ color: "#FFFFFF" }}
+          {/* GENDER */}
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={form.gender}
+              onValueChange={(v) => {
+                handleChange("gender", v);
+                setTouched((p) => ({ ...p, gender: true }));
+                validateSingleField("gender", v);
+              }}
+            >
+              <Picker.Item label="Gender" value="" />
+              <Picker.Item label="Male" value="Male" />
+              <Picker.Item label="Female" value="Female" />
+              <Picker.Item label="Other" value="Other" />
+            </Picker>
+          </View>
+          {renderError("gender")}
+
+          {/* DOB */}
+          <TouchableOpacity
+            style={styles.inputBox}
+            onPress={() => setShowDatePicker(true)}
           >
-            <Picker.Item label="Select Blood Group" value="" />
-            <Picker.Item label="A+" value="A+" />
-            <Picker.Item label="A-" value="A-" />
-            <Picker.Item label="B+" value="B+" />
-            <Picker.Item label="B-" value="B-" />
-            <Picker.Item label="AB+" value="AB+" />
-            <Picker.Item label="AB-" value="AB-" />
-            <Picker.Item label="O+" value="O+" />
-            <Picker.Item label="O-" value="O-" />
-          </Picker>
-        </View>
-        {errors.bloodGroup && (
-          <Text style={styles.error}>{errors.bloodGroup}</Text>
-        )}
-
-        <TextInput
-          placeholder="Allergies (comma separated)"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={form.allergies}
-          onChangeText={(value) => handleChange("allergies", value)}
-          style={styles.input}
-        />
-
-        <TextInput
-          placeholder="Address Line 1"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={form.line1}
-          onChangeText={(value) => handleChange("line1", value)}
-          style={styles.input}
-        />
-        {errors.line1 && <Text style={styles.error}>{errors.line1}</Text>}
-
-        <TextInput
-          placeholder="City"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={form.city}
-          onChangeText={(value) => handleChange("city", value)}
-          style={styles.input}
-        />
-        {errors.city && <Text style={styles.error}>{errors.city}</Text>}
-
-        <TextInput
-          placeholder="Postcode"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          keyboardType="numeric"
-          value={form.postcode}
-          onChangeText={(value) => handleChange("postcode", value)}
-          style={styles.input}
-        />
-        {errors.postcode && <Text style={styles.error}>{errors.postcode}</Text>}
-
-        <TextInput
-          placeholder="Emergency Contact"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          keyboardType="phone-pad"
-          value={form.emergencyContact}
-          onChangeText={(value) => handleChange("emergencyContact", value)}
-          style={styles.input}
-        />
-        {errors.emergencyContact && (
-          <Text style={styles.error}>{errors.emergencyContact}</Text>
-        )}
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSignup}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading ? "Registering..." : "Register"}
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.loginContainer}>
-          <Text style={{ color: "#FFFFFF" }}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.loginText}> Login</Text>
+            <Ionicons name="calendar-outline" size={22} color="#777" />
+            <Text style={styles.dateText}>{form.dob || "Date of Birth"}</Text>
           </TouchableOpacity>
+          {renderError("dob")}
+
+          {showDatePicker && (
+            <DateTimePicker
+              mode="date"
+              maximumDate={new Date()}
+              value={new Date()}
+              onChange={(e, date) => {
+                setShowDatePicker(false);
+                if (date) {
+                  const value = date.toISOString().split("T")[0];
+                  handleChange("dob", value);
+                  setTouched((p) => ({ ...p, dob: true }));
+                  validateSingleField("dob", value);
+                }
+              }}
+            />
+          )}
+
+          {/* BLOOD GROUP */}
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={form.bloodGroup}
+              onValueChange={(v) => {
+                handleChange("bloodGroup", v);
+                setTouched((p) => ({ ...p, bloodGroup: true }));
+                validateSingleField("bloodGroup", v);
+              }}
+            >
+              <Picker.Item label="Blood Group" value="" />
+              <Picker.Item label="A+" value="A+" />
+              <Picker.Item label="A-" value="A-" />
+              <Picker.Item label="B+" value="B+" />
+              <Picker.Item label="B-" value="B-" />
+              <Picker.Item label="AB+" value="AB+" />
+              <Picker.Item label="AB-" value="AB-" />
+              <Picker.Item label="O+" value="O+" />
+              <Picker.Item label="O-" value="O-" />
+            </Picker>
+          </View>
+          {renderError("bloodGroup")}
+
+          {/* ALLERGIES */}
+          <View style={styles.inputBox}>
+            <Ionicons name="medkit-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Allergies"
+              value={form.allergies}
+              style={styles.input}
+              onChangeText={(v) => handleChange("allergies", v)}
+            />
+          </View>
+
+          {/* ADDRESS */}
+          <View style={styles.inputBox}>
+            <Ionicons name="location-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Address"
+              style={styles.input}
+              value={form.line1}
+              onChangeText={(v) => handleChange("line1", v)}
+              onBlur={() => {
+                setTouched((p) => ({ ...p, line1: true }));
+                validateSingleField("line1", form.line1);
+              }}
+            />
+          </View>
+          {renderError("line1")}
+
+          <View style={styles.inputBox}>
+            <TextInput
+              placeholder="City"
+              style={styles.input}
+              value={form.city}
+              onChangeText={(v) => handleChange("city", v)}
+              onBlur={() => {
+                setTouched((p) => ({ ...p, city: true }));
+                validateSingleField("city", form.city);
+              }}
+            />
+          </View>
+          {renderError("city")}
+
+          <View style={styles.inputBox}>
+            <TextInput
+              placeholder="Postcode"
+              keyboardType="numeric"
+              maxLength={6}
+              style={styles.input}
+              value={form.postcode}
+              onChangeText={(v) =>
+                handleChange("postcode", v.replace(/[^0-9]/g, ""))
+              }
+              onBlur={() => {
+                setTouched((p) => ({ ...p, postcode: true }));
+                validateSingleField("postcode", form.postcode);
+              }}
+            />
+          </View>
+          {renderError("postcode")}
+
+          {/* EMERGENCY */}
+          <View style={styles.inputBox}>
+            <Ionicons name="call-outline" size={22} color="#777" />
+            <TextInput
+              placeholder="Emergency Contact"
+              keyboardType="phone-pad"
+              maxLength={10}
+              style={styles.input}
+              value={form.emergencyContact}
+              onChangeText={(v) =>
+                handleChange("emergencyContact", v.replace(/[^0-9]/g, ""))
+              }
+              onBlur={() => {
+                setTouched((p) => ({
+                  ...p,
+                  emergencyContact: true,
+                }));
+                validateSingleField("emergencyContact", form.emergencyContact);
+              }}
+            />
+          </View>
+          {renderError("emergencyContact")}
+
+          {/* BUTTON */}
+          <TouchableOpacity
+            style={[
+              styles.button,
+              (!isFormValid() || loading) && { opacity: 0.5 },
+            ]}
+            disabled={!isFormValid() || loading}
+            onPress={handleSignup}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? "Creating..." : "Signup"}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.loginRow}>
+            <Text style={styles.loginText}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.loginLink}> Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 export default SignupScreen;
+
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: "#121826",
-    paddingTop: 60,
-    paddingHorizontal: 25,
-    paddingBottom: 40,
+  background: { flex: 1 },
+  container: { flexGrow: 1, paddingBottom: 40 },
+  header: { paddingTop: 80, paddingHorizontal: 20 },
+  welcome: { fontSize: 40, fontWeight: "800", color: "#222" },
+  hms: { fontSize: 52, fontWeight: "900", color: PRIMARY },
+
+  tagBox: {
+    marginTop: 10,
+    borderWidth: 1.5,
+    borderColor: PRIMARY,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
   },
 
-  heading: {
-    color: "#FFFFFF",
-    fontSize: 38,
-    fontWeight: "700",
-  },
-
-  headingHighlight: {
-    color: "#FF6B6B",
-    fontSize: 50,
-    fontWeight: "800",
-    marginBottom: 8,
-  },
-
-  subHeading: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: 14,
-    marginBottom: 25,
-  },
+  tagText: { fontSize: 14 },
 
   card: {
-    backgroundColor: "rgba(255,255,255,0.08)",
-    borderRadius: 30,
+    marginTop: 160,
+    marginHorizontal: 12,
+    backgroundColor: "#EFEFEF",
+    borderRadius: 40,
     padding: 25,
+    elevation: 10,
   },
 
-  title: {
-    color: "#FFFFFF",
-    fontSize: 26,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 25,
+  inputBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F8F8F8",
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    height: 60,
+    marginBottom: 10,
+    elevation: 3,
   },
 
-  input: {
-    height: 55,
-    color: "#FFFFFF",
-    fontSize: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.4)",
-    marginBottom: 20,
+  input: { flex: 1, marginLeft: 10 },
+
+  pickerBox: {
+    backgroundColor: "#F8F8F8",
+    borderRadius: 20,
+    marginBottom: 10,
+    elevation: 3,
   },
 
-  pickerContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.4)",
-    marginBottom: 20,
-  },
-
-  error: {
-    color: "#FF8A8A",
-    fontSize: 12,
-    marginBottom: 12,
-  },
+  dateText: { marginLeft: 10, color: "#777" },
 
   button: {
-    backgroundColor: "#FF6B6B",
-    height: 58,
+    backgroundColor: PRIMARY,
+    height: 65,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
   },
 
   buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
+    color: "#fff",
+    fontSize: 20,
     fontWeight: "700",
   },
 
-  loginContainer: {
+  loginRow: {
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 25,
   },
 
-  loginText: {
-    color: "#FF6B6B",
+  loginText: { color: "#222" },
+
+  loginLink: {
+    color: PRIMARY,
     fontWeight: "700",
+  },
+
+  error: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 8,
+    marginLeft: 5,
   },
 });
