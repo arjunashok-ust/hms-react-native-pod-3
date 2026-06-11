@@ -4,7 +4,6 @@ export type RootStackParamList = {
     MainTabs: undefined;
 };
 
-// Add EditAppointment and its expected payload to the stack types
 export type AppointmentStackParamList = {
     ViewAppointments: undefined;
     BookAppointment: undefined;

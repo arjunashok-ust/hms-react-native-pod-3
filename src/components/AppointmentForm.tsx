@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,22 +6,20 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as SecureStore from "expo-secure-store";
-import axios from "axios";
-import { useNavigation, NavigationProp } from "@react-navigation/native"; // 🟢 Added for redirect button
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { MaterialIcons, Fontisto } from "@expo/vector-icons";
+
+import { appointmentService } from "../services/appointmentService";
+import { useAppointmentData } from "../hooks/useAppointmentData"; // 🟢 Our new Hook
+import SelectablePill from "./SelectablePill"; // 🟢 Our new Component
 
 interface AppointmentFormProps {
   patientUHID: string | undefined;
   isEditMode?: boolean;
-  appointmentData?: {
-    appointmentCode: string;
-    doctorEmployeeID: string;
-    date: string;
-    timeSlot: string;
-  };
+  appointmentData?: any;
   onSuccess: () => void;
 }
 
@@ -32,137 +30,71 @@ export default function AppointmentForm({
   onSuccess,
 }: Readonly<AppointmentFormProps>) {
   const navigation = useNavigation<NavigationProp<any>>();
-
-  // 🟢 Define Date Boundaries
-  const today = new Date();
-
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0, 0, 0, 0);
-
-  const sixMonthsFromNow = new Date(today);
-  sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
-
-  const [doctors, setDoctors] = useState<any[]>([]);
-  const [slots, setSlots] = useState<string[]>([]);
-
-  const [selectedDoctor, setSelectedDoctor] = useState("");
-
-  // 🟢 Default new appointments to tomorrow
-  const [selectedDate, setSelectedDate] = useState<Date>(tomorrow);
-  const [selectedSlot, setSelectedSlot] = useState("");
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load baseline doctors list and check for existing edit data states
-  useEffect(() => {
-    fetchDoctors();
-    if (isEditMode && appointmentData) {
-      setSelectedDoctor(appointmentData.doctorEmployeeID);
-      setSelectedDate(new Date(appointmentData.date));
-      setSelectedSlot(appointmentData.timeSlot);
-    }
-  }, [isEditMode, appointmentData]);
+  // 🟢 One line pulls in all the complex data logic!
+  const {
+    doctors,
+    slots,
+    selectedDoctor,
+    setSelectedDoctor,
+    selectedDate,
+    setSelectedDate,
+    selectedSlot,
+    setSelectedSlot,
+    tomorrow,
+    doctorListRef,
+    slotListRef,
+  } = useAppointmentData(isEditMode, appointmentData);
 
-  // Refetch slots dynamically whenever doctor or date selections shift
-  useEffect(() => {
-    if (selectedDoctor && selectedDate) {
-      fetchAvailableSlots();
-    } else {
-      setSlots([]);
-    }
-  }, [selectedDoctor, selectedDate]);
+  const sixMonthsFromNow = new Date(tomorrow);
+  sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
 
-  const fetchDoctors = async () => {
-    try {
-      const token = await SecureStore.getItemAsync("patient_jwt");
-      const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/doctors`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      setDoctors(res.data);
-    } catch (err) {
-      console.error("Failed to load doctor dataset context:", err);
-    }
-  };
-
-  const fetchAvailableSlots = async () => {
-    try {
-      const token = await SecureStore.getItemAsync("patient_jwt");
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-      const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/slots?doctorId=${selectedDoctor}&date=${formattedDate}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-
-      // Special logic for Edit Mode: append the currently booked slot to the available slots list
-      if (
-        isEditMode &&
-        appointmentData &&
-        selectedSlot === appointmentData.timeSlot
-      ) {
-        if (!res.data.includes(appointmentData.timeSlot)) {
-          res.data.unshift(appointmentData.timeSlot);
-        }
-      }
-      setSlots(res.data);
-    } catch (err) {
-      console.error("Failed to compile slots:", err);
-    }
+  const handleScrollFailed = (
+    info: any,
+    ref: React.RefObject<FlatList | null>,
+  ) => {
+    setTimeout(
+      () =>
+        ref.current?.scrollToIndex({
+          index: info.index,
+          animated: true,
+          viewPosition: 0.5,
+        }),
+      500,
+    );
   };
 
   const handleFormSubmit = async () => {
     if (!selectedDoctor || !selectedSlot) {
-      Alert.alert(
+      return Alert.alert(
         "Validation Error",
-        "Please verify all scheduling configurations.",
+        "Please select a doctor and an available time slot.",
       );
-      return;
     }
-
     setIsLoading(true);
     try {
-      const token = await SecureStore.getItemAsync("patient_jwt");
       const payload = {
         patientID: patientUHID,
         doctorEmployeeID: selectedDoctor,
         date: selectedDate.toISOString().split("T")[0],
         timeSlot: selectedSlot,
-        status: "Pending", // Forces status modification re-evaluation down the wire
+        status: "Pending",
       };
-
-      if (isEditMode && appointmentData) {
-        // Execute PUT update transaction routing logic
-        await axios.put(
-          `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/${appointmentData.appointmentCode}`,
+      if (isEditMode) {
+        await appointmentService.updateAppointment(
+          appointmentData.appointmentCode,
           payload,
-          { headers: { Authorization: `Bearer ${token}` } },
         );
-        Alert.alert(
-          "Success",
-          "Appointment modifications requested successfully.",
-        );
+        Alert.alert("Success", "Appointment modifications requested.");
       } else {
-        // Execute typical POST creation routing rules
-        await axios.post(
-          `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/create`,
-          payload,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-        Alert.alert(
-          "Success",
-          "Appointment requested. Awaiting confirmation status.",
-        );
+        await appointmentService.createAppointment(payload);
+        Alert.alert("Success", "Appointment requested.");
       }
-
       onSuccess();
     } catch (err: any) {
-      Alert.alert(
-        "Transaction Failed",
-        err.response?.data?.message ||
-          "An error occurred with the network transaction subsystem.",
-      );
+      Alert.alert("Transaction Failed", err.message);
     } finally {
       setIsLoading(false);
     }
@@ -172,7 +104,7 @@ export default function AppointmentForm({
     <View style={styles.card}>
       <View style={styles.cardHeaderRow}>
         <View style={styles.iconCircle}>
-          <Text style={{ color: "#FFF" }}>📅</Text>
+          <MaterialIcons name="today" size={24} color="white" />
         </View>
         <View>
           <Text style={styles.subText}>
@@ -192,20 +124,28 @@ export default function AppointmentForm({
       </View>
 
       <Text style={styles.label}>SELECT DOCTOR</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedDoctor}
-          onValueChange={(item) => setSelectedDoctor(item)}
-        >
-          <Picker.Item label="Choose Doctor" value="" color="#9CA3AF" />
-          {doctors.map((doc) => (
-            <Picker.Item
-              key={doc.employeeCode}
-              label={`${doc.name} (${doc.department})`}
-              value={doc.employeeCode}
+      <View style={styles.scrollWrapper}>
+        <FlatList
+          ref={doctorListRef}
+          data={doctors}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.employeeCode}
+          onScrollToIndexFailed={(info) =>
+            handleScrollFailed(info, doctorListRef)
+          }
+          renderItem={({ item }) => (
+            <SelectablePill
+              title={item.name}
+              subtitle={item.department}
+              isSelected={selectedDoctor === item.employeeCode}
+              onPress={() => {
+                setSelectedDoctor(item.employeeCode);
+                setSelectedSlot("");
+              }}
             />
-          ))}
-        </Picker>
+          )}
+        />
       </View>
 
       <Text style={styles.label}>SCHEDULE DATE</Text>
@@ -220,28 +160,45 @@ export default function AppointmentForm({
         <DateTimePicker
           value={selectedDate}
           mode="date"
-          minimumDate={tomorrow} // 🟢 Locked to tomorrow minimum
-          maximumDate={sixMonthsFromNow} // 🟢 Locked to 6 months max
+          minimumDate={tomorrow}
+          maximumDate={sixMonthsFromNow}
           onChange={(e, date) => {
             setShowDatePicker(false);
-            if (date) setSelectedDate(date);
+            if (date) {
+              setSelectedDate(date);
+              setSelectedSlot("");
+            }
           }}
         />
       )}
 
-      {selectedDoctor && (
+      {!!selectedDoctor && (
         <>
           <Text style={styles.label}>AVAILABLE SLOTS</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectedSlot}
-              onValueChange={(item) => setSelectedSlot(item)}
-            >
-              <Picker.Item label="Select Time Slot" value="" color="#9CA3AF" />
-              {slots.map((s) => (
-                <Picker.Item key={s} label={s} value={s} />
-              ))}
-            </Picker>
+          <View style={styles.scrollWrapper}>
+            {slots.length === 0 ? (
+              <Text style={styles.noSlotsText}>
+                No slots available for this date.
+              </Text>
+            ) : (
+              <FlatList
+                ref={slotListRef}
+                data={slots}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item}
+                onScrollToIndexFailed={(info) =>
+                  handleScrollFailed(info, slotListRef)
+                }
+                renderItem={({ item }) => (
+                  <SelectablePill
+                    title={item}
+                    isSelected={selectedSlot === item}
+                    onPress={() => setSelectedSlot(item)}
+                  />
+                )}
+              />
+            )}
           </View>
         </>
       )}
@@ -260,17 +217,16 @@ export default function AppointmentForm({
         )}
       </TouchableOpacity>
 
-      {/* 🟢 Secondary Redirect Button */}
       <TouchableOpacity
         style={styles.backBtn}
         onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "MainTabs" }], // Wipes the stack and defaults to HomeTab
-          })
+          navigation.reset({ index: 0, routes: [{ name: "ViewAppointments" }] })
         }
       >
-        <Text style={styles.backText}>⬅️ GO BACK TO DASHBOARD</Text>
+        <View style={styles.backBtnContainer}>
+          <Fontisto name="close" size={24} color="#4B5563" />
+          <Text style={styles.backText}>CANCEL</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -306,8 +262,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#9CA3AF",
     fontWeight: "bold",
-    marginBottom: 6,
-    marginTop: 12,
+    marginBottom: 8,
+    marginTop: 16,
   },
   disabledInput: {
     backgroundColor: "#F3F4F6",
@@ -317,6 +273,14 @@ const styles = StyleSheet.create({
     borderColor: "#4B1D76",
   },
   disabledInputText: { color: "#1E1E3F", fontWeight: "bold" },
+  scrollWrapper: { marginHorizontal: -4 },
+  noSlotsText: {
+    color: "#EF4444",
+    fontSize: 14,
+    fontStyle: "italic",
+    paddingHorizontal: 4,
+    marginTop: 4,
+  },
   pickerContainer: {
     backgroundColor: "#FFF",
     borderRadius: 16,
@@ -333,11 +297,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 24,
   },
   btnText: { color: "#FFF", fontWeight: "bold", fontSize: 16 },
-
-  // 🟢 New secondary button styling
   backBtn: {
     backgroundColor: "#F3F4F6",
     padding: 14,
@@ -345,9 +307,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 12,
   },
-  backText: {
-    color: "#4B5563",
-    fontWeight: "bold",
-    fontSize: 14,
-  },
+  backBtnContainer: { flexDirection: "row", alignItems: "center", gap: 8 },
+  backText: { color: "#4B5563", fontWeight: "bold", fontSize: 14 },
 });

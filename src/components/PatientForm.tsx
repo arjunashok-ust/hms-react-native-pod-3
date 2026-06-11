@@ -14,7 +14,6 @@ import PhoneInput from "react-native-phone-number-input";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 
-// 1. Define the Props for Reusability
 interface PatientFormProps {
   initialValues: any;
   onSubmit: (data: any) => void;
@@ -23,11 +22,9 @@ interface PatientFormProps {
   isEditMode?: boolean;
 }
 
-// 2. Dynamic Validation Schema
 const getValidationSchema = (isEditMode: boolean) => {
   const nameRegex = /^[A-Za-z\s.\-']+$/;
   const stateRegex = /^[A-Za-z\s]+$/;
-  // Captures optional +91, followed exactly by a 10-digit number starting with 6,7,8,9
   const indianPhoneRegex = /^(?:\+91)?\s*[6-9]\d{9}$/;
 
   let baseSchema = {
@@ -109,7 +106,6 @@ const getValidationSchema = (isEditMode: boolean) => {
       .required("Pincode is required"),
   };
 
-  // Only validate password structural composition for new accounts
   if (!isEditMode) {
     Object.assign(baseSchema, {
       password: Yup.string()
@@ -200,7 +196,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
         <Text style={styles.errorText}>{errors.email.message as string}</Text>
       )}
 
-      {/* 3. Phone Field - 🟢 Added strictly numeric keyboard */}
+      {/* 3. Phone Field */}
       <Controller
         control={control}
         name="phone"
@@ -212,20 +208,22 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               defaultCode="IN"
               layout="first"
               onChangeFormattedText={onChange}
-              value={value}
+              value={value ? value.replace(/^\+?91/, "").trim() : ""}
               containerStyle={styles.phoneContainer}
               textContainerStyle={styles.phoneTextContainer}
+              disableArrowIcon={true} 
+              countryPickerProps={{
+                countryCodes: ["IN"], 
+                withFilter: false, 
+              }}
               textInputProps={{
-                keyboardType: "number-pad", // Blocks alphabets completely on the device keyboard
-                maxLength: 10, // Restricts standard 10 digit Indian limit
+                keyboardType: "number-pad",
+                maxLength: 10,
               }}
             />
           </View>
         )}
       />
-      {errors.phone && (
-        <Text style={styles.errorText}>{errors.phone.message as string}</Text>
-      )}
 
       {/* Password Fields */}
       {!isEditMode && (
@@ -298,7 +296,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
         <Text style={styles.errorText}>{errors.gender.message as string}</Text>
       )}
 
-      {/* 5. Date of Birth Picker - 🟢 MaxDate is set to current Date() */}
+      {/* 5. Date of Birth Picker */}
       <Controller
         control={control}
         name="dob"
@@ -322,7 +320,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
                 mode="date"
                 display="default"
                 minimumDate={new Date("1926-01-01")}
-                maximumDate={new Date()} // Prevents selection of future dates
+                maximumDate={new Date()}
                 onChange={(event, selectedDate) => {
                   setIsDatePickerOpen(false);
                   if (event.type === "set" && selectedDate)
@@ -381,7 +379,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
         )}
       />
 
-      {/* 8. Emergency Contact Field - 🟢 Changed to PhoneInput matching standard phone */}
+      {/* 8. Emergency Contact Field */}
       <Controller
         control={control}
         name="emergencyContact"
@@ -396,11 +394,16 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               defaultCode="IN"
               layout="first"
               onChangeFormattedText={onChange}
-              value={value || ""}
+              value={value ? value.replace(/^\+?91/, "").trim() : ""}
               containerStyle={styles.phoneContainer}
               textContainerStyle={styles.phoneTextContainer}
+              disableArrowIcon={true}
+              countryPickerProps={{
+                countryCodes: ["IN"],
+                withFilter: false,
+              }}
               textInputProps={{
-                keyboardType: "number-pad", // Blocks alphabets completely on the device keyboard
+                keyboardType: "number-pad",
                 maxLength: 10,
                 placeholder: "Emergency Contact (Optional)",
                 placeholderTextColor: "#9CA3AF",
@@ -409,12 +412,6 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
           </View>
         )}
       />
-      {errors.emergencyContact && (
-        <Text style={styles.errorText}>
-          {errors.emergencyContact.message as string}
-        </Text>
-      )}
-
       {/* 9. Address Line 1 */}
       <Controller
         control={control}
@@ -477,7 +474,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            keyboardType="number-pad" // Enforce strictly numeric pad
+            keyboardType="number-pad"
             maxLength={6}
           />
         )}
@@ -535,8 +532,17 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
-  phoneContainer: { width: "100%", backgroundColor: "#ffffff" },
-  phoneTextContainer: { backgroundColor: "#ffffff", paddingVertical: 0 },
+  phoneContainer: {
+    width: "100%",
+    backgroundColor: "#ffffff",
+    height: 55, // 🟢 1. Added explicit height to prevent collapse
+  },
+  phoneTextContainer: {
+    backgroundColor: "#ffffff",
+    paddingVertical: 0,
+    borderLeftWidth: 1, // 🟢 Optional: Adds a nice divider line between the flag and the number
+    borderColor: "#F3F4F6",
+  },
   pickerWrapper: {
     borderRadius: 16,
     marginBottom: 16,

@@ -10,17 +10,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import axios from "axios";
 import { RootStackParamList } from "../types/navigation";
 
-// Import the extracted component
 import PatientForm from "../components/PatientForm";
 
+import { authService } from "../services/authService";
+
 export default function RegisterScreen() {
+  const backgroundImage = require("../../assets/images/hospital3.jpg");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Default empty values for Signup
   const initialSignupValues = {
     name: "",
     email: "",
@@ -38,84 +38,69 @@ export default function RegisterScreen() {
     pincode: "",
   };
 
- const handleRegisterSubmit = async (data: any) => {
-   setIsLoading(true);
-   try {
-     // 1. Safe Date Parsing (Handles both raw string timestamps and Date Objects)
-     let formattedDob = "";
-     if (data.dob) {
-       const dateObj = new Date(data.dob);
-       formattedDob = !isNaN(dateObj.getTime())
-         ? dateObj.toISOString().split("T")[0]
-         : String(data.dob).split("T")[0];
-     }
+  const handleRegisterSubmit = async (data: any) => {
+    setIsLoading(true);
+    try {
+      let formattedDob = "";
+      if (data.dob) {
+        const dateObj = new Date(data.dob);
+        formattedDob = Number.isNaN(dateObj.getTime())
+          ? String(data.dob).split("T")[0]
+          : dateObj.toISOString().split("T")[0];
+      }
 
-     // 2. Clear out empty string values to prevent Picker fallbacks from saving blank strings
-     const formattedBloodGroup =
-       data.bloodGroup && data.bloodGroup.trim() !== ""
-         ? data.bloodGroup
-         : null;
+      const formattedBloodGroup =
+        data.bloodGroup && data.bloodGroup.trim() !== ""
+          ? data.bloodGroup
+          : null;
 
-     // 3. String Array conversion wrapper for Allergies
-     const formattedAllergies =
-       data.allergies && data.allergies.trim() !== ""
-         ? data.allergies
-             .split(",")
-             .map((a: string) => a.trim())
-             .filter((a: string) => a.length > 0)
-         : [];
+      const formattedAllergies =
+        data.allergies && data.allergies.trim() !== ""
+          ? data.allergies
+              .split(",")
+              .map((a: string) => a.trim())
+              .filter((a: string) => a.length > 0)
+          : [];
 
-     const payload = {
-       name: data.name.trim(),
-       email: data.email.trim().toLowerCase(),
-       phone: data.phone.trim(),
-       password: data.password,
-       gender: data.gender,
-       dob: formattedDob,
-       bloodGroup: formattedBloodGroup,
-       allergies: formattedAllergies,
-       emergencyContact: data.emergencyContact.trim(),
-       address: {
-         line1: data.line1.trim(),
-         line2: data.line2?.trim() || "",
-         state: data.state.trim(),
-         pincode: Number.parseInt(data.pincode, 10),
-       },
-     };
+      const payload = {
+        name: data.name.trim(),
+        email: data.email.trim().toLowerCase(),
+        phone: data.phone.trim(),
+        password: data.password,
+        gender: data.gender,
+        dob: formattedDob,
+        bloodGroup: formattedBloodGroup,
+        allergies: formattedAllergies,
+        emergencyContact: data.emergencyContact
+          ? data.emergencyContact.trim()
+          : null,
+        address: {
+          line1: data.line1.trim(),
+          line2: data.line2?.trim() || "",
+          state: data.state.trim(),
+          pincode: Number.parseInt(data.pincode, 10),
+        },
+      };
 
-     // 4. Trace outbound shape right before network execution
-     console.log(
-       "🚀 FINAL SANITIZED AXIOS PAYLOAD:",
-       JSON.stringify(payload, null, 2),
-     );
+      console.log(
+        "🚀 FINAL SANITIZED PAYLOAD:",
+        JSON.stringify(payload, null, 2),
+      );
 
-     await axios.post(
-       `${process.env.EXPO_PUBLIC_API_URL}/api/patients/mobile-register`,
-       payload,
-     );
+      await authService.register(payload);
 
-     Alert.alert("Success", "Account created successfully.");
-     navigation.navigate("Login");
-   } catch (error) {
-     if (axios.isAxiosError(error)) {
-       console.error("❌ BACKEND ERROR RESPONSE:", error.response?.data);
-       const serverMessage =
-         error.response?.data?.message || "Registration failed.";
-       Alert.alert("Error", serverMessage);
-     } else {
-       console.error("❌ NATIVE SYSTEM CRASH:", error);
-       Alert.alert("System Error", "An unexpected error occurred.");
-     }
-   } finally {
-     setIsLoading(false);
-   }
- };
+      Alert.alert("Success", "Account created successfully.");
+      navigation.navigate("Login");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <ImageBackground
-      source={{
-        uri: "https://images.unsplash.com/photo-1551076805-e18690c5e53b?q=80&w=2000&auto=format&fit=crop",
-      }}
+      source={backgroundImage}
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.3 }}
     >
@@ -136,13 +121,12 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.card}>
-            {/* The Reusable Form */}
             <PatientForm
               initialValues={initialSignupValues}
               onSubmit={handleRegisterSubmit}
               isLoading={isLoading}
               buttonText="Signup"
-              isEditMode={false} // Enforces password validation
+              isEditMode={false}
             />
 
             <TouchableOpacity

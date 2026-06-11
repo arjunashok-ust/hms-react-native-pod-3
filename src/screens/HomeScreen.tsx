@@ -4,22 +4,23 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
   Alert,
+  ImageBackground
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-import axios from "axios";
 import { PatientProfile } from "../features/auth/types";
 import AppointmentCard, { Appointment } from "../components/AppointmentCard";
 import TopDoctors, { Doctor } from "../components/TopDoctors";
 import HealthSummaryCard from "../components/HealthSummaryCard";
-import { RootStackParamList } from "../types/navigation";
+import { appointmentService } from "../services/appointmentService";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
-  const navigation = useNavigation<NavigationProp<any>>(); // Using any to handle nested tab navigation targets
+   const backgroundImage = require("../../assets/images/hospital3.jpg");
+  const navigation = useNavigation<NavigationProp<any>>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -41,23 +42,13 @@ export default function HomeScreen() {
 
       setProfile(JSON.parse(profileString));
 
-      const axiosConfig = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
-      const [appointmentsRes, doctorsRes] = await Promise.all([
-        axios.get(
-          `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/my-appointments`,
-          axiosConfig,
-        ),
-        axios.get(
-          `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/doctors`,
-          axiosConfig,
-        ),
+      const [appointmentsData, doctorsData] = await Promise.all([
+        appointmentService.getMyAppointments(),
+        appointmentService.getDoctors(),
       ]);
 
-      setAppointments(appointmentsRes.data);
-      setDoctors(doctorsRes.data);
+      setAppointments(appointmentsData);
+      setDoctors(doctorsData);
     } catch (error) {
       console.error("Dashboard Fetch Error:", error);
       Alert.alert("Error", "Could not load dashboard data. Please try again.");
@@ -67,60 +58,53 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Header Section */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.welcomeText}>Welcome Back 👋</Text>
-            <Text style={styles.patientName}>{profile?.name}</Text>
-            <Text style={styles.uhid}>{profile?.UHID}</Text>
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.backgroundImage}
+      imageStyle={{ opacity: 0.3 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.patientName}>{profile?.name}</Text>
+              <Text style={styles.uhid}>{profile?.UHID}</Text>
+            </View>
           </View>
 
-          {/* Settings Icon routes to Profile Tab */}
+          <HealthSummaryCard profile={profile} />
+
+          <View style={styles.sectionHeader}>
+            <Ionicons name="calendar-clear-outline" size={20} color="blue" />
+            <Text style={styles.sectionTitle}>My Appointments</Text>
+          </View>
+
           <TouchableOpacity
-            style={styles.settingsButton}
-            onPress={() => navigation.navigate("ProfileTab")}
+            activeOpacity={0.9}
+            onPress={() =>
+              navigation.navigate("AppointmentsTab", {
+                screen: "ViewAppointments",
+              })
+            }
           >
-            <Text style={styles.settingsText}>⚙️</Text>
+            {appointments.length > 0 ? (
+              <AppointmentCard appointment={appointments[0]} />
+            ) : (
+              <View style={styles.emptyCard}>
+                <Text style={styles.emptyText}>
+                  No upcoming appointments. Tap to schedule.
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
-        </View>
 
-        {/* Health Summary Card */}
-        <HealthSummaryCard profile={profile} />
-
-        {/* My Appointments Section Header */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>📅 My Appointments</Text>
-        </View>
-
-        {/* Wrap appointment blocks in touchable highlights to open the management stack */}
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() =>
-            navigation.navigate("AppointmentsTab", {
-              screen: "ViewAppointments",
-            })
-          }
-        >
-          {appointments.length > 0 ? (
-            <AppointmentCard appointment={appointments[0]} />
-          ) : (
-            <View style={styles.emptyCard}>
-              <Text style={styles.emptyText}>
-                No upcoming appointments. Tap to schedule.
-              </Text>
-            </View>
-          )}
-        </TouchableOpacity>
-
-        {/* Top Doctors Horizontal Carousel */}
-        <TopDoctors doctors={doctors} />
-      </ScrollView>
-    </SafeAreaView>
+          <TopDoctors doctors={doctors} />
+        </ScrollView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
@@ -128,6 +112,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5F6FA",
+  },
+  backgroundImage: {
+    flex: 1,
+    backgroundColor: "#E6F0F2",
   },
   center: {
     justifyContent: "center",
@@ -156,7 +144,7 @@ const styles = StyleSheet.create({
   },
   patientName: {
     color: "#1E1E3F",
-    fontSize: 28,
+    fontSize: 45,
     fontWeight: "bold",
     marginTop: 4,
   },
@@ -181,6 +169,9 @@ const styles = StyleSheet.create({
   sectionHeader: {
     paddingHorizontal: 20,
     marginBottom: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8
   },
   sectionTitle: {
     color: "#1E1E3F",

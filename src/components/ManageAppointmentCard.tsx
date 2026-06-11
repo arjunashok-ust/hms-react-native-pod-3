@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Feather, FontAwesome6 } from "@expo/vector-icons";
 
 interface ManageAppointmentCardProps {
   appointment: any;
@@ -39,30 +40,48 @@ export default function ManageAppointmentCard({
         <View
           style={[
             styles.badge,
-            { backgroundColor: isScheduled ? "#00875A" : "#8A5300" },
+            { backgroundColor: isScheduled ? "#c5ead5" : "#f7d7a6" },
           ]}
         >
-          <Text style={styles.badgeText}>
+          <Text
+            style={[
+              styles.badgeText,
+              { color: isScheduled ? "green" : "#9e6002" },
+            ]}
+          >
             {isScheduled ? "Booked" : "Pending"}
           </Text>
         </View>
       </View>
 
-      <Text style={styles.timeText}>
-        📅 {appointment.date ? new Date(appointment.date).toDateString() : ""} |
-        🕒 {appointment.timeSlot}
-      </Text>
+      <View style={styles.timeContainer}>
+        <View style={styles.pill}>
+          <Text style={styles.pillText}>
+            {appointment.date ? new Date(appointment.date).toDateString() : ""}
+          </Text>
+        </View>
+
+        <View style={styles.pill}>
+          <Text style={styles.pillText}>{appointment.timeSlot}</Text>
+        </View>
+      </View>
 
       <View style={styles.actionRow}>
         <TouchableOpacity style={styles.actionBtn} onPress={onEdit}>
-          <Text style={styles.actionText}>📝 Edit</Text>
+          <View style={styles.actionButton}>
+            <Feather name="edit-3" size={18} color="blue" />
+            <Text style={[styles.actionText, { color: "blue" }]}> Edit</Text>
+          </View>
         </TouchableOpacity>
 
         {/* We use a slight red tint for the delete text to indicate a destructive action */}
         <TouchableOpacity style={styles.actionBtn} onPress={onDelete}>
-          <Text style={[styles.actionText, { color: "#EF4444" }]}>
-            🗑️ Delete
-          </Text>
+          <View style={styles.actionButton}>
+            <FontAwesome6 name="trash-can" size={18} color="red" />
+            <Text style={[styles.actionText, { color: "#EF4444" }]}>
+              Delete
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -124,4 +143,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
   },
   actionText: { fontWeight: "600", color: "#4B5563" },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  timeContainer: {
+    flexDirection: "row",
+    gap: 8, // spacing between pills (use marginRight if older RN)
+    alignItems: "center",
+  },
+
+  pill: {
+    backgroundColor: "#E0E7FF", // light blue (you can change)
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20, // makes it pill-shaped
+  },
+
+  pillText: {
+    color: "#1E1E3F",
+    fontSize: 12,
+    fontWeight: "600",
+  },
 });

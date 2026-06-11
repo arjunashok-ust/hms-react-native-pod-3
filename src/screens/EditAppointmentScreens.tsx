@@ -5,7 +5,6 @@ import {
   useNavigation,
   useRoute,
   RouteProp,
-  NavigationProp,
   CompositeNavigationProp,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -15,7 +14,6 @@ import {
   AppointmentStackParamList,
 } from "../types/navigation";
 
-// Import your extracted reusable form
 import AppointmentForm from "../components/AppointmentForm";
 
 export default function EditAppointmentScreen() {
@@ -27,7 +25,6 @@ export default function EditAppointmentScreen() {
       >
     >();
 
-  // Extract the appointment data passed from ViewAppointmentsScreen
   const route =
     useRoute<RouteProp<AppointmentStackParamList, "EditAppointment">>();
   const { appointmentData } = route.params;
@@ -53,13 +50,9 @@ export default function EditAppointmentScreen() {
     >
       <SafeAreaView style={styles.safe}>
         <View style={styles.container}>
-          <Text style={styles.mainTitle}>Modify your,</Text>
+          <Text style={styles.mainTitle}>Modify your</Text>
           <Text style={styles.boldTitle}>APPOINTMENT</Text>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>here.</Text>
-          </View>
 
-          {/* 🟢 Reusable Form with Edit Flags enabled */}
           <AppointmentForm
             patientUHID={profile?.UHID}
             isEditMode={true}

@@ -16,7 +16,7 @@ interface Props {
   appointment: Appointment;
 }
 
-export default function AppointmentCard({ appointment }: Props) {
+export default function AppointmentCard({ appointment }: Readonly<Props>) {
   const formatDate = (isoString: string) => {
     const dateObj = new Date(isoString);
     return dateObj.toLocaleDateString("en-GB", {
@@ -64,25 +64,25 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   code: {
-    color: "#6C4EDB", // Purple accent
+    color: "#6C4EDB",
     fontSize: 12,
     fontWeight: "bold",
     marginBottom: 6,
   },
   doctorName: {
-    color: "#1E1E3F", // Navy Blue
+    color: "#1E1E3F",
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 4,
   },
   specialization: {
-    color: "#6C4EDB", // Purple accent
+    color: "#6C4EDB",
     fontSize: 14,
     fontWeight: "600",
     marginBottom: 16,
   },
   dateTime: {
-    color: "#6B7280", // Gray
+    color: "#6B7280",
     fontSize: 13,
     fontWeight: "500",
   },

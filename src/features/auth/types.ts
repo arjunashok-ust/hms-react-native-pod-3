@@ -1,6 +1,3 @@
-// src/features/auth/types.ts
-
-// 1. Define the strict profile structure based on your MongoDB schema
 export interface PatientProfile {
     _id: string;
     UHID: string;
@@ -8,7 +5,7 @@ export interface PatientProfile {
     email: string;
     phone: string;
     gender: "Male" | "Female" | "Other";
-    dob: string; // ISO 8601 Date string from backend
+    dob: string; 
     bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
     allergies?: string[];
     emergencyContact?: string;
@@ -23,15 +20,13 @@ export interface PatientProfile {
     updatedAt: string;
 }
 
-// 2. Inject the strict profile into the User interface
 export interface User {
     _id: string;
     email: string;
     role: string;
-    profile: PatientProfile; // Replaced 'any' with the strict interface
+    profile: PatientProfile;
 }
 
-// 3. The Login Response remains the same, but now inherits the strict User
 export interface LoginResponse {
     message?: string;
     token: string;

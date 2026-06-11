@@ -11,12 +11,13 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { RootStackParamList } from "../types/navigation";
-import { LoginResponse } from "../features/auth/types";
+import { authService } from "../services/authService";
+//
 
 export default function LoginScreen() {
+  const backgroundImage = require("../../assets/images/hospital3.jpg");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,15 +32,10 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post<LoginResponse>(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/auth/login`,
-        {
-          email: email.trim(),
-          password: password,
-        },
-      );
-      const token = response.data.token;
-      const profile = response.data.user.profile;
+      const data = await authService.login(email.trim(), password);
+
+      const token = data.token;
+      const profile = data.user.profile;
 
       if (!token) throw new Error("Server did not return a token.");
 
@@ -50,15 +46,8 @@ export default function LoginScreen() {
       );
 
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const serverMessage =
-          error.response?.data?.message ||
-          "Invalid credentials or server error.";
-        Alert.alert("Authentication Failed", serverMessage);
-      } else {
-        Alert.alert("System Error", "An unexpected error occurred.");
-      }
+    } catch (error: any) {
+      Alert.alert("Authentication Failed", error.message);
     } finally {
       setIsLoading(false);
     }
@@ -66,15 +55,12 @@ export default function LoginScreen() {
 
   return (
     <ImageBackground
-      source={{
-        uri: "https://images.unsplash.com/photo-1551076805-e18690c5e53b?q=80&w=2000&auto=format&fit=crop",
-      }}
+      source={backgroundImage}
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
-          {/* Top Branding Section */}
           <View style={styles.headerSection}>
             <Text style={styles.headerTitleLine1}>Welcome Back,</Text>
             <Text style={styles.headerTitleLine2}>Sign In.</Text>
@@ -85,7 +71,6 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          {/* Form Card */}
           <View style={styles.card}>
             <TextInput
               placeholder="Email"
@@ -146,7 +131,7 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     marginBottom: 40,
-    marginTop: -40, // Pulls it up slightly to balance the vertical space
+    marginTop: -40,
   },
   headerTitleLine1: {
     fontSize: 40,

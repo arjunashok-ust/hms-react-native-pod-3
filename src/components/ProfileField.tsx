@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: "#1E1E3F", // Navy blue from your theme
+    color: "#1E1E3F",
     fontWeight: "600",
   },
 });

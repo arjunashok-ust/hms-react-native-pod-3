@@ -15,13 +15,12 @@ import {
   NavigationProp,
   useIsFocused,
 } from "@react-navigation/native";
-import * as SecureStore from "expo-secure-store";
-import axios from "axios";
-
-// 🟢 Import the extracted component
+import { Ionicons } from "@expo/vector-icons";
+import { appointmentService } from "../services/appointmentService";
 import ManageAppointmentCard from "../components/ManageAppointmentCard";
 
 export default function ViewAppointmentsScreen() {
+  const backgroundImage = require("../../assets/images/hospital3.jpg");
   const navigation = useNavigation<NavigationProp<any>>();
   const isFocused = useIsFocused();
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -36,14 +35,8 @@ export default function ViewAppointmentsScreen() {
   const fetchAppointments = async () => {
     setIsLoading(true);
     try {
-      const token = await SecureStore.getItemAsync("patient_jwt");
-      const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/my-appointments`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      setAppointments(res.data);
+      const data = await appointmentService.getMyAppointments();
+      setAppointments(data);
     } catch (err) {
       console.error("Fetch Appointments Failed:", err);
     } finally {
@@ -62,7 +55,6 @@ export default function ViewAppointmentsScreen() {
     });
   };
 
-  // Safe Deletion framework
   const handleDelete = (appointment: any) => {
     Alert.alert(
       "Cancel Appointment",
@@ -74,18 +66,10 @@ export default function ViewAppointmentsScreen() {
           style: "destructive",
           onPress: async () => {
             try {
-              // 1. Retrieve the secure token
-              const token = await SecureStore.getItemAsync("patient_jwt");
-
-              // 2. Execute the DELETE network transaction
-              await axios.delete(
-                `${process.env.EXPO_PUBLIC_API_URL}/api/appointment/${appointment.appointmentCode}`,
-                {
-                  headers: { Authorization: `Bearer ${token}` },
-                },
+              await appointmentService.deleteAppointment(
+                appointment.appointmentCode,
               );
 
-              // 3. Notify the user and refresh the local list state
               Alert.alert("Success", "Appointment cancelled successfully.");
               fetchAppointments();
             } catch (err: any) {
@@ -104,29 +88,20 @@ export default function ViewAppointmentsScreen() {
 
   return (
     <ImageBackground
-      source={{
-        uri: "https://images.unsplash.com/photo-1551076805-e18690c5e53b?q=80&w=2000",
-      }}
-      style={styles.bg}
-      imageStyle={{ opacity: 0.15 }}
+      source={backgroundImage}
+      style={styles.backgroundImage}
+      imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.safe}>
         <View style={styles.container}>
-          <Text style={styles.mainTitle}>View your,</Text>
+          <Text style={styles.mainTitle}>View your</Text>
           <Text style={styles.boldTitle}>APPOINTMENTS</Text>
 
           <TouchableOpacity
             style={styles.bookTriggerBtn}
             onPress={() => navigation.navigate("BookAppointment")}
           >
-            <Text style={styles.bookTriggerText}>➕ Book New Appointment</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.backBtn}
-            onPress={() => navigation.navigate("HomeTab")}
-          >
-            <Text style={styles.backText}>⬅️ GO BACK TO DASHBOARD</Text>
+            <Text style={styles.bookTriggerText}>Book New Appointment</Text>
           </TouchableOpacity>
 
           {isLoading ? (
@@ -159,6 +134,10 @@ export default function ViewAppointmentsScreen() {
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    backgroundColor: "#E6F0F2",
+  },
   bg: { flex: 1, backgroundColor: "#E6F0F2" },
   safe: { flex: 1 },
   container: { flex: 1, padding: 24 },
@@ -201,5 +180,10 @@ const styles = StyleSheet.create({
   emptyListText: {
     color: "#9CA3AF",
     fontStyle: "italic",
+  },
+  goBackButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
 });

@@ -1,59 +1,106 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { Animated, View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
-// Screen Imports
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import BookAppointmentScreen from "../screens/BookAppointmentScreen";
 import ViewAppointmentsScreen from "../screens/ViewAppointmentsScreen";
 import EditAppointmentScreen from "../screens/EditAppointmentScreens";
 
-// Type Imports
 import { AppointmentStackParamList } from "../types/navigation";
 
 const Tab = createBottomTabNavigator();
 const AppointmentStack =
   createNativeStackNavigator<AppointmentStackParamList>();
 
-// At the top of MainTabNavigator.tsx
-
-
-// Further down, inside AppointmentNavigator():
 function AppointmentNavigator() {
   return (
     <AppointmentStack.Navigator screenOptions={{ headerShown: false }}>
-      <AppointmentStack.Screen 
-        name="ViewAppointments" 
-        component={ViewAppointmentsScreen} 
+      <AppointmentStack.Screen
+        name="ViewAppointments"
+        component={ViewAppointmentsScreen}
       />
-      <AppointmentStack.Screen 
-        name="BookAppointment" 
-        component={BookAppointmentScreen} 
+      <AppointmentStack.Screen
+        name="BookAppointment"
+        component={BookAppointmentScreen}
       />
-      {/* 🟢 Add this new route */}
-      <AppointmentStack.Screen 
-        name="EditAppointment" 
-        component={EditAppointmentScreen} 
+      <AppointmentStack.Screen
+        name="EditAppointment"
+        component={EditAppointmentScreen}
       />
     </AppointmentStack.Navigator>
   );
 }
+
+// 🟢 Custom Animated Icon Component
+const AnimatedTabIcon = ({
+  focused,
+  iconName,
+}: {
+  focused: boolean;
+  iconName: keyof typeof Feather.glyphMap;
+}) => {
+  const scaleValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (focused) {
+      // Spring animation when selected
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        friction: 5,
+        tension: 50,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Smooth fade out when unselected
+      Animated.timing(scaleValue, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [focused]);
+
+  return (
+    <View style={styles.iconContainer}>
+      <Animated.View
+        style={[
+          styles.circleBackground,
+          {
+            transform: [{ scale: scaleValue }],
+            opacity: scaleValue,
+          },
+        ]}
+      />
+      {/* 🟢 Removed the <Text> wrapper and applied dynamic colors */}
+      <Feather
+        name={iconName}
+        size={24}
+        color={focused ? "#6C4EDB" : "#9CA3AF"}
+        style={{ zIndex: 1 }}
+      />
+    </View>
+  );
+};
 
 export default function MainTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#6C4EDB", // The purple accent
-        tabBarInactiveTintColor: "#9CA3AF",
+        tabBarShowLabel: false, // 🟢 Hidden labels so the circles look clean
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 10,
-          height: 60,
-          paddingBottom: 10,
+          height: 90, // 🟢 Taller to accommodate the circles comfortably
           backgroundColor: "#FFFFFF",
+          shadowColor: "#000",
+          shadowOpacity: 0.1,
+          shadowRadius: 10,
+          shadowOffset: { width: 0, height: -5 },
         },
       }}
     >
@@ -61,18 +108,19 @@ export default function MainTabNavigator() {
         name="HomeTab"
         component={HomeScreen}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🏠</Text>,
+          tabBarIcon: ({ focused }) => (
+            <AnimatedTabIcon focused={focused} iconName="home" />
+          ),
         }}
       />
 
-      {/* 2. Swapped placeholder out for the nested stack navigator */}
       <Tab.Screen
         name="AppointmentsTab"
         component={AppointmentNavigator}
         options={{
-          tabBarLabel: "Appointment",
-          tabBarIcon: () => <Text style={{ fontSize: 20 }}>📅</Text>,
+          tabBarIcon: ({ focused }) => (
+            <AnimatedTabIcon focused={focused} iconName="calendar" />
+          ),
         }}
       />
 
@@ -80,10 +128,33 @@ export default function MainTabNavigator() {
         name="ProfileTab"
         component={ProfileScreen}
         options={{
-          tabBarLabel: "Profile",
-          tabBarIcon: () => <Text style={{ fontSize: 20 }}>👤</Text>,
+          tabBarIcon: ({ focused }) => (
+            <AnimatedTabIcon focused={focused} iconName="user" />
+          ),
         }}
       />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 80,  // 🟢 Increased width of the active highlight
+    height: 60, // 🟢 Gave the container more height to fit the new shape
+  },
+  circleBackground: {
+    position: "absolute",
+    // top: -10, // Uncomment this line if you want the shape to stick flush to the top ceiling of the tab bar
+    width: 200,   // Matches container width
+    height: 35,  // Controls how far down the semicircle hangs
+    backgroundColor: "rgba(108, 78, 219, 0.15)",
+    
+    // 🟢 Upside-down semicircle geometry
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 100,  // Exactly half of the width (80 / 2)
+    borderBottomRightRadius: 100, // Exactly half of the width (80 / 2)
+  },
+});

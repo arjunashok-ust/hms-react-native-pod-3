@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   useNavigation,
-  NavigationProp,
   CompositeNavigationProp,
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -13,8 +12,8 @@ import {
   AppointmentStackParamList,
 } from "../types/navigation";
 
-// Import extracted form component
 import AppointmentForm from "../components/AppointmentForm";
+const backgroundImage = require("../../assets/images/hospital3.jpg");
 
 export default function BookAppointmentScreen() {
   const navigation =
@@ -38,28 +37,22 @@ export default function BookAppointmentScreen() {
 
   return (
     <ImageBackground
-      source={{
-        uri: "https://images.unsplash.com/photo-1551076805-e18690c5e53b?q=80&w=2000",
-      }}
+      source={backgroundImage}
       style={styles.bg}
       imageStyle={{ opacity: 0.15 }}
     >
       <SafeAreaView style={styles.safe}>
         <View style={styles.container}>
-          <Text style={styles.mainTitle}>Create your,</Text>
+          <Text style={styles.mainTitle}>Create your</Text>
           <Text style={styles.boldTitle}>APPOINTMENT</Text>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>here.</Text>
-          </View>
 
-          {/* Render the reusable form with clear success callback transitions */}
           <AppointmentForm
             patientUHID={profile?.UHID}
             isEditMode={false}
             onSuccess={() =>
               navigation.reset({
                 index: 0,
-                routes: [{ name: "ViewAppointments" }], // Makes the list view the new root of this stack
+                routes: [{ name: "ViewAppointments" }],
               })
             }
           />
