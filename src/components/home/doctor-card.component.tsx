@@ -5,7 +5,7 @@ export const DoctorCard = (props: any) => {
   return (
     <TouchableOpacity style={styles.doctorContainer}>
       <LinearGradient
-         colors={["rgba(206, 11, 131, 0.9)", "rgb(255, 0, 68)"]}
+         colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
         style={styles.doctorAvatar}
       >
         <Text style={[styles.text,styles.doctorPrefix]}>{props.prefix}</Text>
@@ -24,14 +24,15 @@ export const DoctorCard = (props: any) => {
 const styles = StyleSheet.create({
   doctorContainer: {
     height: 100,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: "#f0f0f0",
     borderWidth:1,
-    borderColor:"rgba(229, 57, 255, 0.2)",
+    borderColor:"rgba(0, 0, 0, 0.2)",
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
     marginTop:10,
+    elevation:5,
   },
   doctorAvatar: {
     flex: 1,
@@ -53,27 +54,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   doctorName: {
-    color: "white",
+    color: "#2d2d2d",
     fontSize: 16,
     lineHeight: 28,
   },
   doctorDesignation: {
-    color: "white",
+    color: "#636363",
     fontSize: 12,
     lineHeight: 12,
   },
   doctorFooter: {
     flex: 2,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(170, 170, 170, 0.2)",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    elevation: 8,
   },
   doctorDepartment: {
     fontSize: 12,
     lineHeight: 12,
-    color: "white",
+    color: "#8e8e8e",
   },
 });

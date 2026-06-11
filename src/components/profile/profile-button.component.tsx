@@ -6,7 +6,7 @@ export default function ProfileButton(props:any) {
     <TouchableOpacity style={styles.buttonHolder} onPress={props.onAction}>
       <Ionicons
         name={props.iconName}
-        color={"rgba(255, 0, 242, 0.6)"}
+        color={"rgb(221, 221, 221)"}
         size={20}
         style={styles.iconStyle}
       />
@@ -18,23 +18,24 @@ export default function ProfileButton(props:any) {
 const styles = StyleSheet.create({
   buttonHolder: {
     flexDirection: "row",
-    backgroundColor: "rgba(52, 6, 6, 0.3)",
+    backgroundColor: "rgb(223, 223, 223)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+    borderColor: "rgba(82, 15, 111, 0.3)",
     borderRadius: 8,
     padding: 8,
     marginHorizontal: 20,
     marginVertical:10,
     alignItems: "center",
+    elevation:2,
   },
   buttonText: {
-    color: "white",
+    color: "rgb(41, 41, 41)",
     fontSize: 12,
     lineHeight: 12,
     marginLeft: 10,
   },
   iconStyle: {
-    backgroundColor: "rgba(230, 0, 255, 0.2)",
+    backgroundColor: "rgb(100, 20, 109)",
     borderRadius: 8,
     padding: 5,
   },

@@ -21,8 +21,8 @@ import { NavigationModel } from "../types/navigation.types";
 import { useEffect, useState } from "react";
 import { PatientModel } from "../types/user.types";
 import { getPatientProfile } from "../services/user.service";
-import * as SecureStore from "expo-secure-store";
 import ProfileButton from "../components/profile/profile-button.component";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -40,7 +40,7 @@ export default function ProfileScreen() {
 
   const fetchData = async () => {
     try {
-      const email = await SecureStore.getItemAsync("email");
+      const email = await AsyncStorage.getItem("email");
       const data = await getPatientProfile(email ?? "");
       setPatientData(data);
     } catch (err) {
@@ -60,6 +60,10 @@ export default function ProfileScreen() {
     return formattedDate;
   };
 
+  const goToEditProfile = () => {
+    navigator.navigate("editProfile");
+  }
+
   return (
     <ImageBackground source={BgImage} style={styles.wrapper} resizeMode="cover">
       <View style={styles.overlay}>
@@ -69,9 +73,8 @@ export default function ProfileScreen() {
           designation={patientData?.role}
           id={patientData?.uhid}
         />
-        <LinearGradient
+        <View
           style={styles.container}
-          colors={["rgba(255, 61, 77, 0.05)", "rgba(20, 4, 30, 0.9)"]}
         >
           <ScrollView>
             <SectionDivider iconName="person-outline" title="PERSONAL INFO" />
@@ -118,7 +121,7 @@ export default function ProfileScreen() {
             <ProfileButton
               iconName="pencil-outline"
               title="EDIT PROFILE"
-              onAction={()=>{}}
+              onAction={goToEditProfile}
             />
             <ProfileButton
               iconName="exit-outline"
@@ -126,7 +129,7 @@ export default function ProfileScreen() {
               onAction={logout}
             />
           </ScrollView>
-        </LinearGradient>
+        </View>
       </View>
     </ImageBackground>
   );
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   text: {
     fontFamily: "Sans",
@@ -182,8 +185,10 @@ const styles = StyleSheet.create({
     borderRadius: 19,
     marginTop: 13,
     marginHorizontal: 20,
+    backgroundColor: "#f2f2f2",
     borderColor: "rgba(207, 75, 255, 0.2)",
     borderWidth: 1,
     marginBottom: 30,
+    padding:20,
   },
 });

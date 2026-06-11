@@ -6,7 +6,7 @@ export const SectionDivider = (props: any) => {
     <View style={styles.sectionDivider}>
       <Ionicons
         name={props.iconName}
-        color={"rgb(255, 27, 110)"}
+        color={"rgb(92, 23, 113)"}
         size={20}
       />
       <Text style={[styles.sectionTitle, styles.text]}>{props.title}</Text>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sectionTitle: {
-    color: "rgb(255, 27, 110)",
+    color: "rgb(92, 23, 113)",
     fontSize: 13,
     lineHeight: 16,
     marginLeft: 10,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 1,
     marginLeft: 10,
-    backgroundColor: "rgb(255, 27, 110)",
+    backgroundColor: "rgb(92, 23, 113)",
   },
   text: {
     fontFamily: "Sans",

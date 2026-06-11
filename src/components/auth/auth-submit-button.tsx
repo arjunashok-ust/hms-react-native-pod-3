@@ -11,18 +11,19 @@ export const AuthSubmitButton = (props: any) => {
 const styles = StyleSheet.create({
   submitButton: {
     width: "80%",
-    height:40,
     marginTop: 30,
-    borderColor:'black',
+    padding:10,
+    backgroundColor:"#4c1c77",
+    borderColor:"rgba(0,0,0,0.3)",
     borderWidth:1,
-    borderRadius: 30,
-    overflow: "hidden",
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     fontFamily: 'Sans',
-    color: 'black',
-    fontSize: 16,
+    color: '#f0f0f0',
+    fontSize: 14,
+    lineHeight:30,
   }
 });

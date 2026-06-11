@@ -22,8 +22,9 @@ export default function LoginScreen() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [errors, setErrors] = useState({ email, password });
-  const [isFormValid, setFormStatus] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     let error = { email: "", password: "" };
@@ -41,15 +42,10 @@ export default function LoginScreen() {
       error.password = "Minimum 8 characters required";
     }
 
-    if(!error.email && !error.password){
-      setFormStatus(true);
+    if (!error.email && !error.password) {
       return true;
     }
-    else{
-      return false;
-      setFormStatus(false);
-    }
-  
+
     setErrors(error);
   };
 
@@ -61,18 +57,20 @@ export default function LoginScreen() {
         password: password,
       };
 
-      const isValid = await login(payload);
-
-      setTimeout(() => {
-        if (isValid) {
-          Alert.alert("Success", "Login Sucessfull");
-          navigator.replace("tabs");
-        } else {
-          Alert.alert("Failed", "Invalid Credentials");
-        }
-      },500);
+      try {
+        setIsLoading(true);
+        await login(payload);
+        Alert.alert("Success", "Login Sucessfull");
+        navigator.replace("tabs", {
+          screen: "home",
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      Alert.alert("Server error during login");
+      Alert.alert("Validation Failed", "Please check the input fields");
     }
   };
 
@@ -107,7 +105,10 @@ export default function LoginScreen() {
           {!!errors.password && (
             <Text style={styles.errorText}>{errors.password}</Text>
           )}
-          <AuthSubmitButton titleText="Login" onSubmit={sendLogin} />
+          <AuthSubmitButton
+            titleText={isLoading ? "Logging In..." : "Login"}
+            onSubmit={sendLogin}
+          />
           <TouchableOpacity
             style={styles.loginFooter}
             onPress={() => navigator.navigate("signup")}
@@ -124,11 +125,12 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    backgroundColor: "#e1e1e1",
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgb(0,0,0,0.7)",
     justifyContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 
   welcomeTextContainer: {
@@ -141,20 +143,21 @@ const styles = StyleSheet.create({
   },
   container: {
     height: "50%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingTop: 40,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 30,
+    margin: 20,
     justifyContent: "center",
     alignItems: "center",
+    elevation:5,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#3b3b3b",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#4c1c77",
     borderRadius: 4,
+    marginTop:5,
     paddingHorizontal: 10,
   },
   loginFooter: {
@@ -167,6 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signUp: {
-    color: "rgb(255, 107, 107)",
+    color: "#4c1c77",
   },
 });
