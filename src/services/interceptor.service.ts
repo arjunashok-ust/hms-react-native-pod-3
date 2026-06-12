@@ -1,9 +1,12 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { Alert } from "react-native";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig?.extra?.API_URL;
 
 const api = axios.create({
-  baseURL: "http://10.0.2.2:8080",
+  baseURL: API_URL,
 });
 
 // token attacher

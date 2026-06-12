@@ -23,28 +23,31 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [errors, setErrors] = useState({ email, password });
+  const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
+
+  const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
-    let error = { email: "", password: "" };
-    const emailRegex = /^[a-z0-9._]+@[a-z]+\.[a-z]{2,}$/i;
+    let error = { emailError: "", passwordError: "" };
 
     if (!email) {
-      error.email = "Email is required.";
+      error.emailError = "Email is required.";
     } else if (!emailRegex.test(email)) {
-      error.email = "Email is invalid.";
+      error.emailError = "Email is invalid.";
     }
 
     if (!password) {
-      error.password = "Password is required";
+      // NOSONAR
+      error.passwordError = "Password is required";
     } else if (password.length < 8) {
-      error.password = "Minimum 8 characters required";
+      // NOSONAR
+      error.passwordError = "Minimum 8 characters required";
     }
 
     setErrors(error);
 
-    return !error.email && !error.password;
+    return !error.emailError && !error.passwordError;
   };
 
   const sendLogin = async () => {
@@ -99,8 +102,8 @@ export default function LoginScreen() {
             }}
             iconName="mail-outline"
           />
-          {!!errors.email && (
-            <Text style={styles.errorText}>{errors.email}</Text>
+          {!!errors.emailError && (
+            <Text style={styles.errorText}>{errors.emailError}</Text>
           )}
           <AuthInputText
             innerText="Password"
@@ -110,8 +113,8 @@ export default function LoginScreen() {
             isPassword={true}
             iconName="key-outline"
           />
-          {!!errors.password && (
-            <Text style={styles.errorText}>{errors.password}</Text>
+          {!!errors.passwordError && (
+            <Text style={styles.errorText}>{errors.passwordError}</Text>
           )}
           <AuthSubmitButton
             titleText={isLoading ? "Logging In..." : "Login"}

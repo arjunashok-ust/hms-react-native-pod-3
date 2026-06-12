@@ -43,3 +43,6 @@ yarn-error.*
 # sonar qube configs
 sonar-project.properties
 .scannerwork/
+
+# environment variables
+.env
