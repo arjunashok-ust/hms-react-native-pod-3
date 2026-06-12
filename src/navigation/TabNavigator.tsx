@@ -6,6 +6,22 @@ import AppointmentScreen from "../screens/appointment";
 
 const Tab = createBottomTabNavigator();
 
+const TabIcon = ({ focused, color, size, active, inactive }: any) => (
+  <Ionicons name={focused ? active : inactive} color={color} size={size} />
+);
+
+const HomeTabIcon = ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
+  <TabIcon focused={focused} color={color} size={size} active="home" inactive="home-outline" />
+);
+
+const ProfileTabIcon = ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
+  <TabIcon focused={focused} color={color} size={size} active="person" inactive="person-outline" />
+);
+
+const AppointmentTabIcon = ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
+  <TabIcon focused={focused} color={color} size={size} active="calendar" inactive="calendar-outline" />
+);
+
 export default function TabNavigator() {
   return (
     <Tab.Navigator
@@ -28,13 +44,7 @@ export default function TabNavigator() {
         name="home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: HomeTabIcon,
           tabBarLabel: "HOME",
         }}
       ></Tab.Screen>
@@ -42,13 +52,7 @@ export default function TabNavigator() {
         name="profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "person" : "person-outline"}
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: ProfileTabIcon,
           tabBarLabel: "PROFILE",
         }}
       ></Tab.Screen>
@@ -56,13 +60,7 @@ export default function TabNavigator() {
         name="appointment"
         component={AppointmentScreen}
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "calendar" : "calendar-outline"}
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: AppointmentTabIcon,
           tabBarLabel: "APPOINTMENT",
         }}
       ></Tab.Screen>

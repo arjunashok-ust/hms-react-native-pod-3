@@ -3,12 +3,12 @@ import { useState } from "react";
 import { LoginRequestModel } from "../types/auth.types";
 import { login } from "../services/auth.service";
 import {
-  Alert,
   View,
   Text,
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
@@ -16,6 +16,7 @@ import { WelcomeTextContainer } from "../components/auth/welcome-text-container"
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
+import Toast from "react-native-toast-message";
 
 export default function LoginScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -59,18 +60,32 @@ export default function LoginScreen() {
 
       try {
         setIsLoading(true);
-        await login(payload);
-        Alert.alert("Success", "Login Sucessfull");
-        navigator.replace("tabs", {
-          screen: "home",
-        });
+        try {
+          await login(payload);
+          Toast.show({
+            type: "success",
+            text1: "Success.",
+            text2: "Login Sucessfull",
+          });
+
+          navigator.replace("tabs", {
+            screen: "home",
+          });
+        } catch (err) {
+          Alert.alert("Error", "Only patients are allowed to login");
+          console.error(err);
+        }
       } catch (err) {
         console.error(err);
       } finally {
         setIsLoading(false);
       }
     } else {
-      Alert.alert("Validation Failed", "Please check the input fields");
+      Toast.show({
+        type: "error",
+        text1: "Validation Failed",
+        text2: "Please check the input fields",
+      });
     }
   };
 
@@ -148,7 +163,7 @@ const styles = StyleSheet.create({
     margin: 20,
     justifyContent: "center",
     alignItems: "center",
-    elevation:5,
+    elevation: 5,
   },
   errorText: {
     color: "#3b3b3b",
@@ -157,7 +172,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderColor: "#4c1c77",
     borderRadius: 4,
-    marginTop:5,
+    marginTop: 5,
     paddingHorizontal: 10,
   },
   loginFooter: {

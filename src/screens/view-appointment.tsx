@@ -7,7 +7,6 @@ import {
   FlatList,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
-import { Ionicons } from "@expo/vector-icons";
 import { AppointmentCard } from "../components/appointment/appointment-card.component";
 import { useEffect, useState } from "react";
 import { AppointmentModel } from "../types/appointment.types";
@@ -17,6 +16,7 @@ import { NavigationModel } from "../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
 import { getAppointmentsByPatientId } from "../services/appointment.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FormHeader } from "../components/appointment/form-header.component";
 
 export default function ViewAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -59,22 +59,8 @@ export default function ViewAppointmentScreen() {
         />
 
         <View style={styles.container}>
-          <View style={styles.formHeader}>
-            <Ionicons
-              name="calendar-outline"
-              color={"#d6d6d6"}
-              size={25}
-              style={styles.formHeaderIcon}
-            />
-            <View style={styles.formHeaderTextHolder}>
-              <Text style={[styles.text, styles.formHeaderTitle]}>
-                SCHEDULE
-              </Text>
-              <Text style={[styles.text, styles.formHeaderValue]}>
-                YOUR APPOINTMENTS
-              </Text>
-            </View>
-          </View>
+          
+          <FormHeader title="SCHEDULE" value="Your Appointments"/>
 
           {appointments.length === 0 && (
             <Text style={[styles.noAppointmentsText, styles.text]}>

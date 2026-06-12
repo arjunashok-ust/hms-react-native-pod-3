@@ -40,6 +40,10 @@ yarn-error.*
 /ios
 /android
 
+# sonar qube configs
+sonar-project.properties
+.scannerwork/
+
 CLAUDE.md
 AGENTS.md
 .claude

@@ -7,7 +7,6 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
@@ -21,6 +20,7 @@ import { signUp } from "../services/auth.service";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
+import Toast from "react-native-toast-message";
 
 export default function SignUpScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -153,18 +153,25 @@ export default function SignUpScreen() {
         setIsLoading(true);
         await signUp(payload);
 
-        Alert.alert("Success", "Account created successfully.");
-        navigator.navigate("login");
+        Toast.show({
+          type: "success",
+          text1: "Success.",
+          text2: "Account created successfully.",
+        });
+        setTimeout(() => {
+          navigator.navigate("login");
+        }, 2000);
       } catch (err) {
         console.error(err);
       } finally {
         setIsLoading(false);
       }
     } else {
-      Alert.alert(
-        "Validation failed.",
-        "Please check your input and try again.",
-      );
+      Toast.show({
+        type: "error",
+        text1: "Validation failed.",
+        text2: "Please check your input and try again.",
+      });
     }
   };
 
@@ -233,9 +240,13 @@ export default function SignUpScreen() {
                 style={styles.picker}
                 dropdownIconColor="#828282"
               >
-                <Picker.Item label="Gender" value="" style={styles.picker}/>
-                <Picker.Item label="Male" value="Male" style={styles.picker}/>
-                <Picker.Item label="Female" value="Female" style={styles.picker}/>
+                <Picker.Item label="Gender" value="" style={styles.picker} />
+                <Picker.Item label="Male" value="Male" style={styles.picker} />
+                <Picker.Item
+                  label="Female"
+                  value="Female"
+                  style={styles.picker}
+                />
               </Picker>
             </View>
             {!!errors.gender && (
@@ -350,7 +361,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderColor: "#4c1c77",
     borderRadius: 4,
-    marginTop:5,
+    marginTop: 5,
     paddingHorizontal: 10,
   },
   dropdownHolder: {
@@ -358,7 +369,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 15,
     borderColor: "rgba(0,0,0,0.2)",
-    borderWidth:1,
+    borderWidth: 1,
     width: "80%",
     height: 50,
     marginVertical: 10,
@@ -366,14 +377,14 @@ const styles = StyleSheet.create({
   picker: {
     color: "#828282",
     fontFamily: "Sans",
-    fontSize:14,
+    fontSize: 14,
   },
   dobText: {
     fontFamily: "Sans",
     fontSize: 12,
     color: "#828282",
     paddingHorizontal: 10,
-    marginTop:10,
+    marginTop: 10,
   },
   signUpFooter: {
     marginTop: 40,
