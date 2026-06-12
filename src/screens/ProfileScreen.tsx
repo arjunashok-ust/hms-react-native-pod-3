@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   avatarIcon: { fontSize: 40, color: "#FFFFFF" },
   nameText: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     color: "#1E1E3F",
     marginBottom: 16,
   },
@@ -308,6 +308,6 @@ const styles = StyleSheet.create({
   logoutButtonText: {
     color: "#EF4444",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
   },
 });

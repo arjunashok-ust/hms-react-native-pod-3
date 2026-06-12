@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     padding: 24,
     borderRadius: 20,
-  
+
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: "#1E1E3F",
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     marginLeft: 10,
   },
   listContainer: {
@@ -135,19 +135,19 @@ const styles = StyleSheet.create({
   doctorName: {
     color: "#1E1E3F",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     lineHeight: 22,
   },
   designation: {
     color: "#9CA3AF",
     fontSize: 12,
-    fontWeight: "500",
+    fontFamily: "Lexend",
     marginTop: 2,
   },
   department: {
     color: "#6C4EDB",
     fontSize: 13,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
   },
   specialization: {
     color: "#4B5563",

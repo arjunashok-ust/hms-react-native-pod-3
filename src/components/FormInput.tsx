@@ -72,5 +72,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: -10,
     marginLeft: 8,
+    fontFamily: "Lexend",
   },
 });

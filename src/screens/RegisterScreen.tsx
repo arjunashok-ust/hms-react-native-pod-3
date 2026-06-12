@@ -150,12 +150,16 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   scrollContainer: { flexGrow: 1, justifyContent: "center", padding: 20 },
   headerSection: { marginBottom: 40, marginTop: 20 },
-  headerTitleLine1: { fontSize: 40, fontWeight: "300", color: "#1E1E3F" },
+  headerTitleLine1: {
+    fontSize: 40,
+    color: "#1E1E3F",
+    fontFamily: "Montserrat",
+  },
   headerTitleLine2: {
     fontSize: 40,
-    fontWeight: "bold",
     color: "#4B1D76",
     marginBottom: 10,
+    fontFamily: "Lexend",
   },
   subtitleContainer: {
     borderWidth: 1,
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: "flex-start",
   },
-  subtitleText: { color: "#1E1E3F", fontSize: 14, fontWeight: "500" },
+  subtitleText: { color: "#1E1E3F", fontSize: 14, fontFamily: "Lexend" },
   card: {
     backgroundColor: "#F8F9FA",
     padding: 24,
@@ -177,6 +181,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   linkButton: { marginTop: 24, alignItems: "center" },
-  linkTextRegular: { color: "#1E1E3F", fontSize: 15, fontWeight: "500" },
-  linkTextPurple: { color: "#4B1D76", fontWeight: "bold" },
+  linkTextRegular: { color: "#1E1E3F", fontSize: 15, fontFamily: "Lexend" },
+  linkTextPurple: { color: "#4B1D76", fontFamily: "Lexend" },
+  buttonText: { fontFamily: "Lexend" },
 });

@@ -28,14 +28,12 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profile, setProfile] = useState<PatientProfile | null>(null);
 
-  // 1. Refetch when the screen comes into focus
   useFocusEffect(
     useCallback(() => {
       fetchDashboardData();
     }, []),
   );
 
-  // 2. Refetch if the user taps the tab icon while ALREADY on this screen
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", () => {
       if (navigation.isFocused()) {
@@ -72,14 +70,11 @@ export default function HomeScreen() {
     }
   };
 
-  // 🟢 NEW: Logic to filter out past appointments and find the absolute next one
   const getNextAppointment = () => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Strip time to ensure accurate day-to-day comparison
-
+    today.setHours(0, 0, 0, 0);
     return appointments.find((app) => {
       const appDate = new Date(app.date);
-      // Ensure the appointment is today or in the future, and is still active
       return (
         appDate >= today &&
         (app.status === "Scheduled" || app.status === "Pending")
@@ -164,7 +159,7 @@ const styles = StyleSheet.create({
     color: "#6B7280",
     marginTop: 12,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: "Lexend",
   },
   scrollContent: {
     paddingVertical: 20,
@@ -180,18 +175,18 @@ const styles = StyleSheet.create({
   welcomeText: {
     color: "#9CA3AF",
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: "Lexend",
   },
   patientName: {
     color: "#1E1E3F",
-    fontSize: 45,
-    fontWeight: "bold",
+    fontSize: 55,
+    fontFamily: "ShareTech",
     marginTop: 4,
   },
   uhid: {
     color: "#2d0ba9",
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     marginTop: 4,
   },
   settingsButton: {
@@ -225,7 +220,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: "#1E1E3F",
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
   },
   emptyCard: {
     backgroundColor: "#FFFFFF",
@@ -243,6 +238,6 @@ const styles = StyleSheet.create({
   emptyText: {
     color: "#9CA3AF",
     fontStyle: "italic",
-    fontWeight: "500",
+    fontFamily: "Lexend",
   },
 });

@@ -52,17 +52,18 @@ const styles = StyleSheet.create({
   cardTitle: {
     color: "#1E1E3F",
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     marginBottom: 16,
   },
   summaryText: {
     color: "#6B7280",
     fontSize: 15,
     marginBottom: 12,
+    fontFamily: "Lexend",
   },
   summaryValue: {
     color: "#4B5563",
-    fontWeight: "500",
+    fontFamily: "Lexend",
   },
   summaryHeader: {
     flexDirection: "row",

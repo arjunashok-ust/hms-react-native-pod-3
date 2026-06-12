@@ -31,13 +31,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     color: "#9CA3AF",
-    fontWeight: "600",
+    fontFamily: "Lexend",
     marginBottom: 6,
     letterSpacing: 0.5,
   },
   value: {
     fontSize: 16,
     color: "#1E1E3F",
-    fontWeight: "600",
+    fontFamily: "Lexend",
   },
 });

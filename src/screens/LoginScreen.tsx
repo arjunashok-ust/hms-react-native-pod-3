@@ -11,17 +11,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import * as SecureStore from "expo-secure-store";
 import { RootStackParamList } from "../types/navigation";
 import { authService } from "../services/authService";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default function LoginScreen() {
+  const [secure, setSecure] = useState(true);
   const backgroundImage = require("../../assets/images/hospital3.jpg");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>(""); 
+  const [emailError, setEmailError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -41,18 +42,7 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     try {
-      const data = await authService.login(trimmedEmail, password);
-
-      const token = data.token;
-      const profile = data.user.profile;
-
-      if (!token) throw new Error("Server did not return a token.");
-
-      await SecureStore.setItemAsync("patient_jwt", token);
-      await SecureStore.setItemAsync(
-        "patient_profile",
-        JSON.stringify(profile),
-      );
+      await authService.login(trimmedEmail, password);
 
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
     } catch (error: any) {
@@ -71,36 +61,66 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <View style={styles.headerSection}>
-            <Text style={styles.headerTitleLine1}>Welcome Back,</Text>
+            <Text style={styles.headerTitleLine1}>Welcome Back</Text>
             <Text style={styles.headerTitleLine2}>Sign In.</Text>
           </View>
 
           <View style={styles.card}>
-            <TextInput
-              placeholder="Email"
-              placeholderTextColor="#9CA3AF"
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-                if (emailError) setEmailError("");
-              }}
-              style={[styles.input, emailError ? styles.inputError : null]}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+            <View style={styles.inputContainer}>
+              <Feather
+                name="mail"
+                size={20}
+                color="#6B7280"
+                style={styles.icon}
+              />
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor="#9CA3AF"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  if (emailError) setEmailError("");
+                }}
+                style={[
+                  styles.input,
+                  emailError ? styles.inputError : null,
+                  { flex: 1 }, // important so input takes remaining space
+                ]}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
             {emailError ? (
               <Text style={styles.errorText}>{emailError}</Text>
             ) : null}
 
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="#9CA3AF"
-              value={password}
-              onChangeText={setPassword}
-              style={styles.input}
-              secureTextEntry={true}
-            />
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="onepassword"
+                size={20}
+                color="#6B7280"
+                style={styles.icon}
+              />
 
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#9CA3AF"
+                value={password}
+                onChangeText={setPassword}
+                style={[styles.input, { flex: 1 }]}
+                secureTextEntry={secure}
+                autoCapitalize="none"
+              />
+
+              <TouchableOpacity onPress={() => setSecure(!secure)}>
+                <Feather
+                  name={secure ? "eye-off" : "eye"}
+                  size={20}
+                  color="#6B7280"
+                />
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity
               style={[styles.button, isLoading && styles.buttonDisabled]}
               onPress={handleLoginPress}
@@ -112,7 +132,6 @@ export default function LoginScreen() {
                 <Text style={styles.buttonText}>Login</Text>
               )}
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => navigation.navigate("Register")}
               style={styles.linkButton}
@@ -134,6 +153,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#E6F0F2",
   },
+  text: {
+    fontFamily: "Lexend",
+  },
   safeArea: { flex: 1 },
   container: {
     flex: 1,
@@ -146,14 +168,14 @@ const styles = StyleSheet.create({
   },
   headerTitleLine1: {
     fontSize: 40,
-    fontWeight: "300",
+    fontFamily: "Montserrat",
     color: "#1E1E3F",
   },
   headerTitleLine2: {
     fontSize: 40,
-    fontWeight: "bold",
     color: "#4B1D76",
     marginBottom: 10,
+    fontFamily: "Lexend",
   },
   card: {
     backgroundColor: "#F8F9FA",
@@ -165,23 +187,29 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     elevation: 8,
   },
-  input: {
-    backgroundColor: "#FFFFFF",
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    fontSize: 16,
-    color: "#1E1E3F",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+     width: "100%"
+  },
+
+  icon: {
+    marginRight: 8,
+  },
+
+  input: {
+    height: 50,
+    color: "#111827",
   },
   inputError: {
     borderColor: "#ef4444",
     borderWidth: 1,
-    marginBottom: 8, 
+    marginBottom: 8,
   },
   errorText: {
     color: "#ef4444",
@@ -202,8 +230,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonDisabled: { backgroundColor: "#8b5cf6" },
-  buttonText: { color: "#ffffff", fontSize: 16, fontWeight: "bold" },
+  buttonText: { color: "#ffffff", fontSize: 16, fontFamily: "Lexend" },
   linkButton: { marginTop: 24, alignItems: "center" },
-  linkTextRegular: { color: "#1E1E3F", fontSize: 15, fontWeight: "500" },
-  linkTextPurple: { color: "#4B1D76", fontWeight: "bold" },
+  linkTextRegular: { color: "#1E1E3F", fontSize: 15, fontFamily: "Lexend" },
+  linkTextPurple: { color: "#4B1D76", fontFamily: "Lexend" },
+  TextInput: { fontFamily: "Lexend" },
 });

@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  TextInput,
   ActivityIndicator,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -11,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PhoneInput from "react-native-phone-number-input";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import { Feather } from "@expo/vector-icons";
 
 import FormInput from "../components/FormInput";
 import { getPatientValidationSchema } from "../validations/patientValidations";
@@ -32,6 +34,9 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
     isEditMode = false,
   } = props;
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     control,
@@ -90,20 +95,85 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
       {/* Creation Mode Only Fields */}
       {!isEditMode && (
         <>
-          <FormInput
+          {/* 🟢 Custom Password Field with Eye Toggle */}
+          <Controller
+            control={control}
             name="password"
-            placeholder="Password"
-            control={control}
-            error={errors.password}
-            secureTextEntry
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View
+                style={[
+                  styles.passwordWrapper,
+                  errors.password && styles.inputError,
+                ]}
+              >
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Password"
+                  placeholderTextColor="#9CA3AF"
+                  secureTextEntry={!showPassword}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Feather
+                    name={showPassword ? "eye" : "eye-off"}
+                    size={20}
+                    color="#9CA3AF"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           />
-          <FormInput
+          {errors.password && (
+            <Text style={styles.errorText}>
+              {errors.password.message as string}
+            </Text>
+          )}
+
+          {/* 🟢 Custom Confirm Password Field with Eye Toggle */}
+          <Controller
+            control={control}
             name="confirmPassword"
-            placeholder="Confirm Password"
-            control={control}
-            error={errors.confirmPassword}
-            secureTextEntry
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View
+                style={[
+                  styles.passwordWrapper,
+                  errors.confirmPassword && styles.inputError,
+                ]}
+              >
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#9CA3AF"
+                  secureTextEntry={!showConfirmPassword}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <Feather
+                    name={showConfirmPassword ? "eye" : "eye-off"}
+                    size={20}
+                    color="#9CA3AF"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           />
+          {errors.confirmPassword && (
+            <Text style={styles.errorText}>
+              {errors.confirmPassword.message as string}
+            </Text>
+          )}
         </>
       )}
 
@@ -179,10 +249,7 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               onValueChange={onChange}
               style={styles.picker}
             >
-              <Picker.Item
-                label="Blood Group (Optional)"
-                color="#9CA3AF"
-              />
+              <Picker.Item label="Blood Group (Optional)" color="#9CA3AF" />
               <Picker.Item label="A+" value="A+" />
               <Picker.Item label="A-" value="A-" />
               <Picker.Item label="B+" value="B+" />
@@ -298,6 +365,30 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
+
+  // 🟢 New styles for the password fields
+  passwordWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 16,
+    fontSize: 16,
+    color: "#1E1E3F",
+  },
+  eyeIcon: {
+    padding: 16,
+  },
+
   inputError: { borderColor: "#ef4444", borderWidth: 1 },
   errorText: {
     color: "#ef4444",
@@ -336,8 +427,8 @@ const styles = StyleSheet.create({
   },
   picker: { height: 55, width: "100%", color: "#1E1E3F" },
   dateInput: { justifyContent: "center" },
-  dateText: { fontSize: 16, color: "#1E1E3F" },
-  placeholderText: { fontSize: 16, color: "#9CA3AF" },
+  dateText: { fontSize: 16, color: "#1E1E3F", fontFamily: "Lexend" },
+  placeholderText: { fontSize: 16, color: "#9CA3AF", fontFamily: "Lexend" },
   button: {
     backgroundColor: "#4B1D76",
     padding: 18,
@@ -352,4 +443,5 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: { backgroundColor: "#8b5cf6" },
   buttonText: { color: "#ffffff", fontSize: 16, fontWeight: "bold" },
+  TextInput: { fontFamily: "Lexend" },
 });

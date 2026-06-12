@@ -12,14 +12,37 @@ export const attachErrorInterceptor = (client: AxiosInstance) => {
                 const status = error.response.status;
                 const serverMessage = error.response.data?.message;
 
+                const isAuthRequest =
+                    error.config?.url?.includes('login') ||
+                    error.config?.url?.includes('signup');
+
                 if (status === 401 || status === 403) {
-                    await SecureStore.deleteItemAsync("patient_jwt");
-                    await SecureStore.deleteItemAsync("patient_profile");
-                    resetToLogin();
-                    customErrorMessage = "Your session has expired. Please log in again.";
-                } else if (status >= 500) {
+
+                    if (isAuthRequest) {
+                        customErrorMessage = serverMessage || "Authentication failed.";
+                    }
+                    else if (status === 403) {
+                        customErrorMessage = serverMessage || "Forbidden: You do not have permission to perform this action.";
+                    }
+                    else {
+                        await SecureStore.deleteItemAsync("patient_jwt");
+                        await SecureStore.deleteItemAsync("patient_profile");
+                        resetToLogin();
+                        customErrorMessage = "Your session has expired. Please log in again.";
+                    }
+
+                } else if (status === 404) {
+                    customErrorMessage = "Entity Not Found."
+                } else if (status === 409) {
+                    customErrorMessage = "Conflicting entity exists. Please check your data"
+                } else if (status === 422) {
+                    customErrorMessage = "Invalid request. Please check your data.";
+                }
+                else if (status >= 500) {
                     customErrorMessage = "The server is experiencing issues. Please try again later.";
-                } else {
+                }
+                else {
+                    // Fallback
                     customErrorMessage = serverMessage || "Invalid request. Please check your data.";
                 }
             } else if (error.request) {

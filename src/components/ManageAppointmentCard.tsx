@@ -112,16 +112,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-  avatarText: { color: "#FFF", fontWeight: "bold" },
+  avatarText: { color: "#FFF", fontWeight: "bold", fontFamily: "Lexend" },
   detailsContainer: { flex: 1 },
-  docName: { fontSize: 18, fontWeight: "bold", color: "#1E1E3F" },
-  deptText: { fontSize: 14, color: "#9CA3AF" },
+  docName: {
+    fontSize: 18,
+
+    color: "#1E1E3F",
+    fontFamily: "Lexend",
+  },
+  deptText: { fontSize: 14, color: "#9CA3AF", fontFamily: "Lexend" },
   badge: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8 },
-  badgeText: { color: "#FFF", fontWeight: "bold", fontSize: 12 },
+  badgeText: {
+    color: "#FFF",
+    fontFamily: "Lexend",
+    fontSize: 12,
+  },
   timeText: {
     color: "#4B5563",
     fontSize: 14,
-    fontWeight: "500",
+    fontFamily: "Lexend",
     backgroundColor: "#F9FAFB",
     padding: 12,
     borderRadius: 12,
@@ -141,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FAFAFA",
   },
-  actionText: { fontWeight: "600", color: "#4B5563" },
+  actionText: { fontFamily: "Lexend", color: "#4B5563" },
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -163,6 +172,6 @@ const styles = StyleSheet.create({
   pillText: {
     color: "#1E1E3F",
     fontSize: 12,
-    fontWeight: "600",
+    fontFamily: "Lexend",
   },
 });

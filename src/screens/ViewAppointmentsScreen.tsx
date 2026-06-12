@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   useNavigation,
   NavigationProp,
-  useFocusEffect
+  useFocusEffect,
 } from "@react-navigation/native";
 import { appointmentService } from "../services/appointmentService";
 import ManageAppointmentCard from "../components/ManageAppointmentCard";
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   mainTitle: { fontSize: 36, fontWeight: "300", color: "#1E1E3F" },
   boldTitle: {
     fontSize: 36,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     color: "#4B1D76",
     marginBottom: 16,
   },
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   bookTriggerText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
   },
   backBtn: {
     backgroundColor: "#E5E7EB",

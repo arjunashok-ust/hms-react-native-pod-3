@@ -48,8 +48,11 @@ export default function AppointmentForm({
     slotListRef,
   } = useAppointmentData(isEditMode, appointmentData);
 
-  const sixMonthsFromNow = new Date(tomorrow);
-  sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
+  const maxAppointmentDate = new Date(tomorrow);
+  maxAppointmentDate.setMonth(
+    maxAppointmentDate.getMonth() +
+      process.env.NO_OF_MONTH_ALLOWED_IN_FUTURE_FOR_APPOINTMENT,
+  );
 
   const handleScrollFailed = (
     info: any,
@@ -75,13 +78,19 @@ export default function AppointmentForm({
     }
     setIsLoading(true);
     try {
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const exactLocalDate = `${year}-${month}-${day}`;
+
       const payload = {
         patientID: patientUHID,
         doctorEmployeeID: selectedDoctor,
-        date: selectedDate.toISOString().split("T")[0],
+        date: exactLocalDate,
         timeSlot: selectedSlot,
         status: "Pending",
       };
+
       if (isEditMode) {
         await appointmentService.updateAppointment(
           appointmentData.appointmentCode,
@@ -94,7 +103,11 @@ export default function AppointmentForm({
       }
       onSuccess();
     } catch (err: any) {
-      Alert.alert("Transaction Failed", err.message);
+      const serverErrorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "An unknown error occurred.";
+      Alert.alert("Booking Rejected", serverErrorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -137,7 +150,7 @@ export default function AppointmentForm({
           renderItem={({ item }) => (
             <SelectablePill
               title={item.name}
-              subtitle={item.department}
+              subtitle={item.specialization}
               isSelected={selectedDoctor === item.employeeCode}
               onPress={() => {
                 setSelectedDoctor(item.employeeCode);
@@ -161,7 +174,7 @@ export default function AppointmentForm({
           value={selectedDate}
           mode="date"
           minimumDate={tomorrow}
-          maximumDate={sixMonthsFromNow}
+          maximumDate={maxAppointmentDate}
           onChange={(e, date) => {
             setShowDatePicker(false);
             if (date) {
@@ -256,12 +269,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-  subText: { fontSize: 11, color: "#9CA3AF", fontWeight: "bold" },
-  cardTitle: { fontSize: 18, fontWeight: "bold", color: "#1E1E3F" },
+  subText: { fontSize: 11, color: "#9CA3AF", fontFamily: "Lexend" },
+  cardTitle: { fontSize: 18, fontFamily: "Lexend", color: "#1E1E3F" },
   label: {
     fontSize: 12,
     color: "#9CA3AF",
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     marginBottom: 8,
     marginTop: 16,
   },
@@ -272,7 +285,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderColor: "#4B1D76",
   },
-  disabledInputText: { color: "#1E1E3F", fontWeight: "bold" },
+  disabledInputText: { color: "#1E1E3F", fontFamily: "Lexend" },
   scrollWrapper: { marginHorizontal: -4 },
   noSlotsText: {
     color: "#EF4444",
@@ -280,6 +293,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     paddingHorizontal: 4,
     marginTop: 4,
+    fontFamily: "Lexend",
   },
   pickerContainer: {
     backgroundColor: "#FFF",
@@ -291,7 +305,12 @@ const styles = StyleSheet.create({
     height: 55,
     paddingHorizontal: 8,
   },
-  dateText: { fontSize: 16, color: "#1E1E3F", paddingLeft: 8 },
+  dateText: {
+    fontSize: 16,
+    color: "#1E1E3F",
+    paddingLeft: 8,
+    fontFamily: "Lexend",
+  },
   btn: {
     backgroundColor: "#4B1D76",
     padding: 16,
@@ -299,7 +318,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 24,
   },
-  btnText: { color: "#FFF", fontWeight: "bold", fontSize: 16 },
+  btnText: { color: "#FFF", fontFamily: "Lexend", fontSize: 16 },
   backBtn: {
     backgroundColor: "#F3F4F6",
     padding: 14,
@@ -308,5 +327,5 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   backBtnContainer: { flexDirection: "row", alignItems: "center", gap: 8 },
-  backText: { color: "#4B5563", fontWeight: "bold", fontSize: 14 },
+  backText: { color: "#4B5563", fontFamily: "Lexend", fontSize: 14 },
 });

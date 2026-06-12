@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "#9CA3AF",
     marginTop: 2,
-    fontWeight: "500",
+    fontFamily: "Lexend",
   },
   pillSubTextSelected: { color: "#D1D5DB" },
 });

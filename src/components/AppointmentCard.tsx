@@ -75,23 +75,22 @@ const styles = StyleSheet.create({
   code: {
     color: "#6C4EDB",
     fontSize: 12,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     marginBottom: 6,
   },
   doctorName: {
     color: "#1E1E3F",
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     marginBottom: 4,
   },
   specialization: {
     color: "#6C4EDB",
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "Lexend",
     marginBottom: 16,
   },
 
-  // 🟢 New Pill Styles
   pillRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
   pill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(108, 78, 219, 0.1)", // A soft wash of your brand purple
+    backgroundColor: "rgba(108, 78, 219, 0.1)",
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   pillText: {
     color: "#6C4EDB",
     fontSize: 13,
-    fontWeight: "bold",
-    marginLeft: 6, // Adds breathing room between the icon and the text
+    fontFamily: "Lexend",
+    marginLeft: 6, 
   },
 });

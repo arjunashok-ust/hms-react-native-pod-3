@@ -3,6 +3,7 @@ import * as Yup from "yup";
 const nameRegex = /^[A-Za-z\s.\-']+$/;
 const stateRegex = /^[A-Za-z\s]+$/;
 const indianPhoneRegex = /^(?:\+91)?\s*[6-9]\d{9}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export const getPatientValidationSchema = (isEditMode: boolean) => {
     const baseSchema = {
@@ -13,11 +14,10 @@ export const getPatientValidationSchema = (isEditMode: boolean) => {
             .max(50, "Name cannot exceed 50 characters")
             .matches(nameRegex, "Name can only contain alphabets, spaces, dots, hyphens, and apostrophes"),
 
-        email: Yup.string()
-            .trim()
-            .lowercase()
-            .email("Please enter a valid email address")
-            .required("Email is required"),
+        email: Yup
+            .string()
+            .required("Email is required")
+            .matches(EMAIL_REGEX, "Please enter a valid email containing '@' and a domain (e.g., .com)"),
 
         phone: Yup.string()
             .required("Phone number is required")

@@ -63,10 +63,10 @@ const styles = StyleSheet.create({
   bg: { flex: 1, backgroundColor: "#E6F0F2" },
   safe: { flex: 1 },
   container: { flex: 1, padding: 24, justifyContent: "center" },
-  mainTitle: { fontSize: 40, fontWeight: "300", color: "#1E1E3F" },
+  mainTitle: { fontSize: 40, fontFamily: "Montserrat", color: "#1E1E3F" },
   boldTitle: {
     fontSize: 40,
-    fontWeight: "bold",
+    fontFamily: "Lexend",
     color: "#4B1D76",
     marginBottom: 8,
   },
