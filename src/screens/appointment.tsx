@@ -57,6 +57,7 @@ export default function AppointmentScreen() {
             isDateSet={isDateSet}
             setIsShow={setIsShow}
             doctors={doctors}
+            doctorId={doctorId}
             setDoctor={setDoctor}
             availableSlots={availableSlots}
             timeSlot={timeSlot}
