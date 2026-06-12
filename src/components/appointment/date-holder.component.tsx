@@ -2,16 +2,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
 type DateHolderProps = Readonly<{
-    date: Date,
-    setIsShow: (value:boolean) => void,
-    isDateSet: boolean,
+  date: Date;
+  setIsShow: (value: boolean) => void;
+  isDateSet: boolean;
 }>;
 
-export function DateHolder({
-    date,
-    setIsShow,
-    isDateSet,
-} : DateHolderProps) {
+export function DateHolder({ date, setIsShow, isDateSet }: DateHolderProps) {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -36,7 +32,7 @@ export function DateHolder({
 }
 
 const styles = StyleSheet.create({
-    dateHolder: {
+  dateHolder: {
     flexDirection: "row",
     backgroundColor: "rgb(222, 222, 222)",
     borderWidth: 1,
@@ -68,5 +64,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Sans",
-  }
+  },
 });

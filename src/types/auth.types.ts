@@ -1,6 +1,7 @@
 export type LoginRequestModel = {
   email: string;
   password: string;
+  isClientApp: boolean,
 };
 
 export type SignUpRequestModel = {

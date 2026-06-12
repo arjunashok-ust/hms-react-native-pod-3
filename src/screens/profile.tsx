@@ -27,9 +27,9 @@ export default function ProfileScreen() {
     fetchData();
   }, []);
 
-  const logout = () => {
-    deleteToken();
-    clearSecureStorage();
+  const logout = async () => {
+    await deleteToken();
+    await clearSecureStorage();
     navigator.replace("login");
   };
 

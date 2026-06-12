@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 export const AppointmentCard = (props: any) => {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
-  const [doctor, setDoctor] = useState<UserModel | null>();
+  const [doctor, setDoctor] = useState<UserModel | null>(null);
 
   const fetchDoctor = async () => {
     const data = await getDoctorByEmployeeId(props.doctorEmployeeId);
@@ -38,7 +38,7 @@ export const AppointmentCard = (props: any) => {
 
   useEffect(() => {
     fetchDoctor();
-  }, [props.employeeId]);
+  }, [props.doctorEmployeeId]);
 
   const deleteAppointmentByPatient = async () => {
     Alert.alert(

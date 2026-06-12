@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text,StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 export const InfoCard = (props: any) => {
   return (
@@ -11,8 +11,20 @@ export const InfoCard = (props: any) => {
         style={styles.infoIcon}
       />
       <View style={styles.infoData}>
-        <Text style={[styles.text, styles.infoText]} numberOfLines={1} ellipsizeMode="tail">{props.title}</Text>
-        <Text style={[styles.text, styles.infoValue]} numberOfLines={1} ellipsizeMode="tail">{props.value}</Text>
+        <Text
+          style={[styles.text, styles.infoText]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.title}
+        </Text>
+        <Text
+          style={[styles.text, styles.infoValue]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.value}
+        </Text>
       </View>
     </View>
   );
@@ -40,7 +52,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     marginLeft: 10,
-    width:"80%",
+    width: "80%",
   },
   infoText: {
     color: "rgba(88, 88, 88, 0.7)",
@@ -50,10 +62,10 @@ const styles = StyleSheet.create({
   infoValue: {
     color: "rgb(43, 42, 42)",
     fontSize: 14,
-    flexShrink:1,
+    flexShrink: 1,
     lineHeight: 20,
   },
-  text:{
-    fontFamily:"Sans",
-  }
+  text: {
+    fontFamily: "Sans",
+  },
 });

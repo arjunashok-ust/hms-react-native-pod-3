@@ -8,7 +8,6 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
@@ -43,11 +42,9 @@ export default function LoginScreen() {
       error.password = "Minimum 8 characters required";
     }
 
-    if (!error.email && !error.password) {
-      return true;
-    }
-
     setErrors(error);
+
+    return !error.email && !error.password;
   };
 
   const sendLogin = async () => {
@@ -56,25 +53,21 @@ export default function LoginScreen() {
       const payload: LoginRequestModel = {
         email: email,
         password: password,
+        isClientApp: true,
       };
 
       try {
         setIsLoading(true);
-        try {
-          await login(payload);
-          Toast.show({
-            type: "success",
-            text1: "Success.",
-            text2: "Login Sucessfull",
-          });
+        await login(payload);
+        Toast.show({
+          type: "success",
+          text1: "Success.",
+          text2: "Login Sucessfull",
+        });
 
-          navigator.replace("tabs", {
-            screen: "home",
-          });
-        } catch (err) {
-          Alert.alert("Error", "Only patients are allowed to login");
-          console.error(err);
-        }
+        navigator.replace("tabs", {
+          screen: "home",
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -166,11 +159,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   errorText: {
-    color: "#3b3b3b",
+    color: "#ef2121",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "#4c1c77",
+    borderColor: "#cd1717",
     borderRadius: 4,
     marginTop: 5,
     paddingHorizontal: 10,

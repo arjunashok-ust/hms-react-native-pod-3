@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, Text,StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-export default function ProfileButton(props:any) {
+export default function ProfileButton(props: any) {
   return (
     <TouchableOpacity style={styles.buttonHolder} onPress={props.onAction}>
       <Ionicons
@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     marginHorizontal: 20,
-    marginVertical:10,
+    marginVertical: 10,
     alignItems: "center",
-    elevation:2,
+    elevation: 2,
   },
   buttonText: {
     color: "rgb(41, 41, 41)",
@@ -41,5 +41,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Sans",
-  }
+  },
 });

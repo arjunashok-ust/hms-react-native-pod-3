@@ -15,15 +15,33 @@ export const ProfileCard = (props: any) => {
         <Text style={[styles.text, styles.textPrefix]}>{props.prefix}</Text>
       </LinearGradient>
       <View style={styles.doctorDetails}>
-        <Text style={[styles.text, styles.doctorText]} numberOfLines={1} ellipsizeMode="tail">{props.name}</Text>
-        <Text style={[styles.text, styles.designationText]} numberOfLines={1} ellipsizeMode="tail">{props.designation}</Text>
+        <Text
+          style={[styles.text, styles.doctorText]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.name}
+        </Text>
+        <Text
+          style={[styles.text, styles.designationText]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.designation}
+        </Text>
         <View style={styles.empIdBadge}>
           <Ionicons
             name="id-card-outline"
             size={17}
             color="rgba(255,255,255,0.5)"
           ></Ionicons>
-          <Text style={[styles.empIdText, styles.text]} numberOfLines={1} ellipsizeMode="tail">{props.id}</Text>
+          <Text
+            style={[styles.empIdText, styles.text]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {props.id}
+          </Text>
         </View>
       </View>
     </LinearGradient>

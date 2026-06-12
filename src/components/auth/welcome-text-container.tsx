@@ -2,7 +2,11 @@ import { View, Text, StyleSheet } from "react-native";
 
 export const WelcomeTextContainer = (props: any) => {
   return (
-    <View style={props.isHome?styles.HomeTextContainer:styles.welcomeTextContainer}>
+    <View
+      style={
+        props.isHome ? styles.homeTextContainer : styles.welcomeTextContainer
+      }
+    >
       <Text style={[styles.loginText, styles.loginTextWelcome]}>
         {props.text1}
       </Text>
@@ -23,11 +27,11 @@ const styles = StyleSheet.create({
     padding: 10,
     height: "10%",
   },
-   HomeTextContainer: {
+  homeTextContainer: {
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    marginVertical:60,
-    marginHorizontal:20,
+    marginVertical: 60,
+    marginHorizontal: 20,
     padding: 10,
     height: "10%",
   },
@@ -49,8 +53,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: "#e9e9e9",
     backgroundColor: "#4c1c77",
-    borderWidth:1,
-    borderColor:"rgba(75, 11, 81, 0.2)",
+    borderWidth: 1,
+    borderColor: "rgba(75, 11, 81, 0.2)",
     padding: 10,
     borderRadius: 8,
   },

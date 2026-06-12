@@ -55,7 +55,7 @@ export default function HomeScreen() {
                 prefix={item.name.slice(0, 3).toUpperCase()}
                 name={item.name}
                 designation={item.designation}
-                department={item.department}
+                specialization={item.specialization}
               />
             );
           }}

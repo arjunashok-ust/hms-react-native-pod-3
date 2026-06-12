@@ -29,7 +29,7 @@ export default function DoctorHolder({
         {doctors.map((doctor: UserModel) => (
           <Picker.Item
             key={doctor.employeeCode}
-            label={doctor.name}
+            label={`${doctor.name} (${doctor.specialization})`}
             value={doctor.employeeCode}
           />
         ))}

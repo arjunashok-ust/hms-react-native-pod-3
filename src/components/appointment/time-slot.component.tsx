@@ -2,16 +2,16 @@ import { View, Text, StyleSheet } from "react-native";
 import { TimeSlotHolder } from "../profile/time-slot-holder";
 
 type TimeSlotPropsType = Readonly<{
-    availableSlots: string[],
-    setTimeSlot: (value:string)=>void;
-    timeSlot: string,
+  availableSlots: string[];
+  setTimeSlot: (value: string) => void;
+  timeSlot: string;
 }>;
 
 export default function TimeSlotComponent({
-    availableSlots,
-    setTimeSlot,
-    timeSlot,
-} : TimeSlotPropsType) {
+  availableSlots,
+  setTimeSlot,
+  timeSlot,
+}: TimeSlotPropsType) {
   return (
     <View style={styles.timeSlotContainer}>
       {availableSlots.length === 0 ? (
@@ -19,13 +19,11 @@ export default function TimeSlotComponent({
           No slot available at this moment
         </Text>
       ) : (
-        availableSlots.map((slot, index) => {
+        availableSlots.map((slot) => {
           return (
             <TimeSlotHolder
               slot={slot}
-              onAction={(value: string) => {
-                setTimeSlot(value);
-              }}
+              onAction={setTimeSlot}
               id={slot}
               key={slot}
               isSelected={timeSlot === slot}

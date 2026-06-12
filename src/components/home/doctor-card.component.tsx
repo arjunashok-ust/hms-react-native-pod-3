@@ -5,17 +5,21 @@ export const DoctorCard = (props: any) => {
   return (
     <TouchableOpacity style={styles.doctorContainer}>
       <LinearGradient
-         colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
+        colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
         style={styles.doctorAvatar}
       >
-        <Text style={[styles.text,styles.doctorPrefix]}>{props.prefix}</Text>
+        <Text style={[styles.text, styles.doctorPrefix]}>{props.prefix}</Text>
       </LinearGradient>
       <View style={styles.doctorDetails}>
-        <Text style={[styles.text,styles.doctorName]}>{props.name}</Text>
-        <Text style={[styles.text,styles.doctorDesignation]}>{props.designation}</Text>
+        <Text style={[styles.text, styles.doctorName]}>{props.name}</Text>
+        <Text style={[styles.text, styles.doctorDesignation]}>
+          {props.designation}
+        </Text>
       </View>
       <View style={styles.doctorFooter}>
-        <Text style={[styles.text,styles.doctorDepartment]}>{props.department}</Text>
+        <Text style={[styles.text, styles.doctorDepartment]}>
+          {props.specialization}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -25,14 +29,14 @@ const styles = StyleSheet.create({
   doctorContainer: {
     height: 100,
     backgroundColor: "#f0f0f0",
-    borderWidth:1,
-    borderColor:"rgba(0, 0, 0, 0.2)",
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.2)",
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
-    marginTop:10,
-    elevation:5,
+    marginTop: 10,
+    elevation: 5,
   },
   doctorAvatar: {
     flex: 1,
@@ -40,10 +44,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
-    padding:8,
+    padding: 8,
   },
   text: {
-    fontFamily: 'Sans',
+    fontFamily: "Sans",
   },
   doctorPrefix: {
     fontSize: 13,
@@ -75,5 +79,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 12,
     color: "#8e8e8e",
+    textAlign: "center",
   },
 });

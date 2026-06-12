@@ -10,16 +10,58 @@ const TabIcon = ({ focused, color, size, active, inactive }: any) => (
   <Ionicons name={focused ? active : inactive} color={color} size={size} />
 );
 
-const HomeTabIcon = ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
-  <TabIcon focused={focused} color={color} size={size} active="home" inactive="home-outline" />
+const HomeTabIcon = ({
+  focused,
+  color,
+  size,
+}: {
+  focused: boolean;
+  color: string;
+  size: number;
+}) => (
+  <TabIcon
+    focused={focused}
+    color={color}
+    size={size}
+    active="home"
+    inactive="home-outline"
+  />
 );
 
-const ProfileTabIcon = ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
-  <TabIcon focused={focused} color={color} size={size} active="person" inactive="person-outline" />
+const ProfileTabIcon = ({
+  focused,
+  color,
+  size,
+}: {
+  focused: boolean;
+  color: string;
+  size: number;
+}) => (
+  <TabIcon
+    focused={focused}
+    color={color}
+    size={size}
+    active="person"
+    inactive="person-outline"
+  />
 );
 
-const AppointmentTabIcon = ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
-  <TabIcon focused={focused} color={color} size={size} active="calendar" inactive="calendar-outline" />
+const AppointmentTabIcon = ({
+  focused,
+  color,
+  size,
+}: {
+  focused: boolean;
+  color: string;
+  size: number;
+}) => (
+  <TabIcon
+    focused={focused}
+    color={color}
+    size={size}
+    active="calendar"
+    inactive="calendar-outline"
+  />
 );
 
 export default function TabNavigator() {

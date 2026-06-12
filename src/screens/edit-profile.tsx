@@ -26,6 +26,19 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 
+import {
+  validateName,
+  validateEmail,
+  validatePhone,
+  validateDob,
+  validateRequired,
+  maxDobLimit,
+  minDobLimit,
+  validateAddress,
+} from "../utils/validators";
+
+
+
 export default function EditProfileScreen() {
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
@@ -48,11 +61,6 @@ export default function EditProfileScreen() {
     address: "",
     emergencyContact: "",
   });
-
-  const nameRegex = /^[a-z]+( [a-z]+)*$/i;
-  const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
-  const phoneRegex = /^(\+91[\s-]?)?[6789]\d{9}$/;
-  const addressRegex = /^[\w\s.,#/-]{2,200}$/;
 
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
@@ -86,58 +94,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  const validateName = (name: string) => {
-    if (!name.trim()) return "Name is required.";
-    if (!nameRegex.test(name)) return "Only characters are allowed.";
-    if (name.length < 2) return "Minimum 2 characters are required.";
-    return "";
-  };
-
-  const validateEmail = (email: string) => {
-    if (!email) return "Email is required";
-    if (!emailRegex.test(email)) return "Email is invalid";
-    return "";
-  };
-
-  const validatePhone = (value: string, isConfirmPhone: boolean) => {
-    if (isConfirmPhone && !value) return "";
-    if (!value) return "Phone is required.";
-    if (!phoneRegex.test(value)) return "Invalid number format.";
-    if (value === phone && isConfirmPhone)
-      return "Emergency contact must be different from the primary contact number.";
-    return "";
-  };
-
-  const validateDob = (dob: any) => {
-    let inputDate = new Date(dob);
-    let today = new Date();
-
-    today.setHours(0, 0, 0, 0);
-    inputDate.setHours(0, 0, 0, 0);
-
-    // initially dob is set to Date()
-    if (inputDate.getTime() === today.getTime()) return "DOB is required";
-
-    if (inputDate > today) return "Future date are not allowed.";
-    return "";
-  };
-
-  const validateGender = (value: string) => {
-    if (!value) {
-      return "Gender is required.";
-    }
-    return "";
-  };
-
-  const validateAddress = (value: string) => {
-    if (!value) {
-      return "Address is required";
-    }
-    if (!addressRegex.test(value)) {
-      return "Address field is invalid";
-    }
-    return "";
-  };
 
   const goToProfile = () => {
     navigator.navigate("tabs", {
@@ -153,12 +109,12 @@ export default function EditProfileScreen() {
   const validateUpdateProfile = () => {
     let newErrors = {
       name: validateName(name),
-      gender: validateGender(gender),
+      gender: validateRequired(gender,"Gender"),
       dob: validateDob(dob),
       email: validateEmail(email),
       address: validateAddress(address),
-      phone: validatePhone(phone, false),
-      emergencyContact: validatePhone(emergencyContact, true),
+      phone: validatePhone(phone),
+      emergencyContact: validatePhone(emergencyContact, phone),
     };
 
     setErrors(newErrors);
@@ -382,6 +338,8 @@ export default function EditProfileScreen() {
         <DateTimePicker
           value={dob}
           mode="date"
+          maximumDate={maxDobLimit()}
+          minimumDate={minDobLimit()}
           onChange={(event, value) => {
             if (value) onDateChange(value);
           }}
@@ -471,11 +429,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   errorText: {
-    color: "#3b3b3b",
+    color: "#ef2121",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "#4c1c77",
+    borderColor: "#cd1717",
     borderRadius: 4,
     marginTop: 5,
     paddingHorizontal: 10,

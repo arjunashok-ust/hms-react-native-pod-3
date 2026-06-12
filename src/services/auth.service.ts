@@ -9,11 +9,6 @@ export const login = async (data: LoginRequestModel) => {
 
   const token = response.data.token;
   const email = response.data.email;
-  const role = response.data.role;
-
-  if(role!="Patient"){
-    throw new Error("Only patients are allowed to enter");
-  }
 
   await SecureStore.setItemAsync("token", token);
   await AsyncStorage.setItem("email", email);
@@ -62,8 +57,8 @@ export const deleteToken = async () => {
 
 export const clearSecureStorage = async () => {
   try {
-    await SecureStore.deleteItemAsync("email");
-    await SecureStore.deleteItemAsync("patientId");
+    await AsyncStorage.removeItem("email");
+    await AsyncStorage.removeItem("patientId");
   } catch (err) {
     console.error(err);
     throw err;

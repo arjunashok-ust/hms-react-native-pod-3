@@ -22,6 +22,18 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
 import Toast from "react-native-toast-message";
 
+import {
+  validateName,
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validatePhone,
+  validateDob,
+  validateRequired,
+  maxDobLimit,
+  minDobLimit,
+} from "../utils/validators";
+
 export default function SignUpScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
   const [name, setName] = useState("");
@@ -34,7 +46,7 @@ export default function SignUpScreen() {
   const [isDobSet, setIsDobSet] = useState(false);
   const [address, setAddress] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
-  const [status, setStatus] = useState("Pending");
+  const [status, setStatus] = useState("Active");
 
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,67 +62,10 @@ export default function SignUpScreen() {
     emergencyContact: "",
   });
 
-  const nameRegex = /^[a-z]+( [a-z]+)*$/i;
-  const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
-  const phoneRegex = /^(\+91[\s-]?)?[6789]\d{9}$/;
-
   const onDateChange = (event: DateTimePickerEvent, selectedDob?: any) => {
     setShow(false);
     setIsDobSet(true);
     if (selectedDob) setDob(selectedDob);
-  };
-
-  const validateName = (name: string) => {
-    if (!name.trim()) return "Name is required.";
-    if (!nameRegex.test(name)) return "Only characters are allowed.";
-    if (name.length < 2) return "Minimum 2 characters are required.";
-    return "";
-  };
-
-  const validateEmail = (email: string) => {
-    if (!email) return "Email is required";
-    if (!emailRegex.test(email)) return "Email is invalid";
-    return "";
-  };
-
-  const validatePassword = (password: string) => {
-    if (!password) return "Password is required.";
-    if (password.length < 8) return "Minimum 8 characters are required.";
-    return "";
-  };
-
-  const validateConfirmPassword = (confirmPassword: string) => {
-    if (!confirmPassword) return "Confirm Password is required.";
-    if (password != confirmPassword) return "Passwords doesnt match.";
-    return "";
-  };
-
-  const validatePhone = (value: string, isConfirmPhone: boolean) => {
-    if (isConfirmPhone && !value) return "";
-    if (!value) return "Phone is required.";
-    if (!phoneRegex.test(value)) return "Invalid number format.";
-    if (value === phone && isConfirmPhone)
-      return "Emergency contact must be different from the primary contact number.";
-    return "";
-  };
-
-  const validateDob = (dob: any) => {
-    let inputDate = new Date(dob);
-    let today = new Date();
-
-    today.setHours(0, 0, 0, 0);
-    inputDate.setHours(0, 0, 0, 0);
-
-    // initially dob is set to Date()
-    if (inputDate.getTime() === today.getTime()) return "DOB is required";
-
-    if (inputDate > today) return "Future date are not allowed.";
-    return "";
-  };
-
-  const validateRequired = (value: string, fieldName: string) => {
-    if (!value) return `${fieldName} is required.`;
-    return "";
   };
 
   const validateSignUp = () => {
@@ -118,12 +73,12 @@ export default function SignUpScreen() {
       name: validateName(name),
       email: validateEmail(email),
       password: validatePassword(password),
-      confirmPassword: validateConfirmPassword(confirmPassword),
-      phone: validatePhone(phone, false),
+      confirmPassword: validateConfirmPassword(confirmPassword, password),
+      phone: validatePhone(phone),
       gender: validateRequired(gender, "Gender"),
       address: validateRequired(address, "Address"),
       dob: validateDob(dob),
-      emergencyContact: validatePhone(emergencyContact, true),
+      emergencyContact: validatePhone(phone, emergencyContact),
     };
 
     setErrors(newErrors);
@@ -158,9 +113,7 @@ export default function SignUpScreen() {
           text1: "Success.",
           text2: "Account created successfully.",
         });
-        setTimeout(() => {
-          navigator.navigate("login");
-        }, 2000);
+        navigator.navigate("login");
       } catch (err) {
         console.error(err);
       } finally {
@@ -271,6 +224,8 @@ export default function SignUpScreen() {
                 <DateTimePicker
                   value={dob}
                   mode="date"
+                  minimumDate={minDobLimit()}
+                  maximumDate={maxDobLimit()}
                   onChange={onDateChange}
                 />
               )}
@@ -355,11 +310,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   errorText: {
-    color: "#3b3b3b",
+    color: "#ef2121",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "#4c1c77",
+    borderColor: "#cd1717",
     borderRadius: 4,
     marginTop: 5,
     paddingHorizontal: 10,
