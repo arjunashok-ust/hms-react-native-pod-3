@@ -9,6 +9,11 @@ export const login = async (data: LoginRequestModel) => {
 
   const token = response.data.token;
   const email = response.data.email;
+  const role = response.data.role;
+
+  if(role!="Patient"){
+    throw new Error("Only patients are allowed to enter");
+  }
 
   await SecureStore.setItemAsync("token", token);
   await AsyncStorage.setItem("email", email);

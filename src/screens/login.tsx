@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
@@ -59,17 +60,21 @@ export default function LoginScreen() {
 
       try {
         setIsLoading(true);
-        await login(payload);
+        try {
+          await login(payload);
+          Toast.show({
+            type: "success",
+            text1: "Success.",
+            text2: "Login Sucessfull",
+          });
 
-        Toast.show({
-          type: "success",
-          text1: "Success.",
-          text2: "Login Sucessfull",
-        });
-
-        navigator.replace("tabs", {
-          screen: "home",
-        });
+          navigator.replace("tabs", {
+            screen: "home",
+          });
+        } catch (err) {
+          Alert.alert("Error", "Only patients are allowed to login");
+          console.error(err);
+        }
       } catch (err) {
         console.error(err);
       } finally {
