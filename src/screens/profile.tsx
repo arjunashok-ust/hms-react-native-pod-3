@@ -30,7 +30,7 @@ export default function ProfileScreen() {
   const logout = () => {
     deleteToken();
     clearSecureStorage();
-    navigator.navigate("login");
+    navigator.replace("login");
   };
 
   const fetchData = async () => {
