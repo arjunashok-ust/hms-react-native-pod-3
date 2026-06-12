@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -16,9 +16,9 @@ import {
   getPatientAppointments,
   cancelAppointment,
   getAvailableSlots,
-} from "../api/patientApi";
+} from "../services/patientApi";
 
-import { getPatient, getToken } from "../storage/authStorage";
+import { getPatient } from "../storage/authStorage";
 
 const AppointmentScreen = () => {
   const [form, setForm] = useState({
@@ -73,9 +73,7 @@ const AppointmentScreen = () => {
 
   const loadAppointments = async () => {
     try {
-      const token = await getToken();
-
-      const response = await getPatientAppointments(token);
+      const response = await getPatientAppointments();
 
       setAppointments(response.data || []);
     } catch (error) {
@@ -100,9 +98,7 @@ const AppointmentScreen = () => {
   //Cancel Appointment
   const handleCancelAppointment = async (appointmentId) => {
     try {
-      const token = await getToken();
-
-      const response = await cancelAppointment(appointmentId, token);
+      const response = await cancelAppointment(appointmentId);
 
       alert(response.message);
 
@@ -122,8 +118,6 @@ const AppointmentScreen = () => {
       setLoading(true);
 
       const patient = await getPatient();
-      const token = await getToken();
-
       console.log(patient);
       console.log(patient.UHID);
 
@@ -136,7 +130,7 @@ const AppointmentScreen = () => {
 
       console.log("REQUEST BODY:", requestBody);
 
-      const response = await createAppointment(requestBody, token);
+      const response = await createAppointment(requestBody);
       alert(response.message);
       await loadAppointments();
 
@@ -238,10 +232,8 @@ const AppointmentScreen = () => {
             minimumDate={new Date()}
             onChange={(event, selectedDate) => {
               setShowDatePicker(false);
-
               if (selectedDate) {
                 const formattedDate = selectedDate.toISOString().split("T")[0];
-
                 handleChange("date", formattedDate);
 
                 if (form.doctorEmployeeId) {
@@ -261,7 +253,7 @@ const AppointmentScreen = () => {
               color: "#1C2143",
             }}
           >
-            <Picker.Item label="Select Time Slot" value="" />
+            <Picker.Item label="Select Time Slot" value="Ayush" />
 
             {slots.map((slot) => (
               <Picker.Item key={slot} label={slot} value={slot} />

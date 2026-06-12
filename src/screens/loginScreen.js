@@ -8,12 +8,14 @@ import {
   ScrollView,
   ImageBackground,
   StatusBar,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { loginPatient } from "../api/patientApi";
+import { loginPatient } from "../services/patientApi";
 import { saveLoginData } from "../storage/authStorage";
 import { validateField } from "../utils/validation";
+import PropTypes from "prop-types";
 
 const LoginScreen = ({ navigation }) => {
   const [form, setForm] = useState({
@@ -46,12 +48,21 @@ const LoginScreen = ({ navigation }) => {
 
     setLoading(true);
     try {
+      //PayLoad
       const response = await loginPatient(form);
 
       await saveLoginData(response.token, response.user, response.patient);
       navigation.navigate("Main");
     } catch (error) {
-      alert(error.response?.data?.message || "Login Failed");
+      console.log("FULL ERROR:", error);
+      console.log("STATUS:", error?.response?.status);
+      console.log("DATA:", error?.response?.data);
+      console.log("MESSAGE:", error?.message);
+
+      Alert.alert(
+        "Error",
+        JSON.stringify(error?.response?.data || error.message),
+      );
     } finally {
       setLoading(false);
     }
@@ -173,6 +184,10 @@ const LoginScreen = ({ navigation }) => {
       </ScrollView>
     </ImageBackground>
   );
+};
+
+LoginScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 export default LoginScreen;

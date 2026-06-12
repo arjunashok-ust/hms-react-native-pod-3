@@ -13,7 +13,8 @@ import { validateField } from "../utils/validation";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { registerPatient } from "../api/patientApi";
+import { registerPatient } from "../services/patientApi";
+import PropTypes from "prop-types";
 
 const PRIMARY = "#5A1E96";
 
@@ -34,7 +35,6 @@ const SignupScreen = ({ navigation }) => {
   });
 
   const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -43,65 +43,37 @@ const SignupScreen = ({ navigation }) => {
       ...prev,
       [key]: value,
     }));
-
-    if (touched[key]) {
-      validateSingleField(key, value);
-    }
   };
-
-  const validators = {
-    name: (v) => validateField(v, "Name", "name"),
-    email: (v) => validateField(v, "Email", "email"),
-    password: (v) => validateField(v, "Password", "password"),
-    phone: (v) => validateField(v, "Phone", "phone"),
-    gender: (v) => validateField(v, "Gender", "required"),
-    dob: (v) => validateField(v, "Date of Birth", "dob"),
-    bloodGroup: (v) => validateField(v, "Blood Group", "required"),
-    line1: (v) => validateField(v, "Address", "address"),
-    city: (v) => validateField(v, "City", "city"),
-    postcode: (v) => validateField(v, "Postcode", "postcode"),
-    emergencyContact: (v) =>
-      validateField(v, "Emergency Contact", "optionalPhone"),
-  };
-
-  const validateSingleField = (field, value) => {
-    const error = validators[field] ? validators[field](value) : "";
-
-    setErrors((prev) => ({
-      ...prev,
-      [field]: error,
-    }));
-  };
-
   const validateForm = () => {
-    let newErrors = {};
-    Object.keys(validators).forEach((field) => {
-      newErrors[field] = validators[field](form[field]);
-    });
-    setErrors(newErrors);
-    return Object.values(newErrors).every((e) => !e);
-  };
+    const newErrors = {
+      name: validateField(form.name, "Name", "name"),
+      email: validateField(form.email, "Email", "email"),
+      password: validateField(form.password, "Password", "password"),
+      phone: validateField(form.phone, "Phone", "phone"),
+      gender: validateField(form.gender, "Gender", "required"),
+      dob: validateField(form.dob, "Date of Birth", "dob"),
+      bloodGroup: validateField(form.bloodGroup, "Blood Group", "required"),
+      line1: validateField(form.line1, "Address", "address"),
+      city: validateField(form.city, "City", "city"),
+      postcode: validateField(form.postcode, "Postcode", "postcode"),
+      emergencyContact: validateField(
+        form.emergencyContact,
+        "Emergency Contact",
+        "optionalPhone",
+      ),
+    };
 
-  const isFormValid = () => {
-    return Object.keys(validators).every(
-      (field) => validators[field](form[field]) === "",
-    );
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every((error) => error === "");
+  };
+  const showError = (field) => {
+    return errors[field] ? (
+      <Text style={styles.error}>{errors[field]}</Text>
+    ) : null;
   };
 
   const handleSignup = async () => {
-    setTouched({
-      name: true,
-      email: true,
-      password: true,
-      phone: true,
-      gender: true,
-      dob: true,
-      bloodGroup: true,
-      line1: true,
-      city: true,
-      postcode: true,
-      emergencyContact: true,
-    });
     if (!validateForm()) return;
 
     try {
@@ -125,28 +97,22 @@ const SignupScreen = ({ navigation }) => {
         },
         emergencyContact: form.emergencyContact,
       };
+
       console.log("Request Body:", body);
       await registerPatient(body);
       alert("Account created successfully");
       navigation.navigate("Login");
     } catch (error) {
-  console.log("Signup Error:", error);
-  console.log("Response:", error?.response?.data);
+      console.log("Signup Error:", error);
+      console.log("Response:", error?.response?.data);
 
-  alert(
-    error?.response?.data?.message ||
-    error?.message ||
-    "Signup Failed"
-  );
-}finally {
+      alert(
+        error?.response?.data?.message || error?.message || "Signup Failed",
+      );
+    } finally {
       setLoading(false);
     }
   };
-
-  const renderError = (field) =>
-    touched[field] && errors[field] ? (
-      <Text style={styles.error}>{errors[field]}</Text>
-    ) : null;
 
   return (
     <ImageBackground
@@ -178,13 +144,15 @@ const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={form.name}
               onChangeText={(v) => handleChange("name", v)}
-              onBlur={() => {
-                setTouched((p) => ({ ...p, name: true }));
-                validateSingleField("name", form.name);
-              }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  name: validateField(form.name, "Name", "name"),
+                }))
+              }
             />
           </View>
-          {renderError("name")}
+          {showError("name")}
 
           {/* EMAIL */}
           <View style={styles.inputBox}>
@@ -196,13 +164,15 @@ const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={form.email}
               onChangeText={(v) => handleChange("email", v)}
-              onBlur={() => {
-                setTouched((p) => ({ ...p, email: true }));
-                validateSingleField("email", form.email);
-              }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  email: validateField(form.email, "Email", "email"),
+                }))
+              }
             />
           </View>
-          {renderError("email")}
+          {showError("email")}
 
           {/* PASSWORD */}
           <View style={styles.inputBox}>
@@ -214,13 +184,19 @@ const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={form.password}
               onChangeText={(v) => handleChange("password", v)}
-              onBlur={() => {
-                setTouched((p) => ({ ...p, password: true }));
-                validateSingleField("password", form.password);
-              }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  password: validateField(
+                    form.password,
+                    "Password",
+                    "password",
+                  ),
+                }))
+              }
             />
           </View>
-          {renderError("password")}
+          {showError("password")}
 
           {/* PHONE */}
           <View style={styles.inputBox}>
@@ -231,16 +207,24 @@ const SignupScreen = ({ navigation }) => {
               maxLength={10}
               style={styles.input}
               value={form.phone}
-              onChangeText={(v) =>
-                handleChange("phone", v.replace(/[^0-9]/g, ""))
-              }
-              onBlur={() => {
-                setTouched((p) => ({ ...p, phone: true }));
-                validateSingleField("phone", form.phone);
+              onChangeText={(v) => {
+                const number = v.replaceAll(/\D/g, "");
+
+                if (number.length === 1 && !/[6-9]/.test(number)) {
+                  return;
+                }
+
+                handleChange("phone", number);
               }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  phone: validateField(form.phone, "Phone", "phone"),
+                }))
+              }
             />
           </View>
-          {renderError("phone")}
+          {showError("phone")}
 
           {/* GENDER */}
           <View style={styles.pickerBox}>
@@ -248,8 +232,11 @@ const SignupScreen = ({ navigation }) => {
               selectedValue={form.gender}
               onValueChange={(v) => {
                 handleChange("gender", v);
-                setTouched((p) => ({ ...p, gender: true }));
-                validateSingleField("gender", v);
+
+                setErrors((prev) => ({
+                  ...prev,
+                  gender: validateField(v, "Gender", "required"),
+                }));
               }}
             >
               <Picker.Item label="Gender" value="" />
@@ -258,7 +245,7 @@ const SignupScreen = ({ navigation }) => {
               <Picker.Item label="Other" value="Other" />
             </Picker>
           </View>
-          {renderError("gender")}
+          {showError("gender")}
 
           {/* DOB */}
           <TouchableOpacity
@@ -268,7 +255,7 @@ const SignupScreen = ({ navigation }) => {
             <Ionicons name="calendar-outline" size={22} color="#777" />
             <Text style={styles.dateText}>{form.dob || "Date of Birth"}</Text>
           </TouchableOpacity>
-          {renderError("dob")}
+          {showError("dob")}
 
           {showDatePicker && (
             <DateTimePicker
@@ -280,8 +267,11 @@ const SignupScreen = ({ navigation }) => {
                 if (date) {
                   const value = date.toISOString().split("T")[0];
                   handleChange("dob", value);
-                  setTouched((p) => ({ ...p, dob: true }));
-                  validateSingleField("dob", value);
+
+                  setErrors((prev) => ({
+                    ...prev,
+                    dob: validateField(value, "Date of Birth", "dob"),
+                  }));
                 }
               }}
             />
@@ -293,8 +283,11 @@ const SignupScreen = ({ navigation }) => {
               selectedValue={form.bloodGroup}
               onValueChange={(v) => {
                 handleChange("bloodGroup", v);
-                setTouched((p) => ({ ...p, bloodGroup: true }));
-                validateSingleField("bloodGroup", v);
+
+                setErrors((prev) => ({
+                  ...prev,
+                  bloodGroup: validateField(v, "Blood Group", "required"),
+                }));
               }}
             >
               <Picker.Item label="Blood Group" value="" />
@@ -308,7 +301,7 @@ const SignupScreen = ({ navigation }) => {
               <Picker.Item label="O-" value="O-" />
             </Picker>
           </View>
-          {renderError("bloodGroup")}
+          {showError("bloodGroup")}
 
           {/* ALLERGIES */}
           <View style={styles.inputBox}>
@@ -329,13 +322,15 @@ const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={form.line1}
               onChangeText={(v) => handleChange("line1", v)}
-              onBlur={() => {
-                setTouched((p) => ({ ...p, line1: true }));
-                validateSingleField("line1", form.line1);
-              }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  line1: validateField(form.line1, "Address", "address"),
+                }))
+              }
             />
           </View>
-          {renderError("line1")}
+          {showError("line1")}
 
           <View style={styles.inputBox}>
             <TextInput
@@ -343,13 +338,15 @@ const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={form.city}
               onChangeText={(v) => handleChange("city", v)}
-              onBlur={() => {
-                setTouched((p) => ({ ...p, city: true }));
-                validateSingleField("city", form.city);
-              }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  city: validateField(form.city, "City", "city"),
+                }))
+              }
             />
           </View>
-          {renderError("city")}
+          {showError("city")}
 
           <View style={styles.inputBox}>
             <TextInput
@@ -359,15 +356,21 @@ const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={form.postcode}
               onChangeText={(v) =>
-                handleChange("postcode", v.replace(/[^0-9]/g, ""))
+                handleChange("postcode", v.replaceAll(/\D/g, ""))
               }
-              onBlur={() => {
-                setTouched((p) => ({ ...p, postcode: true }));
-                validateSingleField("postcode", form.postcode);
-              }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  postcode: validateField(
+                    form.postcode,
+                    "Postcode",
+                    "postcode",
+                  ),
+                }))
+              }
             />
           </View>
-          {renderError("postcode")}
+          {showError("postcode")}
 
           {/* EMERGENCY */}
           <View style={styles.inputBox}>
@@ -378,27 +381,38 @@ const SignupScreen = ({ navigation }) => {
               maxLength={10}
               style={styles.input}
               value={form.emergencyContact}
-              onChangeText={(v) =>
-                handleChange("emergencyContact", v.replace(/[^0-9]/g, ""))
-              }
-              onBlur={() => {
-                setTouched((p) => ({
-                  ...p,
-                  emergencyContact: true,
-                }));
-                validateSingleField("emergencyContact", form.emergencyContact);
+              onChangeText={(v) => {
+                const number = v.replaceAll(/\D/g, "");
+
+                if (number.length === 1 && !/[6-9]/.test(number)) {
+                  return;
+                }
+
+                handleChange("emergencyContact", number);
               }}
+              onBlur={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  emergencyContact: validateField(
+                    form.emergencyContact,
+                    "Emergency Contact",
+                    "optionalPhone",
+                  ),
+                }))
+              }
             />
           </View>
-          {renderError("emergencyContact")}
+          {showError("emergencyContact")}
 
-          {/* BUTTON */}
+          {/* SIGNUP BUTTON */}
           <TouchableOpacity
             style={[
               styles.button,
-              (!isFormValid() || loading) && { opacity: 0.5 },
+              loading && {
+                opacity: 0.5,
+              },
             ]}
-            disabled={!isFormValid() || loading}
+            disabled={loading}
             onPress={handleSignup}
           >
             <Text style={styles.buttonText}>
@@ -416,6 +430,10 @@ const SignupScreen = ({ navigation }) => {
       </ScrollView>
     </ImageBackground>
   );
+};
+
+SignupScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 export default SignupScreen;

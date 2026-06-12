@@ -7,10 +7,12 @@ import {
 } from "react-native";
 
 
-import { getAllDoctors, getPatientAppointments  } from "../api/patientApi";
-import { getToken,getPatient, clearStorage  } from "../storage/authStorage";
+import { getAllDoctors, getPatientAppointments  } from "../services/patientApi";
+import { getPatient, clearStorage  } from "../storage/authStorage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback,useState } from "react";
+import PropTypes from "prop-types";
+
 
 const HomeScreen = ({ navigation }) => {
   const [patient, setPatient] = useState(null);
@@ -39,8 +41,7 @@ const HomeScreen = ({ navigation }) => {
   };
   const loadAppointments = async () => {
     try {
-      const token = await getToken();
-      const response = await getPatientAppointments(token);
+      const response = await getPatientAppointments();
       console.log("APPOINTMENTS RESPONSE:", response);
       setAppointments(response.data || []);
     } catch (error) {
@@ -169,6 +170,13 @@ const HomeScreen = ({ navigation }) => {
     </ScrollView>
   );
 };
+
+HomeScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 
 export default HomeScreen;
 

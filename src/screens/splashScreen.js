@@ -1,9 +1,9 @@
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { useEffect } from "react";
 import { getToken } from "../storage/authStorage";
-
+import PropTypes from "prop-types";
 const SplashScreen = ({ navigation }) => {
-  
+
   useEffect(() => {
     checkLogin();
   }, []);
@@ -32,6 +32,11 @@ const SplashScreen = ({ navigation }) => {
 };
 
 export default SplashScreen;
+SplashScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

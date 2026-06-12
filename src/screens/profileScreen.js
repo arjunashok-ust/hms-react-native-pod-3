@@ -18,7 +18,7 @@ import {
   saveLoginData,
 } from "../storage/authStorage";
 
-import { updatePatientProfile } from "../api/patientApi";
+import { updatePatientProfile } from "../services/patientApi";
 
 const ProfileScreen = () => {
   const [patient, setPatient] = useState(null);
@@ -81,14 +81,10 @@ const ProfileScreen = () => {
         },
       };
 
-      const response = await updatePatientProfile(requestBody, token);
-
+      const response = await updatePatientProfile(requestBody);
       const user = await getUser();
-
       await saveLoginData(token, user, response.patient);
-
       setPatient(response.patient);
-
       setIsEditing(false);
 
       Alert.alert("Success", "Profile Updated Successfully");
@@ -130,6 +126,14 @@ const ProfileScreen = () => {
     </View>
   );
 
+  let buttonText = "Edit Profile";
+
+  if (loading) {
+    buttonText = "Saving...";
+  } else if (isEditing) {
+    buttonText = "Save Changes";
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.avatarContainer}>
@@ -148,9 +152,7 @@ const ProfileScreen = () => {
           }
         }}
       >
-        <Text style={styles.editButtonText}>
-          {loading ? "Saving..." : isEditing ? "Save Changes" : "Edit Profile"}
-        </Text>
+        <Text style={styles.editButtonText}>{buttonText}</Text>
       </TouchableOpacity>
 
       {isEditing && (
