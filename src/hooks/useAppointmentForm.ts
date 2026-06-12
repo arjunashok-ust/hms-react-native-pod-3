@@ -28,7 +28,7 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
   const [isLoading, setIsLoading] = useState(false);
 
   const [patientId, setPatientId] = useState("");
-  const [doctorId, setDoctorId] = useState("");
+  const [doctorId, setDoctorId] = useState(initialAppointment?.doctorEmployeeId ?? "");
   const [date, setDate] = useState(new Date());
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [timeSlot, setTimeSlot] = useState(initialAppointment?.timeSlot ?? "");

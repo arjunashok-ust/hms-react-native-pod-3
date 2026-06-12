@@ -19,6 +19,7 @@ interface AppointmentFormBodyProps {
   isDateSet: boolean;
   setIsShow: (v: boolean) => void;
   doctors: UserModel[];
+  doctorId: string;
   setDoctor: (id: string) => void;
   availableSlots: string[];
   timeSlot: string;
@@ -41,6 +42,7 @@ export function AppointmentFormBody({
   isDateSet,
   setIsShow,
   doctors,
+  doctorId,
   setDoctor,
   availableSlots,
   timeSlot,
@@ -76,7 +78,7 @@ export function AppointmentFormBody({
         <View>
           <SectionDivider title="DOCTOR" iconName="heart-outline" />
 
-          <DoctorHolder doctors={doctors} setDoctor={setDoctor} />
+          <DoctorHolder doctors={doctors} setDoctor={setDoctor} selectedDoctor={doctorId}/>
           {!!errors.doctorEmployeeId && (
             <Text style={[styles.text, styles.errorText]}>
               {errors.doctorEmployeeId}

@@ -5,11 +5,13 @@ import { UserModel } from "../../types/user.types";
 
 type DoctorHolderProps = Readonly<{
   doctors: UserModel[];
+  selectedDoctor: string;
   setDoctor: (value: string) => void;
 }>;
 
 export default function DoctorHolder({
   doctors,
+  selectedDoctor,
   setDoctor,
 }: DoctorHolderProps) {
   return (
@@ -24,8 +26,9 @@ export default function DoctorHolder({
         style={styles.picker}
         dropdownIconColor="white"
         onValueChange={(value: string) => setDoctor(value)}
+        selectedValue={selectedDoctor}
       >
-        <Picker.Item label="Doctor" value="" />
+        <Picker.Item label="Doctor" value=""/>
         {doctors.map((doctor: UserModel) => (
           <Picker.Item
             key={doctor.employeeCode}
