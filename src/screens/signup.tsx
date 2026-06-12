@@ -50,7 +50,7 @@ export default function SignUpScreen() {
     emergencyContact: "",
   });
 
-  const nameRegex = /^[a-z ]*$/i;
+  const nameRegex = /^[a-z]+( [a-z]+)*$/i;
   const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
   const phoneRegex = /^(\+91[\s-]?)?[6789]\d{9}$/;
 
@@ -61,7 +61,7 @@ export default function SignUpScreen() {
   };
 
   const validateName = (name: string) => {
-    if (!name) return "Name is required.";
+    if (!name.trim()) return "Name is required.";
     if (!nameRegex.test(name)) return "Only characters are allowed.";
     if (name.length < 2) return "Minimum 2 characters are required.";
     return "";
