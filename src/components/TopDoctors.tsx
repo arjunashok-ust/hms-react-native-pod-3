@@ -69,7 +69,7 @@ export default function TopDoctors({ doctors }: Readonly<Props>) {
   return (
     <View style={styles.container}>
       <View style={styles.doctorHeader}>
-        <FontAwesome6 name="user-doctor" size={20} color="#6C4EDB" />
+        <FontAwesome6 name="user-doctor" size={20} color="blue" />
         <Text style={styles.sectionTitle}>Our Top Doctors</Text>
       </View>
       <FlatList

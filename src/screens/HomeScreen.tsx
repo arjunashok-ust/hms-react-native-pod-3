@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   Alert,
   ImageBackground,
-  ActivityIndicator, // 🟢 Added missing import
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import * as SecureStore from "expo-secure-store";
 import { PatientProfile } from "../features/auth/types";
 import AppointmentCard, { Appointment } from "../components/AppointmentCard";
@@ -21,15 +22,28 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation<BottomTabNavigationProp<any>>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profile, setProfile] = useState<PatientProfile | null>(null);
 
+  // 1. Refetch when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchDashboardData();
+    }, []),
+  );
+
+  // 2. Refetch if the user taps the tab icon while ALREADY on this screen
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    const unsubscribe = navigation.addListener("tabPress", () => {
+      if (navigation.isFocused()) {
+        fetchDashboardData();
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchDashboardData = async () => {
     try {
@@ -58,6 +72,23 @@ export default function HomeScreen() {
     }
   };
 
+  // 🟢 NEW: Logic to filter out past appointments and find the absolute next one
+  const getNextAppointment = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Strip time to ensure accurate day-to-day comparison
+
+    return appointments.find((app) => {
+      const appDate = new Date(app.date);
+      // Ensure the appointment is today or in the future, and is still active
+      return (
+        appDate >= today &&
+        (app.status === "Scheduled" || app.status === "Pending")
+      );
+    });
+  };
+
+  const nextAppointment = getNextAppointment();
+
   return (
     <ImageBackground
       source={backgroundImage}
@@ -65,7 +96,6 @@ export default function HomeScreen() {
       imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.container}>
-        {/* 🟢 FIXED: Actively using isLoading to show a loading screen */}
         {isLoading ? (
           <View style={[styles.container, styles.center]}>
             <ActivityIndicator size="large" color="#6C4EDB" />
@@ -86,11 +116,7 @@ export default function HomeScreen() {
             <HealthSummaryCard profile={profile} />
 
             <View style={styles.sectionHeader}>
-              <Ionicons
-                name="calendar-clear-outline"
-                size={20}
-                color="#6C4EDB"
-              />
+              <Ionicons name="calendar-clear-outline" size={20} color="blue" />
               <Text style={styles.sectionTitle}>My Appointments</Text>
             </View>
 
@@ -102,8 +128,8 @@ export default function HomeScreen() {
                 })
               }
             >
-              {appointments.length > 0 ? (
-                <AppointmentCard appointment={appointments[0]} />
+              {nextAppointment ? (
+                <AppointmentCard appointment={nextAppointment} />
               ) : (
                 <View style={styles.emptyCard}>
                   <Text style={styles.emptyText}>
@@ -124,7 +150,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "transparent", // 🟢 Fixed so background image shows through correctly
+    backgroundColor: "transparent",
   },
   backgroundImage: {
     flex: 1,
@@ -163,7 +189,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   uhid: {
-    color: "#6C4EDB",
+    color: "#2d0ba9",
     fontSize: 14,
     fontWeight: "bold",
     marginTop: 4,

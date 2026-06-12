@@ -14,25 +14,34 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { RootStackParamList } from "../types/navigation";
 import { authService } from "../services/authService";
-//
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>(""); 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleLoginPress = async () => {
-    if (email.trim() === "" || password === "") {
+    const trimmedEmail = email.trim();
+
+    if (trimmedEmail === "" || password === "") {
       Alert.alert("Validation Error", "Please enter both email and password");
+      return;
+    }
+
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setEmailError("Please enter a valid email address");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const data = await authService.login(email.trim(), password);
+      const data = await authService.login(trimmedEmail, password);
 
       const token = data.token;
       const profile = data.user.profile;
@@ -64,11 +73,6 @@ export default function LoginScreen() {
           <View style={styles.headerSection}>
             <Text style={styles.headerTitleLine1}>Welcome Back,</Text>
             <Text style={styles.headerTitleLine2}>Sign In.</Text>
-            <View style={styles.subtitleContainer}>
-              <Text style={styles.subtitleText}>
-                Access your health portal securely.
-              </Text>
-            </View>
           </View>
 
           <View style={styles.card}>
@@ -76,11 +80,18 @@ export default function LoginScreen() {
               placeholder="Email"
               placeholderTextColor="#9CA3AF"
               value={email}
-              onChangeText={setEmail}
-              style={styles.input}
+              onChangeText={(text) => {
+                setEmail(text);
+                if (emailError) setEmailError("");
+              }}
+              style={[styles.input, emailError ? styles.inputError : null]}
               keyboardType="email-address"
               autoCapitalize="none"
             />
+            {emailError ? (
+              <Text style={styles.errorText}>{emailError}</Text>
+            ) : null}
+
             <TextInput
               placeholder="Password"
               placeholderTextColor="#9CA3AF"
@@ -144,19 +155,6 @@ const styles = StyleSheet.create({
     color: "#4B1D76",
     marginBottom: 10,
   },
-  subtitleContainer: {
-    borderWidth: 1,
-    borderColor: "#4B1D76",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignSelf: "flex-start",
-  },
-  subtitleText: {
-    color: "#1E1E3F",
-    fontSize: 14,
-    fontWeight: "500",
-  },
   card: {
     backgroundColor: "#F8F9FA",
     padding: 24,
@@ -179,6 +177,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 5,
     elevation: 2,
+  },
+  inputError: {
+    borderColor: "#ef4444",
+    borderWidth: 1,
+    marginBottom: 8, 
+  },
+  errorText: {
+    color: "#ef4444",
+    fontSize: 12,
+    marginBottom: 12,
+    marginLeft: 8,
   },
   button: {
     backgroundColor: "#4B1D76",

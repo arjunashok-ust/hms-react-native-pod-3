@@ -44,7 +44,6 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
 
   return (
     <View style={styles.formContainer}>
-      {/* Text Fields abstracted via FormInput */}
       <FormInput
         name="name"
         placeholder="Full Name"

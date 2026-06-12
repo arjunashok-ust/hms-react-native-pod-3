@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   useNavigation,
   NavigationProp,
-  useIsFocused,
+  useFocusEffect
 } from "@react-navigation/native";
 import { appointmentService } from "../services/appointmentService";
 import ManageAppointmentCard from "../components/ManageAppointmentCard";
@@ -21,15 +22,28 @@ import ManageAppointmentCard from "../components/ManageAppointmentCard";
 export default function ViewAppointmentsScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
   const navigation = useNavigation<NavigationProp<any>>();
-  const isFocused = useIsFocused();
   const [appointments, setAppointments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (isFocused) {
+  useFocusEffect(
+    useCallback(() => {
       fetchAppointments();
-    }
-  }, [isFocused]);
+    }, []),
+  );
+
+  useEffect(() => {
+    const parentNav = navigation.getParent<BottomTabNavigationProp<any>>();
+
+    if (!parentNav) return;
+
+    const unsubscribe = parentNav.addListener("tabPress", () => {
+      if (navigation.isFocused()) {
+        fetchAppointments();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchAppointments = async () => {
     setIsLoading(true);

@@ -74,7 +74,6 @@ export default function ManageAppointmentCard({
           </View>
         </TouchableOpacity>
 
-        {/* We use a slight red tint for the delete text to indicate a destructive action */}
         <TouchableOpacity style={styles.actionBtn} onPress={onDelete}>
           <View style={styles.actionButton}>
             <FontAwesome6 name="trash-can" size={18} color="red" />

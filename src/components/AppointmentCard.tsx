@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { Feather } from "@expo/vector-icons"; // 🟢 Added for premium iconography
 
 export interface Appointment {
   _id: string;
@@ -40,9 +41,17 @@ export default function AppointmentCard({ appointment }: Readonly<Props>) {
           {formatSpecialization(appointment.doctorSpecialization)}
         </Text>
 
-        <Text style={styles.dateTime}>
-          {formatDate(appointment.date)} | {appointment.timeSlot}
-        </Text>
+        <View style={styles.pillRow}>
+          <View style={styles.pill}>
+            <Feather name="calendar" size={14} color="#6C4EDB" />
+            <Text style={styles.pillText}>{formatDate(appointment.date)}</Text>
+          </View>
+
+          <View style={styles.pill}>
+            <Feather name="clock" size={14} color="#6C4EDB" />
+            <Text style={styles.pillText}>{appointment.timeSlot}</Text>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -81,9 +90,26 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 16,
   },
-  dateTime: {
-    color: "#6B7280",
+
+  // 🟢 New Pill Styles
+  pillRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 2,
+  },
+  pill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(108, 78, 219, 0.1)", // A soft wash of your brand purple
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  pillText: {
+    color: "#6C4EDB",
     fontSize: 13,
-    fontWeight: "500",
+    fontWeight: "bold",
+    marginLeft: 6, // Adds breathing room between the icon and the text
   },
 });
