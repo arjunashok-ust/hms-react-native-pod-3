@@ -1,18 +1,19 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   ImageBackground,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
 import { PatientProfile } from "../features/auth/types";
 import AppointmentCard, { Appointment } from "../components/AppointmentCard";
 import TopDoctors, { Doctor } from "../components/TopDoctors";
@@ -25,7 +26,10 @@ export default function HomeScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<any>>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
   const [profile, setProfile] = useState<PatientProfile | null>(null);
 
   useFocusEffect(
@@ -37,9 +41,11 @@ export default function HomeScreen() {
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", () => {
       if (navigation.isFocused()) {
+        setRefreshing(true);
         fetchDashboardData();
       }
     });
+
     return unsubscribe;
   }, [navigation]);
 
@@ -64,19 +70,33 @@ export default function HomeScreen() {
       setDoctors(doctorsData);
     } catch (error) {
       console.error("Dashboard Fetch Error:", error);
-      Alert.alert("Error", "Could not load dashboard data. Please try again.");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Could not load dashboard data. Please try again.",
+      });
     } finally {
       setIsLoading(false);
+      setRefreshing(false);
     }
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchDashboardData();
+  }, []);
+
   const getNextAppointment = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const todayStr = `${year}-${month}-${day}`;
+
     return appointments.find((app) => {
-      const appDate = new Date(app.date);
+      const appDateStr = app.date.split("T")[0];
       return (
-        appDate >= today &&
+        appDateStr >= todayStr &&
         (app.status === "Scheduled" || app.status === "Pending")
       );
     });
@@ -90,7 +110,7 @@ export default function HomeScreen() {
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.3 }}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
         {isLoading ? (
           <View style={[styles.container, styles.center]}>
             <ActivityIndicator size="large" color="#6C4EDB" />
@@ -100,6 +120,14 @@ export default function HomeScreen() {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["#4B1D76"]}
+                tintColor="#4B1D76"
+              />
+            }
           >
             <View style={styles.header}>
               <View>
@@ -162,8 +190,8 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend",
   },
   scrollContent: {
-    paddingVertical: 20,
-    paddingBottom: 20,
+    paddingTop: 20,
+    paddingBottom: 24,
   },
   header: {
     flexDirection: "row",

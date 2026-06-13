@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
@@ -14,6 +13,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/navigation";
 import { authService } from "../services/authService";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -30,7 +30,11 @@ export default function LoginScreen() {
     const trimmedEmail = email.trim();
 
     if (trimmedEmail === "" || password === "") {
-      Alert.alert("Validation Error", "Please enter both email and password");
+      Toast.show({
+        type: "error",
+        text1: "Validation Error",
+        text2: "Please enter both email and password",
+      });
       return;
     }
 
@@ -46,7 +50,11 @@ export default function LoginScreen() {
 
       navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
     } catch (error: any) {
-      Alert.alert("Authentication Failed", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Authentication Failed",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +92,7 @@ export default function LoginScreen() {
                 style={[
                   styles.input,
                   emailError ? styles.inputError : null,
-                  { flex: 1 }, // important so input takes remaining space
+                  { flex: 1 },
                 ]}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -195,7 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 10,
     marginBottom: 10,
-     width: "100%"
+    width: "100%",
   },
 
   icon: {

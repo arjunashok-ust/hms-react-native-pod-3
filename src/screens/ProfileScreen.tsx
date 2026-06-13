@@ -16,6 +16,7 @@ import {
   useFocusEffect,
 } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
 import { PatientProfile } from "../features/auth/types";
 import ProfileField from "../components/ProfileField";
 import PatientForm from "../components/PatientForm";
@@ -59,7 +60,11 @@ export default function ProfileScreen() {
 
   const handleUpdateProfile = async (data: any) => {
     if (!profile?.UHID) {
-      Alert.alert("Error", "User identification missing.");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "User identification missing.",
+      });
       return;
     }
 
@@ -93,10 +98,18 @@ export default function ProfileScreen() {
         JSON.stringify(updatedProfile),
       );
 
-      Alert.alert("Success", "Profile updated successfully.");
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Profile updated successfully.",
+      });
       setIsEditing(false);
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message,
+      });
       console.error("Profile Update Failed:", error);
     } finally {
       setIsSaving(false);
@@ -114,7 +127,11 @@ export default function ProfileScreen() {
       });
     } catch (error) {
       console.error("Error clearing session:", error);
-      Alert.alert("Error", "Failed to clear session data safely.");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to clear session data safely.",
+      });
     }
   };
 
@@ -146,7 +163,7 @@ export default function ProfileScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.center}>
+      <SafeAreaView style={styles.center} edges={["top", "left", "right"]}>
         <ActivityIndicator size="large" color="#6C4EDB" />
       </SafeAreaView>
     );
@@ -158,7 +175,7 @@ export default function ProfileScreen() {
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.3 }}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -249,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6F0F2",
   },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  scrollContent: { padding: 20, paddingBottom: 40 },
+  scrollContent: { padding: 20, paddingBottom: 24 },
   header: { alignItems: "center", marginBottom: 24, position: "relative" },
   settingsIcon: {
     position: "absolute",

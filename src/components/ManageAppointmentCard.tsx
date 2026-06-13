@@ -158,15 +158,15 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     flexDirection: "row",
-    gap: 8, // spacing between pills (use marginRight if older RN)
+    gap: 8, 
     alignItems: "center",
   },
 
   pill: {
-    backgroundColor: "#E0E7FF", // light blue (you can change)
+    backgroundColor: "#E0E7FF", 
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 20, // makes it pill-shaped
+    borderRadius: 20, 
   },
 
   pillText: {

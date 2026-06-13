@@ -62,7 +62,6 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
   );
 };
 
-// 🟢 FIXED: Extracted out of the parent component to keep identity stable across renders
 const ListSpacer = () => <View style={styles.separator} />;
 
 export default function TopDoctors({ doctors }: Readonly<Props>) {
@@ -79,7 +78,7 @@ export default function TopDoctors({ doctors }: Readonly<Props>) {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
-        ItemSeparatorComponent={ListSpacer} // 🟢 FIXED: Reference the static reference directly
+        ItemSeparatorComponent={ListSpacer}
       />
     </View>
   );
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   separator: {
-    width: 16, // 🟢 Cleanly bundled into styles object
+    width: 16,
   },
   card: {
     backgroundColor: "#FFFFFF",

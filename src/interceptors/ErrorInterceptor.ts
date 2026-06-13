@@ -1,6 +1,7 @@
 import { AxiosInstance } from "axios";
 import * as SecureStore from "expo-secure-store";
 import { resetToLogin } from "../navigation/RootNavigation";
+import Toast from "react-native-toast-message";
 
 export const attachErrorInterceptor = (client: AxiosInstance) => {
     client.interceptors.response.use(
@@ -46,6 +47,11 @@ export const attachErrorInterceptor = (client: AxiosInstance) => {
                     customErrorMessage = serverMessage || "Invalid request. Please check your data.";
                 }
             } else if (error.request) {
+                 Toast.show({
+                                type: "error",
+                                text1: "Server Error",
+                                text2: "Our servers are experiencing issues. Please try again later.",
+                            });
                 customErrorMessage = "Could not connect to the server. Please check your internet connection.";
             }
 

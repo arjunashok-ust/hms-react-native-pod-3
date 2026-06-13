@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons"; // 🟢 Added for premium iconography
+import { Feather } from "@expo/vector-icons"; 
 
 export interface Appointment {
   _id: string;

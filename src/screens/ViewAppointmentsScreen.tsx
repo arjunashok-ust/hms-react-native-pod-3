@@ -16,6 +16,7 @@ import {
   NavigationProp,
   useFocusEffect,
 } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 import { appointmentService } from "../services/appointmentService";
 import ManageAppointmentCard from "../components/ManageAppointmentCard";
 
@@ -71,15 +72,21 @@ export default function ViewAppointmentsScreen() {
   const executeDeletion = async (appointment: any) => {
     try {
       await appointmentService.deleteAppointment(appointment.appointmentCode);
-      Alert.alert("Success", "Appointment cancelled successfully.");
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Appointment cancelled successfully.",
+      });
       fetchAppointments();
     } catch (err: any) {
       console.error("Delete Appointment Failed:", err);
-      Alert.alert(
-        "Cancellation Failed",
-        err.response?.data?.message ||
+      Toast.show({
+        type: "error",
+        text1: "Cancellation Failed",
+        text2:
+          err.response?.data?.message ||
           "Could not connect to the server to cancel the appointment.",
-      );
+      });
     }
   };
 
@@ -106,7 +113,7 @@ export default function ViewAppointmentsScreen() {
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.3 }}
     >
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
         <View style={styles.container}>
           <Text style={styles.mainTitle}>View your</Text>
           <Text style={styles.boldTitle}>APPOINTMENTS</Text>
@@ -125,6 +132,7 @@ export default function ViewAppointmentsScreen() {
               data={appointments}
               keyExtractor={(item) => item.appointmentCode || item._id}
               showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.listContent}
               renderItem={({ item }) => (
                 <ManageAppointmentCard
                   appointment={item}
@@ -154,7 +162,14 @@ const styles = StyleSheet.create({
   },
   bg: { flex: 1, backgroundColor: "#E6F0F2" },
   safe: { flex: 1 },
-  container: { flex: 1, padding: 24 },
+  container: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  listContent: {
+    paddingBottom: 24,
+  },
   mainTitle: { fontSize: 36, fontWeight: "300", color: "#1E1E3F" },
   boldTitle: {
     fontSize: 36,

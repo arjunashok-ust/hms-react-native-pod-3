@@ -95,7 +95,6 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
       {/* Creation Mode Only Fields */}
       {!isEditMode && (
         <>
-          {/* 🟢 Custom Password Field with Eye Toggle */}
           <Controller
             control={control}
             name="password"
@@ -134,8 +133,6 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
               {errors.password.message as string}
             </Text>
           )}
-
-          {/* 🟢 Custom Confirm Password Field with Eye Toggle */}
           <Controller
             control={control}
             name="confirmPassword"
@@ -366,7 +363,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
 
-  // 🟢 New styles for the password fields
   passwordWrapper: {
     flexDirection: "row",
     alignItems: "center",

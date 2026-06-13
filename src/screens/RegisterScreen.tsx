@@ -4,13 +4,13 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ScrollView,
   ImageBackground,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/navigation";
+import Toast from "react-native-toast-message";
 
 import PatientForm from "../components/PatientForm";
 
@@ -89,10 +89,18 @@ export default function RegisterScreen() {
 
       await authService.register(payload);
 
-      Alert.alert("Success", "Account created successfully.");
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Account created successfully.",
+      });
       navigation.navigate("Login");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }

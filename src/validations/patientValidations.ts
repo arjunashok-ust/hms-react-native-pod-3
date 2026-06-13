@@ -34,30 +34,27 @@ export const getPatientValidationSchema = (isEditMode: boolean) => {
             .min(new Date("1926-01-01"), "Date of Birth cannot be earlier than 1926")
             .max(new Date(), "Date of Birth cannot be in the future"),
 
-        // 🟢 FIXED: Forgives empty strings and missing values perfectly
         bloodGroup: Yup.string()
             .nullable()
             .optional()
             .test("is-valid-blood", "Invalid Blood Group", (value) => {
-                if (!value || value.trim() === "") return true; // Valid if empty
+                if (!value || value.trim() === "") return true; 
                 return ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].includes(value);
             }),
 
-        // 🟢 FIXED: Truly optional
         allergies: Yup.string()
             .trim()
             .nullable()
             .optional()
             .max(200, "Allergies descriptions cannot exceed 200 characters"),
 
-        // 🟢 FIXED: Forgives the default "+91" / "91" / "" outputs of the phone picker
         emergencyContact: Yup.string()
             .trim()
             .nullable()
             .optional()
             .test("is-valid-emergency", "Enter a valid 10-digit emergency number", (value) => {
                 if (!value || value.trim() === "" || value === "+91" || value === "91") {
-                    return true; // Valid if empty or untouched
+                    return true; 
                 }
                 return indianPhoneRegex.test(value);
             }),
@@ -67,7 +64,6 @@ export const getPatientValidationSchema = (isEditMode: boolean) => {
             .required("Address Line 1 is required")
             .min(5, "Address must be descriptive (min 5 characters)"),
 
-        // 🟢 FIXED: Truly optional
         line2: Yup.string()
             .trim()
             .nullable()

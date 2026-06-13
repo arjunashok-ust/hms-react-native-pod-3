@@ -4,17 +4,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
   FlatList,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { MaterialIcons, Fontisto } from "@expo/vector-icons";
+import Toast from "react-native-toast-message"; 
 
 import { appointmentService } from "../services/appointmentService";
-import { useAppointmentData } from "../hooks/useAppointmentData"; // 🟢 Our new Hook
-import SelectablePill from "./SelectablePill"; // 🟢 Our new Component
+import { useAppointmentData } from "../hooks/useAppointmentData";
+import SelectablePill from "./SelectablePill";
 
 interface AppointmentFormProps {
   patientUHID: string | undefined;
@@ -33,7 +33,6 @@ export default function AppointmentForm({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 🟢 One line pulls in all the complex data logic!
   const {
     doctors,
     slots,
@@ -49,9 +48,10 @@ export default function AppointmentForm({
   } = useAppointmentData(isEditMode, appointmentData);
 
   const maxAppointmentDate = new Date(tomorrow);
+  
   maxAppointmentDate.setMonth(
     maxAppointmentDate.getMonth() +
-      process.env.NO_OF_MONTH_ALLOWED_IN_FUTURE_FOR_APPOINTMENT,
+      Number(process.env.NO_OF_MONTH_ALLOWED_IN_FUTURE_FOR_APPOINTMENT || 6),
   );
 
   const handleScrollFailed = (
@@ -71,12 +71,16 @@ export default function AppointmentForm({
 
   const handleFormSubmit = async () => {
     if (!selectedDoctor || !selectedSlot) {
-      return Alert.alert(
-        "Validation Error",
-        "Please select a doctor and an available time slot.",
-      );
+      
+      return Toast.show({
+        type: "error",
+        text1: "Validation Error",
+        text2: "Please select a doctor and an available time slot.",
+      });
     }
+
     setIsLoading(true);
+
     try {
       const year = selectedDate.getFullYear();
       const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
@@ -96,10 +100,20 @@ export default function AppointmentForm({
           appointmentData.appointmentCode,
           payload,
         );
-        Alert.alert("Success", "Appointment modifications requested.");
+        
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Appointment modifications requested.",
+        });
       } else {
         await appointmentService.createAppointment(payload);
-        Alert.alert("Success", "Appointment requested.");
+        
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Appointment requested successfully.",
+        });
       }
       onSuccess();
     } catch (err: any) {
@@ -107,7 +121,13 @@ export default function AppointmentForm({
         err.response?.data?.message ||
         err.message ||
         "An unknown error occurred.";
-      Alert.alert("Booking Rejected", serverErrorMessage);
+
+      
+      Toast.show({
+        type: "error",
+        text1: "Booking Rejected",
+        text2: serverErrorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -248,7 +268,7 @@ export default function AppointmentForm({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFF",
-    padding: 24,
+    padding: 10,
     borderRadius: 30,
     shadowColor: "#000",
     shadowOpacity: 0.1,
