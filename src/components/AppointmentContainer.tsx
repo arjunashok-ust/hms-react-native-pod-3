@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -23,13 +23,23 @@ export default function AppointmentContainer({
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const loadProfileContext = async () => {
+      const profileStr = await SecureStore.getItemAsync("patient_profile");
+      if (profileStr && isMounted) setProfile(JSON.parse(profileStr));
+    };
+
     loadProfileContext();
+    return () => { isMounted = false; };
   }, []);
 
-  const loadProfileContext = async () => {
-    const profileStr = await SecureStore.getItemAsync("patient_profile");
-    if (profileStr) setProfile(JSON.parse(profileStr));
-  };
+  const handleSuccess = useCallback(() => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "ViewAppointments" }],
+    });
+  }, [navigation]);
 
   return (
     <ImageBackground
@@ -46,12 +56,7 @@ export default function AppointmentContainer({
             patientUHID={profile?.UHID}
             isEditMode={isEditMode}
             appointmentData={appointmentData}
-            onSuccess={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "ViewAppointments" }],
-              })
-            }
+            onSuccess={handleSuccess}
           />
         </View>
       </SafeAreaView>

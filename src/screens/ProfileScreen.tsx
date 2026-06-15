@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import {
   View,
   Text,
@@ -32,8 +32,29 @@ export default function ProfileScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const isMounted = useRef(true);
 
   useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profileString = await SecureStore.getItemAsync("patient_profile");
+        if (profileString && isMounted.current) {
+          setProfile(JSON.parse(profileString));
+        }
+      } catch (error) {
+        console.error("Failed to load profile", error);
+      } finally {
+        if (isMounted.current) setIsLoading(false);
+      }
+    };
+
     loadProfile();
   }, []);
 
@@ -45,78 +66,72 @@ export default function ProfileScreen() {
     }, []),
   );
 
-  const loadProfile = async () => {
-    try {
-      const profileString = await SecureStore.getItemAsync("patient_profile");
-      if (profileString) {
-        setProfile(JSON.parse(profileString));
+  const handleUpdateProfile = useCallback(
+    async (data: any) => {
+      if (!profile?.UHID) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "User identification missing.",
+        });
+        return;
       }
-    } catch (error) {
-      console.error("Failed to load profile", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const handleUpdateProfile = async (data: any) => {
-    if (!profile?.UHID) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "User identification missing.",
-      });
-      return;
-    }
+      setIsSaving(true);
+      try {
+        const payload = {
+          phone: data.phone.trim(),
+          gender: data.gender,
+          dob: data.dob.toISOString().split("T")[0],
+          bloodGroup: data.bloodGroup,
+          allergies: data.allergies
+            ? data.allergies.split(",").map((a: string) => a.trim())
+            : [],
+          emergencyContact: data.emergencyContact
+            ? data.emergencyContact.trim()
+            : null,
+          address: {
+            line1: data.line1.trim(),
+            line2: data.line2 ? data.line2.trim() : "",
+            state: data.state.trim(),
+            pincode: Number.parseInt(data.pincode, 10),
+          },
+        };
 
-    setIsSaving(true);
-    try {
-      const payload = {
-        phone: data.phone.trim(),
-        gender: data.gender,
-        dob: data.dob.toISOString().split("T")[0],
-        bloodGroup: data.bloodGroup,
-        allergies: data.allergies
-          ? data.allergies.split(",").map((a: string) => a.trim())
-          : [],
-        emergencyContact: data.emergencyContact
-          ? data.emergencyContact.trim()
-          : null,
-        address: {
-          line1: data.line1.trim(),
-          line2: data.line2 ? data.line2.trim() : "",
-          state: data.state.trim(),
-          pincode: Number.parseInt(data.pincode, 10),
-        },
-      };
+        await patientService.updateProfile(profile.UHID, payload);
 
-      await patientService.updateProfile(profile.UHID, payload);
+        if (isMounted.current) {
+          const updatedProfile = { ...profile, ...payload };
+          setProfile(updatedProfile);
+          await SecureStore.setItemAsync(
+            "patient_profile",
+            JSON.stringify(updatedProfile),
+          );
 
-      const updatedProfile = { ...profile, ...payload };
-      setProfile(updatedProfile);
-      await SecureStore.setItemAsync(
-        "patient_profile",
-        JSON.stringify(updatedProfile),
-      );
+          Toast.show({
+            type: "success",
+            text1: "Success",
+            text2: "Profile updated successfully.",
+          });
+          setIsEditing(false);
+        }
+      } catch (error: any) {
+        if (isMounted.current) {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.message,
+          });
+          console.error("Profile Update Failed:", error);
+        }
+      } finally {
+        if (isMounted.current) setIsSaving(false);
+      }
+    },
+    [profile],
+  );
 
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "Profile updated successfully.",
-      });
-      setIsEditing(false);
-    } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error.message,
-      });
-      console.error("Profile Update Failed:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const executeLogout = async () => {
+  const executeLogout = useCallback(async () => {
     try {
       await SecureStore.deleteItemAsync("patient_jwt");
       await SecureStore.deleteItemAsync("patient_profile");
@@ -133,22 +148,20 @@ export default function ProfileScreen() {
         text2: "Failed to clear session data safely.",
       });
     }
-  };
+  }, [navigation]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     Alert.alert("Logout", "Are you sure you want to log out of your account?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Logout",
         style: "destructive",
-        onPress: () => {
-          executeLogout();
-        },
+        onPress: executeLogout,
       },
     ]);
-  };
+  }, [executeLogout]);
 
-  const getInitialEditValues = () => {
+  const initialEditValues = useMemo(() => {
     if (!profile) return {};
     return {
       ...profile,
@@ -159,7 +172,9 @@ export default function ProfileScreen() {
       state: profile.address?.state || "",
       pincode: profile.address?.pincode?.toString() || "",
     };
-  };
+  }, [profile]);
+
+  const toggleEditMode = useCallback(() => setIsEditing((e) => !e), []);
 
   if (isLoading) {
     return (
@@ -190,7 +205,7 @@ export default function ProfileScreen() {
 
             <TouchableOpacity
               style={[styles.editButton, isEditing && styles.cancelButton]}
-              onPress={() => setIsEditing(!isEditing)}
+              onPress={toggleEditMode}
             >
               <Text style={styles.editButtonText}>
                 {isEditing ? "Cancel Edit" : "Edit Profile"}
@@ -200,10 +215,8 @@ export default function ProfileScreen() {
 
           {isEditing ? (
             <PatientForm
-              initialValues={getInitialEditValues()}
-              onSubmit={(data) => {
-                handleUpdateProfile(data);
-              }}
+              initialValues={initialEditValues}
+              onSubmit={handleUpdateProfile}
               isLoading={isSaving}
               buttonText="Save Changes"
               isEditMode={true}

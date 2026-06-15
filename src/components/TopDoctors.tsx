@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  ListRenderItem,
 } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 
@@ -31,7 +32,7 @@ interface DoctorCardProps {
   doctor: Doctor;
 }
 
-const DoctorCard = ({ doctor }: DoctorCardProps) => {
+const DoctorCard = React.memo(({ doctor }: DoctorCardProps) => {
   console.log(`Data for ${doctor.name}:`, {
     designation: doctor.designation,
     specialization: doctor.specialization,
@@ -60,11 +61,14 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const ListSpacer = () => <View style={styles.separator} />;
-
-export default function TopDoctors({ doctors }: Readonly<Props>) {
+function TopDoctors({ doctors }: Readonly<Props>) {
+  const renderDoctorCard = useCallback<ListRenderItem<Doctor>>(
+    ({ item }) => <DoctorCard doctor={item} />,
+    [],
+  );
   return (
     <View style={styles.container}>
       <View style={styles.doctorHeader}>
@@ -74,7 +78,7 @@ export default function TopDoctors({ doctors }: Readonly<Props>) {
       <FlatList
         data={doctors}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <DoctorCard doctor={item} />}
+        renderItem={renderDoctorCard}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
@@ -83,6 +87,8 @@ export default function TopDoctors({ doctors }: Readonly<Props>) {
     </View>
   );
 }
+
+export default React.memo(TopDoctors);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,95 +16,107 @@ import PatientForm from "../components/PatientForm";
 
 import { authService } from "../services/authService";
 
+const initialSignupValues = {
+  name: "",
+  email: "",
+  phone: "",
+  password: "",
+  confirmPassword: "",
+  gender: undefined,
+  dob: undefined,
+  bloodGroup: "",
+  allergies: "",
+  emergencyContact: "",
+  line1: "",
+  line2: "",
+  state: "",
+  pincode: "",
+};
+
 export default function RegisterScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
+  const isMounted = useRef(true);
 
-  const initialSignupValues = {
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    gender: undefined,
-    dob: undefined,
-    bloodGroup: "",
-    allergies: "",
-    emergencyContact: "",
-    line1: "",
-    line2: "",
-    state: "",
-    pincode: "",
-  };
+  useEffect(() => {
+    isMounted.current = true;
 
-  const handleRegisterSubmit = async (data: any) => {
-    setIsLoading(true);
-    try {
-      let formattedDob = "";
-      if (data.dob) {
-        const dateObj = new Date(data.dob);
-        formattedDob = Number.isNaN(dateObj.getTime())
-          ? String(data.dob).split("T")[0]
-          : dateObj.toISOString().split("T")[0];
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const handleRegisterSubmit = useCallback(
+    async (data: any) => {
+      setIsLoading(true);
+      try {
+        let formattedDob = "";
+        if (data.dob) {
+          const dateObj = new Date(data.dob);
+          formattedDob = Number.isNaN(dateObj.getTime())
+            ? String(data.dob).split("T")[0]
+            : dateObj.toISOString().split("T")[0];
+        }
+
+        const formattedBloodGroup =
+          data.bloodGroup && data.bloodGroup.trim() !== ""
+            ? data.bloodGroup
+            : null;
+
+        const formattedAllergies =
+          data.allergies && data.allergies.trim() !== ""
+            ? data.allergies
+                .split(",")
+                .map((a: string) => a.trim())
+                .filter((a: string) => a.length > 0)
+            : [];
+
+        const payload = {
+          name: data.name.trim(),
+          email: data.email.trim().toLowerCase(),
+          phone: data.phone.trim(),
+          password: data.password,
+          gender: data.gender,
+          dob: formattedDob,
+          bloodGroup: formattedBloodGroup,
+          allergies: formattedAllergies,
+          emergencyContact: data.emergencyContact
+            ? data.emergencyContact.trim()
+            : null,
+          address: {
+            line1: data.line1.trim(),
+            line2: data.line2?.trim() || "",
+            state: data.state.trim(),
+            pincode: Number.parseInt(data.pincode, 10),
+          },
+        };
+
+        console.log(
+          "🚀 FINAL SANITIZED PAYLOAD:",
+          JSON.stringify(payload, null, 2),
+        );
+
+        await authService.register(payload);
+
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Account created successfully.",
+        });
+        navigation.navigate("Login");
+      } catch (error: any) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error.message,
+        });
+      } finally {
+        if (isMounted.current) setIsLoading(false);
       }
-
-      const formattedBloodGroup =
-        data.bloodGroup && data.bloodGroup.trim() !== ""
-          ? data.bloodGroup
-          : null;
-
-      const formattedAllergies =
-        data.allergies && data.allergies.trim() !== ""
-          ? data.allergies
-              .split(",")
-              .map((a: string) => a.trim())
-              .filter((a: string) => a.length > 0)
-          : [];
-
-      const payload = {
-        name: data.name.trim(),
-        email: data.email.trim().toLowerCase(),
-        phone: data.phone.trim(),
-        password: data.password,
-        gender: data.gender,
-        dob: formattedDob,
-        bloodGroup: formattedBloodGroup,
-        allergies: formattedAllergies,
-        emergencyContact: data.emergencyContact
-          ? data.emergencyContact.trim()
-          : null,
-        address: {
-          line1: data.line1.trim(),
-          line2: data.line2?.trim() || "",
-          state: data.state.trim(),
-          pincode: Number.parseInt(data.pincode, 10),
-        },
-      };
-
-      console.log(
-        "🚀 FINAL SANITIZED PAYLOAD:",
-        JSON.stringify(payload, null, 2),
-      );
-
-      await authService.register(payload);
-
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "Account created successfully.",
-      });
-      navigation.navigate("Login");
-    } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error.message,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [navigation],
+  );
 
   return (
     <ImageBackground

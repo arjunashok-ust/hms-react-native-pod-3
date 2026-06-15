@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  ListRenderItem,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { MaterialIcons, Fontisto } from "@expo/vector-icons";
-import Toast from "react-native-toast-message"; 
+import Toast from "react-native-toast-message";
 
 import { appointmentService } from "../services/appointmentService";
 import { useAppointmentData } from "../hooks/useAppointmentData";
@@ -23,7 +24,7 @@ interface AppointmentFormProps {
   onSuccess: () => void;
 }
 
-export default function AppointmentForm({
+function AppointmentForm({
   patientUHID,
   isEditMode = false,
   appointmentData,
@@ -32,6 +33,15 @@ export default function AppointmentForm({
   const navigation = useNavigation<NavigationProp<any>>();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const {
     doctors,
@@ -48,30 +58,29 @@ export default function AppointmentForm({
   } = useAppointmentData(isEditMode, appointmentData);
 
   const maxAppointmentDate = new Date(tomorrow);
-  
+
   maxAppointmentDate.setMonth(
     maxAppointmentDate.getMonth() +
       Number(process.env.NO_OF_MONTH_ALLOWED_IN_FUTURE_FOR_APPOINTMENT || 6),
   );
 
-  const handleScrollFailed = (
-    info: any,
-    ref: React.RefObject<FlatList | null>,
-  ) => {
-    setTimeout(
-      () =>
-        ref.current?.scrollToIndex({
-          index: info.index,
-          animated: true,
-          viewPosition: 0.5,
-        }),
-      500,
-    );
-  };
+  const handleScrollFailed = useCallback(
+    (info: any, ref: React.RefObject<FlatList | null>) => {
+      setTimeout(
+        () =>
+          ref.current?.scrollToIndex({
+            index: info.index,
+            animated: true,
+            viewPosition: 0.5,
+          }),
+        500,
+      );
+    },
+    [],
+  );
 
   const handleFormSubmit = async () => {
     if (!selectedDoctor || !selectedSlot) {
-      
       return Toast.show({
         type: "error",
         text1: "Validation Error",
@@ -100,7 +109,7 @@ export default function AppointmentForm({
           appointmentData.appointmentCode,
           payload,
         );
-        
+
         Toast.show({
           type: "success",
           text1: "Success",
@@ -108,7 +117,7 @@ export default function AppointmentForm({
         });
       } else {
         await appointmentService.createAppointment(payload);
-        
+
         Toast.show({
           type: "success",
           text1: "Success",
@@ -122,16 +131,41 @@ export default function AppointmentForm({
         err.message ||
         "An unknown error occurred.";
 
-      
       Toast.show({
         type: "error",
         text1: "Booking Rejected",
         text2: serverErrorMessage,
       });
     } finally {
-      setIsLoading(false);
+      if (isMounted.current) setIsLoading(false);
     }
   };
+
+  const renderDoctorItem = useCallback<ListRenderItem<any>>(
+    ({ item }) => (
+      <SelectablePill
+        title={item.name}
+        subtitle={item.specialization}
+        isSelected={selectedDoctor === item.employeeCode}
+        onPress={() => {
+          setSelectedDoctor(item.employeeCode);
+          setSelectedSlot("");
+        }}
+      />
+    ),
+    [selectedDoctor, setSelectedDoctor, setSelectedSlot],
+  );
+
+  const renderSlotItem = useCallback<ListRenderItem<string>>(
+    ({ item }) => (
+      <SelectablePill
+        title={item}
+        isSelected={selectedSlot === item}
+        onPress={() => setSelectedSlot(item)}
+      />
+    ),
+    [selectedSlot, setSelectedSlot],
+  );
 
   return (
     <View style={styles.card}>
@@ -167,17 +201,7 @@ export default function AppointmentForm({
           onScrollToIndexFailed={(info) =>
             handleScrollFailed(info, doctorListRef)
           }
-          renderItem={({ item }) => (
-            <SelectablePill
-              title={item.name}
-              subtitle={item.specialization}
-              isSelected={selectedDoctor === item.employeeCode}
-              onPress={() => {
-                setSelectedDoctor(item.employeeCode);
-                setSelectedSlot("");
-              }}
-            />
-          )}
+          renderItem={renderDoctorItem}
         />
       </View>
 
@@ -223,13 +247,7 @@ export default function AppointmentForm({
                 onScrollToIndexFailed={(info) =>
                   handleScrollFailed(info, slotListRef)
                 }
-                renderItem={({ item }) => (
-                  <SelectablePill
-                    title={item}
-                    isSelected={selectedSlot === item}
-                    onPress={() => setSelectedSlot(item)}
-                  />
-                )}
+                renderItem={renderSlotItem}
               />
             )}
           </View>
@@ -264,6 +282,8 @@ export default function AppointmentForm({
     </View>
   );
 }
+
+export default React.memo(AppointmentForm);
 
 const styles = StyleSheet.create({
   card: {

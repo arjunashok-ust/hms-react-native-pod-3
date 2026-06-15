@@ -25,7 +25,7 @@ interface PatientFormProps {
   isEditMode?: boolean;
 }
 
-export default function PatientForm(props: Readonly<PatientFormProps>) {
+function PatientForm(props: Readonly<PatientFormProps>) {
   const {
     initialValues,
     onSubmit,
@@ -346,6 +346,8 @@ export default function PatientForm(props: Readonly<PatientFormProps>) {
     </View>
   );
 }
+
+export default React.memo(PatientForm);
 
 const styles = StyleSheet.create({
   formContainer: { width: "100%" },

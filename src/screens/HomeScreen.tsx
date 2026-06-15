@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   View,
   Text,
@@ -31,25 +31,18 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [profile, setProfile] = useState<PatientProfile | null>(null);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchDashboardData();
-    }, []),
-  );
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("tabPress", () => {
-      if (navigation.isFocused()) {
-        setRefreshing(true);
-        fetchDashboardData();
-      }
-    });
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
-    return unsubscribe;
-  }, [navigation]);
+  
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync("patient_jwt");
       const profileString = await SecureStore.getItemAsync("patient_profile");
@@ -59,15 +52,16 @@ export default function HomeScreen() {
         return;
       }
 
-      setProfile(JSON.parse(profileString));
-
       const [appointmentsData, doctorsData] = await Promise.all([
         appointmentService.getMyAppointments(),
         appointmentService.getDoctors(),
       ]);
 
-      setAppointments(appointmentsData);
-      setDoctors(doctorsData);
+      if (isMounted.current) {
+        setProfile(JSON.parse(profileString));
+        setAppointments(appointmentsData);
+        setDoctors(doctorsData);
+      }
     } catch (error) {
       console.error("Dashboard Fetch Error:", error);
       Toast.show({
@@ -76,17 +70,25 @@ export default function HomeScreen() {
         text2: "Could not load dashboard data. Please try again.",
       });
     } finally {
-      setIsLoading(false);
-      setRefreshing(false);
+      if (isMounted.current) {
+        setIsLoading(false);
+        setRefreshing(false);
+      }
     }
-  };
+  }, [navigation]);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchDashboardData();
+    }, [fetchDashboardData]),
+  );
+  
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
 
-  const getNextAppointment = () => {
+  const nextAppointment = useMemo(() => {
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -100,9 +102,7 @@ export default function HomeScreen() {
         (app.status === "Scheduled" || app.status === "Pending")
       );
     });
-  };
-
-  const nextAppointment = getNextAppointment();
+  }, [appointments]);
 
   return (
     <ImageBackground

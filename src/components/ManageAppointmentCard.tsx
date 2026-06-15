@@ -8,7 +8,7 @@ interface ManageAppointmentCardProps {
   onDelete: () => void;
 }
 
-export default function ManageAppointmentCard({
+function ManageAppointmentCard({
   appointment,
   onEdit,
   onDelete,
@@ -87,6 +87,8 @@ export default function ManageAppointmentCard({
   );
 }
 
+export default React.memo(ManageAppointmentCard);
+
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFF",
@@ -158,15 +160,15 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     flexDirection: "row",
-    gap: 8, 
+    gap: 8,
     alignItems: "center",
   },
 
   pill: {
-    backgroundColor: "#E0E7FF", 
+    backgroundColor: "#E0E7FF",
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 20, 
+    borderRadius: 20,
   },
 
   pillText: {
