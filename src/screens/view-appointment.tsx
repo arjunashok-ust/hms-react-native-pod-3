@@ -5,10 +5,11 @@ import {
   StyleSheet,
   Text,
   FlatList,
+  ListRenderItem,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { AppointmentCard } from "../components/appointment/appointment-card.component";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AppointmentModel } from "../types/appointment.types";
 import ProfileButton from "../components/profile/profile-button.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -22,6 +23,20 @@ export default function ViewAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
   const [appointments, setAppointments] = useState<AppointmentModel[]>([]);
+
+  const renderItem : ListRenderItem<AppointmentModel> = useCallback(
+    ({ item }) => (
+      <AppointmentCard
+        doctorEmployeeId={item.doctorEmployeeId}
+        status={item.status}
+        date={item.date}
+        timeSlot={item.timeSlot}
+        appointmentId={item.appointmentId}
+        onAppointmentChange={fetchAppointments}
+      />
+    ),
+    [],
+  );
 
   const goToHome = () => {
     navigator.navigate("tabs", {
@@ -59,8 +74,7 @@ export default function ViewAppointmentScreen() {
         />
 
         <View style={styles.container}>
-          
-          <FormHeader title="SCHEDULE" value="Your Appointments"/>
+          <FormHeader title="SCHEDULE" value="Your Appointments" />
 
           {appointments.length === 0 && (
             <Text style={[styles.noAppointmentsText, styles.text]}>
@@ -71,18 +85,10 @@ export default function ViewAppointmentScreen() {
           <FlatList
             data={appointments}
             keyExtractor={(item) => item.appointmentId}
-            renderItem={({ item }) => {
-              return (
-                <AppointmentCard
-                  doctorEmployeeId={item.doctorEmployeeId}
-                  status={item.status}
-                  date={item.date}
-                  timeSlot={item.timeSlot}
-                  appointmentId={item.appointmentId}
-                  onAppointmentChange={fetchAppointments}
-                />
-              );
-            }}
+            renderItem={renderItem}
+            initialNumToRender={1}
+            maxToRenderPerBatch={3}
+            windowSize={3}
           ></FlatList>
         </View>
       </View>

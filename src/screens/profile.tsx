@@ -63,7 +63,7 @@ export default function ProfileScreen() {
     <ImageBackground source={BgImage} style={styles.wrapper} resizeMode="cover">
       <View style={styles.overlay}>
         <ProfileCard
-          prefix={patientData?.name.slice(0, 3).toUpperCase()}
+          prefix={patientData?.name.slice(0, 2).toUpperCase()}
           name={patientData?.name}
           designation={patientData?.role}
           id={patientData?.uhid}

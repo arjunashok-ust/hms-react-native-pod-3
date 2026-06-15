@@ -11,8 +11,9 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
 
-export const AppointmentCard = (props: any) => {
+export const AppointmentCardComponent = (props: any) => {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
   const [doctor, setDoctor] = useState<UserModel | null>(null);
@@ -190,6 +191,8 @@ export const AppointmentCard = (props: any) => {
     </View>
   );
 };
+
+export const AppointmentCard = React.memo(AppointmentCardComponent);
 
 const styles = StyleSheet.create({
   appointmentContainer: {
