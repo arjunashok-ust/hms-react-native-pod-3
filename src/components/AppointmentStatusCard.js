@@ -300,7 +300,6 @@ const AppointmentScreen = () => {
         renderItem={renderAppointment}
         scrollEnabled={false}
       />
-      
     </ScrollView>
   );
 };

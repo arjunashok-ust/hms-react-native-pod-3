@@ -69,7 +69,17 @@ const validateAddress = (value) => {
     return "Address is required";
   }
 
-  return /^[A-Za-z0-9\s,.-]+$/.test(val) ? "" : "Invalid address";
+  // Allowed characters check
+  if (!/^[A-Za-z0-9\s,.-]+$/.test(val)) {
+    return "Invalid address";
+  }
+
+  // Must contain at least one alphabet
+  if (!/[A-Za-z]/.test(val)) {
+    return "Address must contain letters";
+  }
+
+  return "";
 };
 
 const validatePostcode = (value) => {

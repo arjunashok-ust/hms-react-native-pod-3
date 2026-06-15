@@ -304,15 +304,17 @@ const SignupScreen = ({ navigation }) => {
           {showError("bloodGroup")}
 
           {/* ALLERGIES */}
-          <View style={styles.inputBox}>
-            <Ionicons name="medkit-outline" size={22} color="#777" />
-            <TextInput
-              placeholder="Allergies"
-              value={form.allergies}
-              style={styles.input}
-              onChangeText={(v) => handleChange("allergies", v)}
-            />
-          </View>
+         <View style={styles.inputBox}>
+  <Ionicons name="medkit-outline" size={22} color="#777" />
+  <TextInput
+    placeholder="Allergies"
+    value={form.allergies}
+    style={styles.input}
+    onChangeText={(v) =>
+      handleChange("allergies", v.replace(/[^a-zA-Z\s]/g, ""))
+    }
+  />
+</View>
 
           {/* ADDRESS */}
           <View style={styles.inputBox}>
