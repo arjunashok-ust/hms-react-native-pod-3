@@ -17,9 +17,13 @@ export interface AppointmentFormErrors {
 
 export interface UseAppointmentFormOptions {
   initialAppointment?: AppointmentModel;
+  initialDoctorId?: string;
 }
 
-export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOptions = {}) {
+export function useAppointmentForm({
+  initialAppointment,
+  initialDoctorId,
+}: UseAppointmentFormOptions = {}) {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
   const [doctors, setDoctors] = useState<UserModel[]>([]);
@@ -28,7 +32,9 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
   const [isLoading, setIsLoading] = useState(false);
 
   const [patientId, setPatientId] = useState("");
-  const [doctorId, setDoctorId] = useState(initialAppointment?.doctorEmployeeId ?? "");
+  const [doctorId, setDoctorId] = useState(
+    initialAppointment?.doctorEmployeeId ?? initialDoctorId ?? "",
+  );
   const [date, setDate] = useState(new Date());
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [timeSlot, setTimeSlot] = useState(initialAppointment?.timeSlot ?? "");
@@ -65,6 +71,16 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
     }
   }, [doctorId, date, isDateSet]);
 
+  useEffect(() => {
+    if (!initialAppointment && initialDoctorId) {
+      const tommorow = new Date();
+      tommorow.setDate(tommorow.getDate() + 1);
+
+      setDoctor(initialDoctorId);
+      setDate(tommorow);
+      setIsDateSet(true);
+    }
+  }, [initialDoctorId]);
 
   const fetchDoctors = async () => {
     try {
@@ -83,7 +99,8 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
       if (initialAppointment) {
         const isSameDoctor = initialAppointment.doctorEmployeeId === doctorId;
         const isSameDate =
-          new Date(initialAppointment.date).toDateString() === date.toDateString();
+          new Date(initialAppointment.date).toDateString() ===
+          date.toDateString();
 
         if (isSameDoctor && isSameDate) {
           const merged = data.includes(initialAppointment.timeSlot)
@@ -107,7 +124,9 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
     const today = new Date();
     input.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
-    return input <= today ? "Appointments cannot be booked for today or past dates." : "";
+    return input <= today
+      ? "Appointments cannot be booked for today or past dates."
+      : "";
   };
 
   const validateDoctorEmployeeId = (id: string): string =>
@@ -125,7 +144,6 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
     setErrors(newErrors);
     return Object.values(newErrors).every((e) => e === "");
   };
-
 
   const maxDateLimit = (): Date => {
     const d = new Date();
@@ -183,7 +201,7 @@ export function useAppointmentForm({ initialAppointment }: UseAppointmentFormOpt
     timeSlot,
     setTimeSlot,
     errors,
-    
+
     onDateChange,
     setDoctor,
     clearFields,

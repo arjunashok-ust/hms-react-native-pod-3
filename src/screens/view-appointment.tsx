@@ -24,7 +24,7 @@ export default function ViewAppointmentScreen() {
 
   const [appointments, setAppointments] = useState<AppointmentModel[]>([]);
 
-  const renderItem : ListRenderItem<AppointmentModel> = useCallback(
+  const renderItem: ListRenderItem<AppointmentModel> = useCallback(
     ({ item }) => (
       <AppointmentCard
         doctorEmployeeId={item.doctorEmployeeId}
@@ -41,6 +41,7 @@ export default function ViewAppointmentScreen() {
   const goToHome = () => {
     navigator.navigate("tabs", {
       screen: "appointment",
+      params: {},
     });
   };
 

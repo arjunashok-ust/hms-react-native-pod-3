@@ -4,7 +4,7 @@ import { TextInput, View, StyleSheet } from "react-native";
 const SearchBox = (props: any) => {
   return (
     <View style={styles.searchBox}>
-      <Ionicons name="search-outline" style={styles.searchIcon} size={18} />
+      <Ionicons name="search-outline" style={styles.searchIcon} size={20} color="rgb(61, 11, 105)" />
       <TextInput
         style={styles.searchInput}
         placeholder={props.placeholder}
@@ -31,16 +31,13 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     padding: 5,
-    backgroundColor: "rgb(232, 232, 232)",
     marginLeft: 10,
     borderRadius: 5,
-    borderColor: "rgba(61, 11, 105, 0.3)",
-    borderWidth: 1,
   },
   searchInput: {
     flex: 1,
     marginLeft: 10,
-    fontSize: 14,
+    fontSize: 15,
     lineHeight: 30,
   },
 });

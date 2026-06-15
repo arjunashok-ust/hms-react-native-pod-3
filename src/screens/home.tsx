@@ -16,19 +16,21 @@ import SearchBox from "../components/home/search-box.component";
 import SelectHolder from "../components/home/select-holder.component";
 import { getSpecializations } from "../services/ui.service";
 import { SpecializationModel } from "../types/ui.types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationModel } from "../types/navigation.types";
 
 export default function HomeScreen() {
+  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+
   const [doctors, setDoctors] = useState<UserModel[]>([]);
   const [filteredDoctors, setFilteredDoctors] = useState<UserModel[]>([]);
 
   const [specializations, setSpecializations] = useState<SpecializationModel[]>(
     [],
   );
-  const [selectedSpecialization, setSelectedSpecialization] = useState<
-    UserModel[]
-  >([]);
 
-  const [searchText, setSearchText] = useState("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState("");
 
   const renderItem: ListRenderItem<UserModel> = useCallback(
     ({ item }) => (
@@ -37,6 +39,14 @@ export default function HomeScreen() {
         name={item.name}
         designation={item.designation}
         specialization={item.specialization}
+        onPress={() => {
+          navigator.navigate("tabs", {
+            screen: "appointment",
+            params: {
+              doctorId: item.employeeCode,
+            },
+          });
+        }}
       />
     ),
     [],
@@ -47,11 +57,17 @@ export default function HomeScreen() {
       <SelectHolder
         name={item.specialization_name}
         onPress={() => {
-          filterData(item.specialization_name);
+          const newValue =
+            selectedSpecialization === item.specialization_name
+              ? ""
+              : item.specialization_name;
+          setSelectedSpecialization(newValue);
+          filterData(newValue);
         }}
+        isSelected={selectedSpecialization === item.specialization_name}
       />
     ),
-    [],
+    [selectedSpecialization],
   );
 
   useEffect(() => {
@@ -71,24 +87,23 @@ export default function HomeScreen() {
   };
 
   const filterData = async (value: string) => {
-    setSearchText(value);
-
-    if (!value.trim()) {
+    if (!normalize(value)) {
       setFilteredDoctors(doctors);
       return;
     }
 
     const data = doctors.filter((doctor) => {
-      const doctor_search = doctor.name
-        .toLowerCase()
-        .includes(value.toLowerCase());
-      const specialization_search = doctor.specialization
-        .toLowerCase()
-        .includes(value.toLowerCase());
+      const doctor_search = normalize(doctor.name).includes(normalize(value));
+      const specialization_search = normalize(doctor.specialization).includes(
+        normalize(value),
+      );
       return doctor_search || specialization_search;
     });
-
     setFilteredDoctors(data);
+  };
+
+  const normalize = (text: string) => {
+    return text.toLowerCase().trim();
   };
 
   return (
@@ -104,26 +119,30 @@ export default function HomeScreen() {
           placeholder="Search Doctor or Specialization"
           onChangeText={filterData}
         />
-        <View style={styles.contentHolder}>
-          <Text style={[styles.text, styles.contentTitle]}>Specialization</Text>
-          <FlatList
-            horizontal
-            data={specializations}
-            keyExtractor={(item) => item.specialization_id.toString()}
-            renderItem={renderSpecialization}
-            showsHorizontalScrollIndicator={false}
-          ></FlatList>
-        </View>
-        <View style={styles.contentHolder}>
-          <Text style={[styles.text, styles.contentTitle]}>
-            Available Doctors
-          </Text>
-          <FlatList
-            horizontal
-            data={filteredDoctors}
-            keyExtractor={(item) => item.employeeCode}
-            renderItem={renderItem}
-          />
+        <View style={styles.container}>
+          <View style={styles.contentHolder}>
+            <Text style={[styles.text, styles.contentTitle]}>
+              Specialization
+            </Text>
+            <FlatList
+              key="3-columns"
+              data={specializations}
+              keyExtractor={(item) => item.specialization_id.toString()}
+              renderItem={renderSpecialization}
+              numColumns={3}
+            ></FlatList>
+          </View>
+          <View style={styles.contentHolder}>
+            <Text style={[styles.text, styles.contentTitle]}>
+              Available Doctors
+            </Text>
+            <FlatList
+              horizontal
+              data={filteredDoctors}
+              keyExtractor={(item) => item.employeeCode}
+              renderItem={renderItem}
+            />
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -141,17 +160,22 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Sans",
   },
+  container: {
+    backgroundColor: "rgb(255, 255, 255)",
+    flex: 1,
+    marginTop: 10,
+    paddingVertical: 50,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
   contentHolder: {
     marginHorizontal: 20,
     marginVertical: 5,
-    backgroundColor: "rgb(255, 255, 255)",
-    borderColor: "rgba(61, 11, 105, 0.3)",
-    borderWidth: 1,
     borderRadius: 10,
     padding: 10,
   },
   contentTitle: {
-    fontSize: 12,
-    color: "rgb(91, 91, 91)",
+    fontSize: 16,
+    color: "rgb(109, 109, 109)",
   },
 });

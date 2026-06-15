@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
 const DoctorCardComponent = (props: any) => {
   return (
-    <TouchableOpacity style={styles.doctorContainer}>
+    <TouchableOpacity style={styles.doctorContainer} onPress={props.onPress}>
       <View
         style={styles.doctorAvatar}
       >
@@ -28,17 +28,12 @@ export const DoctorCard = React.memo(DoctorCardComponent);
 
 const styles = StyleSheet.create({
   doctorContainer: {
-    backgroundColor: "rgb(222, 222, 222)",
-    borderColor: "rgba(61, 11, 105, 0.3)",
-    borderWidth: 1,
+    backgroundColor: "rgb(236, 236, 236)",
     borderRadius: 10,
     flexDirection: "column",
-    alignItems: "center",
     padding: 20,
     marginTop: 10,
-    elevation: 5,
-    width:200,
-    marginHorizontal:5,
+    marginRight:10,
   },
   doctorAvatar: {
     height: 50,
@@ -60,7 +55,6 @@ const styles = StyleSheet.create({
   doctorDetails: {
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
   },
   doctorName: {
     color: "#545454",

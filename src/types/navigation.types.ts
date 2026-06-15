@@ -13,5 +13,5 @@ export type NavigationModel = {
 export type TabParamList = {
   home: undefined;
   profile: undefined;
-  appointment: undefined;
+  appointment: { doctorId?: string};
 };

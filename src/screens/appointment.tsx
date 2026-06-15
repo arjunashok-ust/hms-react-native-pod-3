@@ -8,14 +8,39 @@ import { AppointmentModel } from "../types/appointment.types";
 import { createAppointment } from "../services/appointment.service";
 import { useAppointmentForm } from "../hooks/useAppointmentForm";
 import { AppointmentFormBody } from "../components/appointment/appointment-form-body-component";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { TabParamList } from "../types/navigation.types";
+
+type AppointmentRouteProp = RouteProp<TabParamList, "appointment">;
 
 export default function AppointmentScreen() {
+  const router = useRoute<AppointmentRouteProp>();
+  const initialDoctorId = router.params?.doctorId;
+
   const {
-    doctors, isShow, setIsShow, isDateSet, isLoading, setIsLoading,
-    patientId, doctorId, date, availableSlots, timeSlot, setTimeSlot, errors,
-    onDateChange, setDoctor, clearFields, validateAppointment,
-    showValidationError, maxDateLimit, goToAppointments,
-  } = useAppointmentForm();
+    doctors,
+    isShow,
+    setIsShow,
+    isDateSet,
+    isLoading,
+    setIsLoading,
+    patientId,
+    doctorId,
+    date,
+    availableSlots,
+    timeSlot,
+    setTimeSlot,
+    errors,
+    onDateChange,
+    setDoctor,
+    clearFields,
+    validateAppointment,
+    showValidationError,
+    maxDateLimit,
+    goToAppointments,
+  } = useAppointmentForm({
+    initialDoctorId,
+  });
 
   const sendAppointment = async () => {
     if (!validateAppointment()) {
@@ -34,7 +59,11 @@ export default function AppointmentScreen() {
         createdByEmployeeId: patientId,
       };
       const response = await createAppointment(payload);
-      Toast.show({ type: "success", text1: "Success", text2: response?.data?.message });
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: response?.data?.message,
+      });
       clearFields();
     } catch (err) {
       console.error(err);
@@ -46,7 +75,11 @@ export default function AppointmentScreen() {
   return (
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
-        <WelcomeTextContainer text1="Create your," text2="APPOINTMENT" text3="here." />
+        <WelcomeTextContainer
+          text1="Create your,"
+          text2="APPOINTMENT"
+          text3="here."
+        />
 
         <ScrollView style={styles.scrollView}>
           <AppointmentFormBody
@@ -71,7 +104,11 @@ export default function AppointmentScreen() {
           />
         </ScrollView>
 
-        <ProfileButton title="VIEW APPOINTMENTS" iconName="eye-outline" onAction={goToAppointments} />
+        <ProfileButton
+          title="VIEW APPOINTMENTS"
+          iconName="eye-outline"
+          onAction={goToAppointments}
+        />
 
         {isShow && (
           <DateTimePicker
@@ -79,7 +116,9 @@ export default function AppointmentScreen() {
             mode="date"
             minimumDate={new Date()}
             maximumDate={maxDateLimit()}
-            onChange={(_, value) => { if (value) onDateChange(value); }}
+            onChange={(_, value) => {
+              if (value) onDateChange(value);
+            }}
           />
         )}
       </View>
