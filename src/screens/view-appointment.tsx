@@ -48,7 +48,7 @@ export default function ViewAppointmentScreen() {
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="View your,"
-          text2="APPOINTMENTS"
+          text2="APPOINTMENT"
           text3="here."
         ></WelcomeTextContainer>
 

@@ -38,7 +38,7 @@ api.interceptors.response.use(
     let message = "";
 
     if (error.response) {
-      message =
+      message = 
         error.response?.data?.message || `Error ${error.response.status}`;
     } else if (error.request) {
       message = "No response from the server";
