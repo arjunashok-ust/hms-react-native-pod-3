@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   ListRenderItem,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -37,6 +38,7 @@ export default function ViewAppointmentsScreen() {
   const navigation = useNavigation<NavigationProp<any>>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -47,19 +49,25 @@ export default function ViewAppointmentsScreen() {
     };
   }, []);
 
-  
-
-  const fetchAppointments = useCallback(async () => {
-    setIsLoading(true);
+  const fetchAppointments = useCallback(async (isRefresh = false) => {
+    if (!isRefresh) setIsLoading(true);
     try {
       const data = await appointmentService.getMyAppointments();
       if (isMounted.current) setAppointments(data);
     } catch (err) {
       console.error("Fetch Appointments Failed:", err);
     } finally {
-      if (isMounted.current) setIsLoading(false);
+      if (isMounted.current) {
+        setIsLoading(false);
+        setRefreshing(false);
+      }
     }
   }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchAppointments(true);
+  }, [fetchAppointments]);
   
   useFocusEffect(
     useCallback(() => {
@@ -174,6 +182,14 @@ export default function ViewAppointmentsScreen() {
                     No appointment logs found.
                   </Text>
                 </View>
+              }
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  colors={["#4B1D76"]}
+                  tintColor="#4B1D76"
+                />
               }
             />
           )}

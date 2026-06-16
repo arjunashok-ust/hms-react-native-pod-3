@@ -4,8 +4,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   ImageBackground,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -125,41 +125,46 @@ export default function RegisterScreen() {
       imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView
+        <FlatList
+          data={[]}
+          renderItem={undefined}
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.headerSection}>
-            <Text style={styles.headerTitleLine1}>New To,</Text>
-            <Text style={styles.headerTitleLine2}>HMS?</Text>
-            <View style={styles.subtitleContainer}>
-              <Text style={styles.subtitleText}>
-                Create your account to get started.
-              </Text>
-            </View>
-          </View>
+          ListHeaderComponent={
+            <>
+              <View style={styles.headerSection}>
+                <Text style={styles.headerTitleLine1}>New To,</Text>
+                <Text style={styles.headerTitleLine2}>HMS?</Text>
+                <View style={styles.subtitleContainer}>
+                  <Text style={styles.subtitleText}>
+                    Create your account to get started.
+                  </Text>
+                </View>
+              </View>
 
-          <View style={styles.card}>
-            <PatientForm
-              initialValues={initialSignupValues}
-              onSubmit={handleRegisterSubmit}
-              isLoading={isLoading}
-              buttonText="Signup"
-              isEditMode={false}
-            />
+              <View style={styles.card}>
+                <PatientForm
+                  initialValues={initialSignupValues}
+                  onSubmit={handleRegisterSubmit}
+                  isLoading={isLoading}
+                  buttonText="Signup"
+                  isEditMode={false}
+                />
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Login")}
-              style={styles.linkButton}
-            >
-              <Text style={styles.linkTextRegular}>
-                Already have an account?{" "}
-                <Text style={styles.linkTextPurple}>Login</Text>
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Login")}
+                  style={styles.linkButton}
+                >
+                  <Text style={styles.linkTextRegular}>
+                    Already have an account?{" "}
+                    <Text style={styles.linkTextPurple}>Login</Text>
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
+        />
       </SafeAreaView>
     </ImageBackground>
   );

@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import {
   View,
   Text,
@@ -16,11 +22,13 @@ import Toast from "react-native-toast-message";
 import { appointmentService } from "../services/appointmentService";
 import { useAppointmentData } from "../hooks/useAppointmentData";
 import SelectablePill from "./SelectablePill";
+import SearchBar from "./SearchBar";
 
 interface AppointmentFormProps {
   patientUHID: string | undefined;
   isEditMode?: boolean;
   appointmentData?: any;
+  preselectedDoctorId?: string;
   onSuccess: () => void;
 }
 
@@ -28,11 +36,13 @@ function AppointmentForm({
   patientUHID,
   isEditMode = false,
   appointmentData,
+  preselectedDoctorId,
   onSuccess,
 }: Readonly<AppointmentFormProps>) {
   const navigation = useNavigation<NavigationProp<any>>();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [doctorSearchQuery, setDoctorSearchQuery] = useState("");
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -55,7 +65,17 @@ function AppointmentForm({
     tomorrow,
     doctorListRef,
     slotListRef,
-  } = useAppointmentData(isEditMode, appointmentData);
+  } = useAppointmentData(isEditMode, appointmentData, preselectedDoctorId);
+
+  const filteredDoctors = useMemo(() => {
+    if (!doctorSearchQuery.trim()) return doctors;
+    const q = doctorSearchQuery.toLowerCase();
+    return doctors.filter(
+      (d: any) =>
+        d.name.toLowerCase().includes(q) ||
+        (d.specialization && d.specialization.toLowerCase().includes(q)),
+    );
+  }, [doctors, doctorSearchQuery]);
 
   const maxAppointmentDate = new Date(tomorrow);
 
@@ -191,10 +211,17 @@ function AppointmentForm({
       </View>
 
       <Text style={styles.label}>SELECT DOCTOR</Text>
+      <View style={{ marginBottom: 12 }}>
+        <SearchBar
+          value={doctorSearchQuery}
+          onChangeText={setDoctorSearchQuery}
+          placeholder="Search doctors..."
+        />
+      </View>
       <View style={styles.scrollWrapper}>
         <FlatList
           ref={doctorListRef}
-          data={doctors}
+          data={filteredDoctors}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.employeeCode}

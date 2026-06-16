@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import {
+  useNavigation,
+  NavigationProp,
+  useRoute,
+} from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 
 import AppointmentForm from "./AppointmentForm";
@@ -20,6 +24,8 @@ export default function AppointmentContainer({
   appointmentData,
 }: Readonly<AppointmentContainerProps>) {
   const navigation = useNavigation<NavigationProp<any>>();
+  const route = useRoute<any>();
+  const preselectedDoctorId = route.params?.preselectedDoctorId;
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
@@ -31,7 +37,9 @@ export default function AppointmentContainer({
     };
 
     loadProfileContext();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleSuccess = useCallback(() => {
@@ -56,6 +64,7 @@ export default function AppointmentContainer({
             patientUHID={profile?.UHID}
             isEditMode={isEditMode}
             appointmentData={appointmentData}
+            preselectedDoctorId={preselectedDoctorId}
             onSuccess={handleSuccess}
           />
         </View>

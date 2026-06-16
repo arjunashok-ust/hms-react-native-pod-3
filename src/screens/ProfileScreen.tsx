@@ -1,13 +1,20 @@
-import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
   ImageBackground,
+  FlatList,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -32,6 +39,7 @@ export default function ProfileScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -41,22 +49,31 @@ export default function ProfileScreen() {
     };
   }, []);
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const profileString = await SecureStore.getItemAsync("patient_profile");
-        if (profileString && isMounted.current) {
-          setProfile(JSON.parse(profileString));
-        }
-      } catch (error) {
-        console.error("Failed to load profile", error);
-      } finally {
-        if (isMounted.current) setIsLoading(false);
+  const fetchProfileData = useCallback(async (isRefresh = false) => {
+    if (!isRefresh) setIsLoading(true);
+    try {
+      const profileString = await SecureStore.getItemAsync("patient_profile");
+      if (profileString && isMounted.current) {
+        setProfile(JSON.parse(profileString));
       }
-    };
-
-    loadProfile();
+    } catch (error) {
+      console.error("Failed to load profile", error);
+    } finally {
+      if (isMounted.current) {
+        setIsLoading(false);
+        setRefreshing(false);
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, [fetchProfileData]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchProfileData(true);
+  }, [fetchProfileData]);
 
   useFocusEffect(
     useCallback(() => {
@@ -191,82 +208,101 @@ export default function ProfileScreen() {
       imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-        <ScrollView
+        <FlatList
+          data={[]}
+          renderItem={undefined}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.header}>
-            <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarIcon}>
-                <Ionicons name="person-outline" size={50} color="black" />
-              </Text>
-            </View>
-            <Text style={styles.nameText}>{profile?.name}</Text>
-
-            <TouchableOpacity
-              style={[styles.editButton, isEditing && styles.cancelButton]}
-              onPress={toggleEditMode}
-            >
-              <Text style={styles.editButtonText}>
-                {isEditing ? "Cancel Edit" : "Edit Profile"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {isEditing ? (
-            <PatientForm
-              initialValues={initialEditValues}
-              onSubmit={handleUpdateProfile}
-              isLoading={isSaving}
-              buttonText="Save Changes"
-              isEditMode={true}
-            />
-          ) : (
+          ListHeaderComponent={
             <>
-              <View style={styles.card}>
-                <ProfileField label="UHID" value={profile?.UHID} />
-                <ProfileField label="Email" value={profile?.email} />
-                <ProfileField label="Name" value={profile?.name} />
-                <ProfileField label="Phone" value={profile?.phone} />
-                <ProfileField label="Gender" value={profile?.gender} />
-                <ProfileField
-                  label="Date of Birth"
-                  value={
-                    profile?.dob
-                      ? new Date(profile.dob).toLocaleDateString()
-                      : ""
-                  }
-                />
-                <ProfileField label="Blood Group" value={profile?.bloodGroup} />
-                <ProfileField
-                  label="Emergency Contact"
-                  value={profile?.emergencyContact}
-                />
-                <ProfileField
-                  label="Allergies"
-                  value={profile?.allergies?.join(", ")}
-                />
-                <ProfileField label="Address" value={profile?.address?.line1} />
-                <ProfileField
-                  label="State / City"
-                  value={profile?.address?.state}
-                />
-                <ProfileField
-                  label="Postcode"
-                  value={profile?.address?.pincode?.toString()}
-                  hideBorder
-                />
+              <View style={styles.header}>
+                <View style={styles.avatarPlaceholder}>
+                  <Text style={styles.avatarIcon}>
+                    <Ionicons name="person-outline" size={50} color="black" />
+                  </Text>
+                </View>
+                <Text style={styles.nameText}>{profile?.name}</Text>
+
+                <TouchableOpacity
+                  style={[styles.editButton, isEditing && styles.cancelButton]}
+                  onPress={toggleEditMode}
+                >
+                  <Text style={styles.editButtonText}>
+                    {isEditing ? "Cancel Edit" : "Edit Profile"}
+                  </Text>
+                </TouchableOpacity>
               </View>
 
-              <TouchableOpacity
-                style={styles.logoutButton}
-                onPress={handleLogout}
-              >
-                <Text style={styles.logoutButtonText}>Logout</Text>
-              </TouchableOpacity>
+              {isEditing ? (
+                <PatientForm
+                  initialValues={initialEditValues}
+                  onSubmit={handleUpdateProfile}
+                  isLoading={isSaving}
+                  buttonText="Save Changes"
+                  isEditMode={true}
+                />
+              ) : (
+                <>
+                  <View style={styles.card}>
+                    <ProfileField label="UHID" value={profile?.UHID} />
+                    <ProfileField label="Email" value={profile?.email} />
+                    <ProfileField label="Name" value={profile?.name} />
+                    <ProfileField label="Phone" value={profile?.phone} />
+                    <ProfileField label="Gender" value={profile?.gender} />
+                    <ProfileField
+                      label="Date of Birth"
+                      value={
+                        profile?.dob
+                          ? new Date(profile.dob).toLocaleDateString()
+                          : ""
+                      }
+                    />
+                    <ProfileField
+                      label="Blood Group"
+                      value={profile?.bloodGroup}
+                    />
+                    <ProfileField
+                      label="Emergency Contact"
+                      value={profile?.emergencyContact}
+                    />
+                    <ProfileField
+                      label="Allergies"
+                      value={profile?.allergies?.join(", ")}
+                    />
+                    <ProfileField
+                      label="Address"
+                      value={profile?.address?.line1}
+                    />
+                    <ProfileField
+                      label="State / City"
+                      value={profile?.address?.state}
+                    />
+                    <ProfileField
+                      label="Postcode"
+                      value={profile?.address?.pincode?.toString()}
+                      hideBorder
+                    />
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.logoutButton}
+                    onPress={handleLogout}
+                  >
+                    <Text style={styles.logoutButtonText}>Logout</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </>
-          )}
-        </ScrollView>
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#6C4EDB"]}
+              tintColor="#6C4EDB"
+            />
+          }
+        />
       </SafeAreaView>
     </ImageBackground>
   );
