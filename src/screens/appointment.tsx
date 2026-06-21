@@ -79,6 +79,7 @@ export default function AppointmentScreen() {
           text1="Create your,"
           text2="APPOINTMENT"
           text3="here."
+          isHome={true}
         />
 
         <ScrollView style={styles.scrollView}>

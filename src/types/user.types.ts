@@ -25,6 +25,8 @@ export type PatientModel= {
   address: string,
   phone: string,
   emergencyContact: string,
+  bloodGroup: string,
+  allergies: string,
   status: string,
   role: string,
   isVerified: string,

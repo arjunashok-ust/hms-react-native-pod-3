@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, Alert } from "react-native";
 import ProfileButton from "../profile/profile-button.component";
 import { Ionicons } from "@expo/vector-icons";
 import { UserModel } from "../../types/user.types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import {
   deleteAppointment,
   editAppointmentStatus,
@@ -11,7 +11,6 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../../types/navigation.types";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
 
 export const AppointmentCardComponent = (props: any) => {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -192,7 +191,7 @@ export const AppointmentCardComponent = (props: any) => {
   );
 };
 
-export const AppointmentCard = React.memo(AppointmentCardComponent);
+export const AppointmentCard = memo(AppointmentCardComponent);
 
 const styles = StyleSheet.create({
   appointmentContainer: {

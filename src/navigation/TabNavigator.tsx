@@ -3,6 +3,7 @@ import HomeScreen from "../screens/home";
 import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "../screens/profile";
 import AppointmentScreen from "../screens/appointment";
+import ViewMedicalRecordScreen from "../screens/view-medical-record";
 
 const Tab = createBottomTabNavigator();
 
@@ -64,6 +65,24 @@ const AppointmentTabIcon = ({
   />
 );
 
+const MedicalRecordTabIcon = ({
+  focused,
+  color,
+  size,
+}: {
+  focused: boolean;
+  color: string;
+  size: number;
+}) => (
+  <TabIcon
+    focused={focused}
+    color={color}
+    size={size}
+    active="document-text"
+    inactive="document-text-outline"
+  />
+);
+
 export default function TabNavigator() {
   return (
     <Tab.Navigator
@@ -104,6 +123,14 @@ export default function TabNavigator() {
         options={{
           tabBarIcon: AppointmentTabIcon,
           tabBarLabel: "APPOINTMENT",
+        }}
+      ></Tab.Screen>
+      <Tab.Screen
+        name="record"
+        component={ViewMedicalRecordScreen}
+        options={{
+          tabBarIcon: MedicalRecordTabIcon,
+          tabBarLabel: "RECORD",
         }}
       ></Tab.Screen>
     </Tab.Navigator>

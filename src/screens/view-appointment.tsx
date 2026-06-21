@@ -66,6 +66,7 @@ export default function ViewAppointmentScreen() {
           text1="View your,"
           text2="APPOINTMENT"
           text3="here."
+          isHome={true}
         ></WelcomeTextContainer>
 
         <ProfileButton
