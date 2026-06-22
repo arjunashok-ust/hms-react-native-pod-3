@@ -51,18 +51,17 @@ const LoginScreen = ({ navigation }) => {
       //PayLoad
       const response = await loginPatient(form);
 
-      await saveLoginData(response.token, response.user, response.patient);
+      await saveLoginData(
+        response.data.token,
+        response.data.user,
+        response.data.patient,
+      );
       navigation.navigate("Main");
     } catch (error) {
       console.log("FULL ERROR:", error);
       console.log("STATUS:", error?.response?.status);
       console.log("DATA:", error?.response?.data);
       console.log("MESSAGE:", error?.message);
-
-      Alert.alert(
-        "Error",
-        JSON.stringify(error?.response?.data || error.message),
-      );
     } finally {
       setLoading(false);
     }

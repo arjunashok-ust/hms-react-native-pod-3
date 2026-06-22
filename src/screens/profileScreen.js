@@ -19,6 +19,7 @@ import {
 } from "../storage/authStorage";
 
 import { updatePatientProfile } from "../services/patientApi";
+import Header from "../components/Header";
 
 const ProfileScreen = () => {
   const [patient, setPatient] = useState(null);
@@ -83,15 +84,14 @@ const ProfileScreen = () => {
 
       const response = await updatePatientProfile(requestBody);
       const user = await getUser();
-      await saveLoginData(token, user, response.patient);
-      setPatient(response.patient);
+      await saveLoginData(token, user, response.data.patient);
+      setPatient(response.data.patient);
       setIsEditing(false);
 
       Alert.alert("Success", "Profile Updated Successfully");
     } catch (error) {
       console.log(error);
 
-      Alert.alert("Error", error.response?.data?.message || "Update Failed");
     } finally {
       setLoading(false);
     }
@@ -99,8 +99,11 @@ const ProfileScreen = () => {
 
   if (!patient) {
     return (
-      <View style={styles.center}>
-        <Text>Loading Profile...</Text>
+      <View style={{ flex: 1 }}>
+        <Header title="Profile" />
+        <View style={styles.center}>
+          <Text>Loading Profile...</Text>
+        </View>
       </View>
     );
   }
@@ -135,7 +138,10 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={{ flex: 1 }}>
+      <Header title="Profile" />
+
+      <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.avatarContainer}>
         <Ionicons name="person-circle" size={130} color="#6B46C1" />
       </View>
@@ -203,7 +209,8 @@ const ProfileScreen = () => {
 
         {renderField("Postcode", patient.address?.postcode, "postcode")}
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -212,7 +219,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: "#F4F4F7",
-    paddingTop: 40,
+    paddingTop: 20,
     paddingHorizontal: 20,
     paddingBottom: 40,
   },

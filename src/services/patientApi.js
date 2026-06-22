@@ -53,3 +53,9 @@ export const getAvailableSlots = async (doctorEmployeeId,date) => {
 
   return response.data;
 };
+
+export const getMyMedicalRecords = async () => {
+  const response = await axiosInstance.get("/api/patientApp/medicalRecords");
+
+  return response.data;
+};

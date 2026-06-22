@@ -11,6 +11,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AppointmentCard from "../components/AppointmentCard";
+import Header from "../components/Header";
 
 import {
   getAllDoctors,
@@ -66,7 +67,7 @@ const AppointmentScreen = () => {
     try {
       const response = await getAvailableSlots(doctorEmployeeId, date);
 
-      setSlots(response.slots || []);
+      setSlots(response.data?.slots || []);
     } catch (error) {
       console.log(error);
       setSlots([]);
@@ -178,7 +179,10 @@ const AppointmentScreen = () => {
     [],
   );
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={{ flex: 1 }}>
+      <Header title="Appointments" />
+
+      <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Book</Text>
 
       <Text style={styles.headingHighlight}>Appointment</Text>
@@ -263,7 +267,7 @@ const AppointmentScreen = () => {
               color: "#1C2143",
             }}
           >
-            <Picker.Item label="Select Time Slot" value="Ayush" />
+            <Picker.Item label="Select Time Slot" value="" />
 
             {slots.map((slot) => (
               <Picker.Item key={slot} label={slot} value={slot} />
@@ -300,8 +304,9 @@ const AppointmentScreen = () => {
         renderItem={renderAppointment}
         scrollEnabled={false}
       />
-      
-    </ScrollView>
+
+      </ScrollView>
+    </View>
   );
 };
 
@@ -311,7 +316,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: "#F4F4F7",
-    paddingTop: 40,
+    paddingTop: 20,
     paddingHorizontal: 20,
     paddingBottom: 40,
   },

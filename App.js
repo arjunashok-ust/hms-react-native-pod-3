@@ -5,12 +5,13 @@ import LoginScreen from "./src/screens/loginScreen";
 import SignupScreen from "./src/screens/signUpScreen";
 import SplashScreen from "./src/screens/splashScreen";
 import BottomTabs from "./src/navigation/bottomTabs";
+import { navigationRef } from "./src/navigation/navigationRef";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{

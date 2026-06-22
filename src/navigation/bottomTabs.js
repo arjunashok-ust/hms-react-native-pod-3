@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import HomeScreen from "../screens/homeScreen";
 import AppointmentScreen from "../screens/appointmentScreen";
+import MedicalRecordScreen from "../screens/medicalRecordScreen";
 import ProfileScreen from "../screens/profileScreen";
 
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,14 @@ const ProfileIcon = ({ focused, color, size }) => (
   />
 );
 
+const MedicalRecordIcon = ({ focused, color, size }) => (
+  <Ionicons
+    name={focused ? "document-text" : "document-text-outline"}
+    size={size}
+    color={color}
+  />
+);
+
 HomeIcon.propTypes = {
   focused: PropTypes.bool.isRequired,
   color: PropTypes.string.isRequired,
@@ -46,6 +55,12 @@ AppointmentIcon.propTypes = {
 };
 
 ProfileIcon.propTypes = {
+  focused: PropTypes.bool.isRequired,
+  color: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired,
+};
+
+MedicalRecordIcon.propTypes = {
   focused: PropTypes.bool.isRequired,
   color: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired,
@@ -73,6 +88,15 @@ const BottomTabs = () => {
         component={AppointmentScreen}
         options={{
           tabBarIcon: AppointmentIcon,
+        }}
+      />
+
+      <Tab.Screen
+        name="MedicalRecords"
+        component={MedicalRecordScreen}
+        options={{
+          title: "Records",
+          tabBarIcon: MedicalRecordIcon,
         }}
       />
 
