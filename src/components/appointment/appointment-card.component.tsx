@@ -180,11 +180,6 @@ export const AppointmentCardComponent = (props: any) => {
               onAction={editAppointmentStatusByPatient}
             />
           )}
-          <ProfileButton
-            iconName="trash-outline"
-            title="Delete"
-            onAction={deleteAppointmentByPatient}
-          />
         </View>
       </View>
     </View>
