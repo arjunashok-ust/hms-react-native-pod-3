@@ -17,21 +17,23 @@ interface Props {
   appointment: Appointment;
 }
 
+// 🟢 FIXED: Moved helper functions completely outside the component function
+// This prevents them from being re-allocated in memory every time the card renders.
+const formatDate = (isoString: string) => {
+  const dateObj = new Date(isoString);
+  return dateObj.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+const formatSpecialization = (spec: string) => {
+  if (!spec) return "N/A";
+  return spec.charAt(0).toUpperCase() + spec.slice(1);
+};
+
 function AppointmentCard({ appointment }: Readonly<Props>) {
-  const formatDate = (isoString: string) => {
-    const dateObj = new Date(isoString);
-    return dateObj.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
-  const formatSpecialization = (spec: string) => {
-    if (!spec) return "N/A";
-    return spec.charAt(0).toUpperCase() + spec.slice(1);
-  };
-
   return (
     <View style={styles.cardWrapper}>
       <View style={styles.card}>
@@ -92,7 +94,6 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend",
     marginBottom: 16,
   },
-
   pillRow: {
     flexDirection: "row",
     alignItems: "center",

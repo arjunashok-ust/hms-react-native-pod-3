@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   FlatList,
+  ListRenderItem,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -22,11 +23,14 @@ import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 import { PatientProfile } from "../features/auth/types";
 import AppointmentCard, { Appointment } from "../components/AppointmentCard";
-import { Doctor } from "../components/TopDoctors";
+import DoctorCarousel, { Doctor } from "../components/DoctorCarousel";
 import HealthSummaryCard from "../components/HealthSummaryCard";
 import { appointmentService } from "../services/appointmentService";
 import { Ionicons } from "@expo/vector-icons";
 import SearchBar from "../components/SearchBar";
+
+// 🟢 FIXED: Create a stable empty array reference outside the component
+const EMPTY_ARRAY: Doctor[] = [];
 
 export default function HomeScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
@@ -121,13 +125,13 @@ export default function HomeScreen() {
   }, [doctors]);
 
   const filteredDoctors = useMemo(() => {
-    if (!searchQuery.trim()) return [];
+    if (!searchQuery.trim()) return EMPTY_ARRAY;
     const query = searchQuery.toLowerCase();
     return doctors.filter(
       (d) =>
         d.name.toLowerCase().includes(query) ||
-        (d.specialization && d.specialization.toLowerCase().includes(query)) ||
-        (d.designation && d.designation.toLowerCase().includes(query)),
+        d.specialization?.toLowerCase().includes(query) ||
+        d.designation?.toLowerCase().includes(query),
     );
   }, [doctors, searchQuery]);
 
@@ -139,6 +143,121 @@ export default function HomeScreen() {
       });
     },
     [navigation],
+  );
+
+  // 🟢 FIXED: Extracted inline navigation function for the upcoming appointment
+  const navigateToViewAppointments = useCallback(() => {
+    navigation.navigate("AppointmentsTab", {
+      screen: "ViewAppointments",
+    });
+  }, [navigation]);
+
+  const renderDoctorResult = useCallback<ListRenderItem<Doctor>>(
+    ({ item: doctor }) => (
+      <View style={{ paddingHorizontal: 20 }}>
+        <TouchableOpacity
+          style={styles.doctorResultCard}
+          onPress={() => navigateToBookDoctor(doctor.employeeCode)}
+        >
+          <View>
+            <Text style={styles.resultName}>{doctor.name}</Text>
+            <Text style={styles.resultSpec}>
+              {doctor.specialization || doctor.department || "General"}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+        </TouchableOpacity>
+      </View>
+    ),
+    [navigateToBookDoctor],
+  );
+
+  // 🟢 FIXED: Memoized the Key Extractor
+  const keyExtractor = useCallback(
+    (item: Doctor) => item._id || item.employeeCode,
+    [],
+  );
+
+  // 🟢 FIXED: Extracted the massive inline ListHeaderComponent into a memoized function
+  const renderListHeader = useCallback(
+    () => (
+      <>
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.patientName}>{profile?.name}</Text>
+            <Text style={styles.uhid}>{profile?.UHID}</Text>
+          </View>
+        </View>
+
+        <View style={styles.sectionHeader}>
+          <Ionicons name="calendar-clear-outline" size={20} color="blue" />
+          <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={navigateToViewAppointments}
+        >
+          {nextAppointment ? (
+            <AppointmentCard appointment={nextAppointment} />
+          ) : (
+            <View style={styles.emptyCard}>
+              <Text style={styles.emptyText}>
+                No upcoming appointments. Tap to schedule.
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
+          <Ionicons name="search-outline" size={20} color="blue" />
+          <Text style={styles.sectionTitle}>Find a Doctor</Text>
+        </View>
+
+        <View style={styles.searchContainer}>
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search by name, specialty, or designation"
+          />
+        </View>
+
+        {!searchQuery.trim() ? (
+          <View style={styles.specialtiesContainer}>
+            <Text style={styles.subHeading}>Specialties</Text>
+            <View style={styles.specialtiesGrid}>
+              {specialties.map((spec) => (
+                <TouchableOpacity
+                  key={spec}
+                  style={styles.specialtyPill}
+                  onPress={() => setSearchQuery(spec)}
+                >
+                  <Text style={styles.specialtyText}>{spec}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : (
+          <View style={styles.searchResultsContainer}>
+            <Text style={styles.subHeading}>Search Results</Text>
+            {filteredDoctors.length === 0 && (
+              <Text style={styles.noResultsText}>
+                No doctors found matching your search.
+              </Text>
+            )}
+          </View>
+        )}
+        <HealthSummaryCard profile={profile} />
+      </>
+    ),
+    [
+      profile,
+      nextAppointment,
+      searchQuery,
+      specialties,
+      filteredDoctors.length,
+      navigateToViewAppointments,
+    ],
   );
 
   return (
@@ -155,111 +274,15 @@ export default function HomeScreen() {
           </View>
         ) : (
           <FlatList
-            data={[]}
-            renderItem={undefined}
-            ListHeaderComponent={
-              <>
-                <View style={styles.header}>
-                  <View>
-                    <Text style={styles.patientName}>{profile?.name}</Text>
-                    <Text style={styles.uhid}>{profile?.UHID}</Text>
-                  </View>
-                </View>
-
-                <HealthSummaryCard profile={profile} />
-
-                <View style={styles.sectionHeader}>
-                  <Ionicons
-                    name="calendar-clear-outline"
-                    size={20}
-                    color="blue"
-                  />
-                  <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
-                </View>
-
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() =>
-                    navigation.navigate("AppointmentsTab", {
-                      screen: "ViewAppointments",
-                    })
-                  }
-                >
-                  {nextAppointment ? (
-                    <AppointmentCard appointment={nextAppointment} />
-                  ) : (
-                    <View style={styles.emptyCard}>
-                      <Text style={styles.emptyText}>
-                        No upcoming appointments. Tap to schedule.
-                      </Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-
-                <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-                  <Ionicons name="search-outline" size={20} color="blue" />
-                  <Text style={styles.sectionTitle}>Find a Doctor</Text>
-                </View>
-
-                <View style={styles.searchContainer}>
-                  <SearchBar
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    placeholder="Search by name, specialty, or designation"
-                  />
-                </View>
-
-                {!searchQuery.trim() ? (
-                  <View style={styles.specialtiesContainer}>
-                    <Text style={styles.subHeading}>Specialties</Text>
-                    <View style={styles.specialtiesGrid}>
-                      {specialties.map((spec) => (
-                        <TouchableOpacity
-                          key={spec}
-                          style={styles.specialtyPill}
-                          onPress={() => setSearchQuery(spec)}
-                        >
-                          <Text style={styles.specialtyText}>{spec}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </View>
-                ) : (
-                  <View style={styles.searchResultsContainer}>
-                    <Text style={styles.subHeading}>Search Results</Text>
-                    {filteredDoctors.length === 0 ? (
-                      <Text style={styles.noResultsText}>
-                        No doctors found matching your search.
-                      </Text>
-                    ) : (
-                      filteredDoctors.map((doctor) => (
-                        <TouchableOpacity
-                          key={doctor._id || doctor.employeeCode}
-                          style={styles.doctorResultCard}
-                          onPress={() =>
-                            navigateToBookDoctor(doctor.employeeCode)
-                          }
-                        >
-                          <View>
-                            <Text style={styles.resultName}>{doctor.name}</Text>
-                            <Text style={styles.resultSpec}>
-                              {doctor.specialization ||
-                                doctor.department ||
-                                "General"}
-                            </Text>
-                          </View>
-                          <Ionicons
-                            name="chevron-forward"
-                            size={20}
-                            color="#9CA3AF"
-                          />
-                        </TouchableOpacity>
-                      ))
-                    )}
-                  </View>
-                )}
-              </>
-            }
+            data={searchQuery.trim() ? filteredDoctors : EMPTY_ARRAY} // 🟢 FIXED: Passed stable empty array
+            keyExtractor={keyExtractor} // 🟢 FIXED: Passed stable key extractor
+            renderItem={renderDoctorResult}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={11}
+            removeClippedSubviews={true}
+            ListHeaderComponent={renderListHeader()} 
+            keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
             refreshControl={

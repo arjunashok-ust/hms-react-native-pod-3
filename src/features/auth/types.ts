@@ -37,3 +37,39 @@ export interface ApiError {
     message: string;
     statusCode?: number;
 }
+
+export interface Medication {
+    _id?: string;
+    name: string;
+    dosage: string;
+    frequency: string;
+    duration: string;
+    deliveryMethod: string;
+}
+
+export interface MedicalObservation {
+    _id?: string;
+    metricName: string;
+    metricValue: string;
+    recordedTime: string;
+}
+
+export interface MedicalRecord {
+    _id: string;
+    recordCode: string;
+    doctorEmployeeId: string;
+    doctorName?: string;
+    doctorSpecialization?: string;
+    appointmentId: string;
+    patientId: string;
+    visitDate: string;
+    diagnosis: string;
+    complaint: string;
+    symptoms: string;
+    medications: Medication[];
+    medicalObservations: MedicalObservation[];
+    notes: string;
+    status: "FINAL" | "DRAFT" | "DELETED";
+    createdAt: string;
+    updatedAt: string;
+}

@@ -68,7 +68,7 @@ export default function ViewAppointmentsScreen() {
     setRefreshing(true);
     fetchAppointments(true);
   }, [fetchAppointments]);
-  
+
   useFocusEffect(
     useCallback(() => {
       fetchAppointments();
@@ -170,6 +170,7 @@ export default function ViewAppointmentsScreen() {
           {isLoading ? (
             <ActivityIndicator size="large" color="#4B1D76" />
           ) : (
+            
             <FlatList
               data={appointments}
               keyExtractor={(item) => item.appointmentCode || item._id}
@@ -191,6 +192,10 @@ export default function ViewAppointmentsScreen() {
                   tintColor="#4B1D76"
                 />
               }
+              initialNumToRender={8}
+              maxToRenderPerBatch={8}
+              windowSize={11}
+              removeClippedSubviews={true}
             />
           )}
         </View>
@@ -214,11 +219,16 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 24,
   },
-  mainTitle: { fontSize: 36, fontWeight: "300", color: "#1E1E3F" },
+  mainTitle: {
+    fontSize: 36,
+    fontFamily: "Montserrat",
+    fontWeight: "300",
+    color: "#1E1E3F",
+  },
   boldTitle: {
     fontSize: 36,
     fontFamily: "Lexend",
-    color: "#4B1D76",
+    color: "#6C4EDB",
     marginBottom: 16,
   },
   bookTriggerBtn: {

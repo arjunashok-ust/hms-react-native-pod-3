@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
+  ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -73,7 +74,7 @@ function AppointmentForm({
     return doctors.filter(
       (d: any) =>
         d.name.toLowerCase().includes(q) ||
-        (d.specialization && d.specialization.toLowerCase().includes(q)),
+        (d.specialization?.toLowerCase().includes(q)),
     );
   }, [doctors, doctorSearchQuery]);
 
@@ -117,7 +118,7 @@ function AppointmentForm({
       const exactLocalDate = `${year}-${month}-${day}`;
 
       const payload = {
-        patientID: patientUHID,
+        patientId: patientUHID,
         doctorEmployeeID: selectedDoctor,
         date: exactLocalDate,
         timeSlot: selectedSlot,
@@ -188,125 +189,138 @@ function AppointmentForm({
   );
 
   return (
-    <View style={styles.card}>
-      <View style={styles.cardHeaderRow}>
-        <View style={styles.iconCircle}>
-          <MaterialIcons name="today" size={24} color="white" />
-        </View>
-        <View>
-          <Text style={styles.subText}>
-            {isEditMode ? "MODIFY ENTRY" : "NEW ENTRY"}
-          </Text>
-          <Text style={styles.cardTitle}>
-            {isEditMode ? "Edit Appointment Details" : "Book Appointment"}
-          </Text>
-        </View>
-      </View>
-
-      <Text style={styles.label}>PATIENT ID</Text>
-      <View style={styles.disabledInput}>
-        <Text style={styles.disabledInputText}>
-          {patientUHID || "Fetching..."}
-        </Text>
-      </View>
-
-      <Text style={styles.label}>SELECT DOCTOR</Text>
-      <View style={{ marginBottom: 12 }}>
-        <SearchBar
-          value={doctorSearchQuery}
-          onChangeText={setDoctorSearchQuery}
-          placeholder="Search doctors..."
-        />
-      </View>
-      <View style={styles.scrollWrapper}>
-        <FlatList
-          ref={doctorListRef}
-          data={filteredDoctors}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.employeeCode}
-          onScrollToIndexFailed={(info) =>
-            handleScrollFailed(info, doctorListRef)
-          }
-          renderItem={renderDoctorItem}
-        />
-      </View>
-
-      <Text style={styles.label}>SCHEDULE DATE</Text>
-      <TouchableOpacity
-        style={styles.pickerContainer}
-        onPress={() => setShowDatePicker(true)}
-      >
-        <Text style={styles.dateText}>{selectedDate.toDateString()}</Text>
-      </TouchableOpacity>
-
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate}
-          mode="date"
-          minimumDate={tomorrow}
-          maximumDate={maxAppointmentDate}
-          onChange={(e, date) => {
-            setShowDatePicker(false);
-            if (date) {
-              setSelectedDate(date);
-              setSelectedSlot("");
-            }
-          }}
-        />
-      )}
-
-      {!!selectedDoctor && (
-        <>
-          <Text style={styles.label}>AVAILABLE SLOTS</Text>
-          <View style={styles.scrollWrapper}>
-            {slots.length === 0 ? (
-              <Text style={styles.noSlotsText}>
-                No slots available for this date.
-              </Text>
-            ) : (
-              <FlatList
-                ref={slotListRef}
-                data={slots}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item}
-                onScrollToIndexFailed={(info) =>
-                  handleScrollFailed(info, slotListRef)
-                }
-                renderItem={renderSlotItem}
-              />
-            )}
+    <ScrollView>
+      <View style={styles.card}>
+        <View style={styles.cardHeaderRow}>
+          <View style={styles.iconCircle}>
+            <MaterialIcons name="today" size={24} color="white" />
           </View>
-        </>
-      )}
-
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={handleFormSubmit}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="#FFF" />
-        ) : (
-          <Text style={styles.btnText}>
-            {isEditMode ? "Confirm Modifications" : "Request Appointment"}
-          </Text>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.backBtn}
-        onPress={() =>
-          navigation.reset({ index: 0, routes: [{ name: "ViewAppointments" }] })
-        }
-      >
-        <View style={styles.backBtnContainer}>
-          <Fontisto name="close" size={24} color="#4B5563" />
-          <Text style={styles.backText}>CANCEL</Text>
+          <View>
+            <Text style={styles.subText}>
+              {isEditMode ? "MODIFY ENTRY" : "NEW ENTRY"}
+            </Text>
+            <Text style={styles.cardTitle}>
+              {isEditMode ? "Edit Appointment Details" : "Book Appointment"}
+            </Text>
+          </View>
         </View>
-      </TouchableOpacity>
-    </View>
+
+        <Text style={styles.label}>PATIENT ID</Text>
+        <View style={styles.disabledInput}>
+          <Text style={styles.disabledInputText}>
+            {patientUHID || "Fetching..."}
+          </Text>
+        </View>
+
+        <Text style={styles.label}>SELECT DOCTOR</Text>
+        <View style={{ marginBottom: 12 }}>
+          <SearchBar
+            value={doctorSearchQuery}
+            onChangeText={setDoctorSearchQuery}
+            placeholder="Search doctors..."
+          />
+        </View>
+        <View style={styles.scrollWrapper}>
+          <FlatList
+            ref={doctorListRef}
+            data={filteredDoctors}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.employeeCode}
+            onScrollToIndexFailed={(info) =>
+              handleScrollFailed(info, doctorListRef)
+            }
+            renderItem={renderDoctorItem}
+            initialNumToRender={5}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            removeClippedSubviews={true}
+          />
+        </View>
+
+        <Text style={styles.label}>SCHEDULE DATE</Text>
+        <TouchableOpacity
+          style={styles.pickerContainer}
+          onPress={() => setShowDatePicker(true)}
+        >
+          <Text style={styles.dateText}>{selectedDate.toDateString()}</Text>
+        </TouchableOpacity>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            minimumDate={tomorrow}
+            maximumDate={maxAppointmentDate}
+            onChange={(e, date) => {
+              setShowDatePicker(false);
+              if (date) {
+                setSelectedDate(date);
+                setSelectedSlot("");
+              }
+            }}
+          />
+        )}
+
+        {!!selectedDoctor && (
+          <>
+            <Text style={styles.label}>AVAILABLE SLOTS</Text>
+            <View style={styles.scrollWrapper}>
+              {slots.length === 0 ? (
+                <Text style={styles.noSlotsText}>
+                  No slots available for this date.
+                </Text>
+              ) : (
+                <FlatList
+                  ref={slotListRef}
+                  data={slots}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item) => item}
+                  onScrollToIndexFailed={(info) =>
+                    handleScrollFailed(info, slotListRef)
+                  }
+                  renderItem={renderSlotItem}
+                  initialNumToRender={8}
+                  maxToRenderPerBatch={8}
+                  windowSize={5}
+                  removeClippedSubviews={true}
+                />
+              )}
+            </View>
+          </>
+        )}
+
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={handleFormSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text style={styles.btnText}>
+              {isEditMode ? "Confirm Modifications" : "Request Appointment"}
+            </Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "ViewAppointments" }],
+            })
+          }
+        >
+          <View style={styles.backBtnContainer}>
+            <Fontisto name="close" size={24} color="#4B5563" />
+            <Text style={styles.backText}>CANCEL</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 

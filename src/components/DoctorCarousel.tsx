@@ -64,7 +64,7 @@ const DoctorCard = React.memo(({ doctor }: DoctorCardProps) => {
 });
 
 const ListSpacer = () => <View style={styles.separator} />;
-function TopDoctors({ doctors }: Readonly<Props>) {
+function DoctorCarouse({ doctors }: Readonly<Props>) {
   const renderDoctorCard = useCallback<ListRenderItem<Doctor>>(
     ({ item }) => <DoctorCard doctor={item} />,
     [],
@@ -83,12 +83,16 @@ function TopDoctors({ doctors }: Readonly<Props>) {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         ItemSeparatorComponent={ListSpacer}
+        initialNumToRender={4}
+        maxToRenderPerBatch={4}
+        windowSize={5}
+        removeClippedSubviews={true}
       />
     </View>
   );
 }
 
-export default React.memo(TopDoctors);
+export default React.memo(DoctorCarouse);
 
 const styles = StyleSheet.create({
   container: {
