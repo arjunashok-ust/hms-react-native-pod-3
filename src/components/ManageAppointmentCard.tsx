@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Feather, FontAwesome6 } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface ManageAppointmentCardProps {
   appointment: any;
@@ -15,13 +15,33 @@ function ManageAppointmentCard({
 }: Readonly<ManageAppointmentCardProps>) {
   const isScheduled = appointment.status === "Scheduled";
 
+  const isCancelled = appointment.status === "Cancelled";
+
+  let badgeBackgroundColor;
+  let badgeTextColor;
+  let badgeText;
+
+  if (isScheduled) {
+    badgeBackgroundColor = "#c5ead5";
+    badgeTextColor = "green";
+    badgeText = "Booked";
+  } else if (isCancelled) {
+    badgeBackgroundColor = "#f3c7c7";
+    badgeTextColor = "red";
+    badgeText = appointment.status;
+  } else {
+    badgeBackgroundColor = "#f7d7a6";
+    badgeTextColor = "#9e6002";
+    badgeText = appointment.status;
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.row}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
             {appointment.doctorName
-              ? appointment.doctorName.substring(4, 6).toUpperCase()
+              ? appointment.doctorName.substring(0, 2).toUpperCase()
               : "DR"}
           </Text>
         </View>
@@ -40,16 +60,21 @@ function ManageAppointmentCard({
         <View
           style={[
             styles.badge,
-            { backgroundColor: isScheduled ? "#c5ead5" : "#f7d7a6" },
+            {
+              backgroundColor: badgeBackgroundColor,
+              borderRadius: 6,
+            },
           ]}
         >
           <Text
             style={[
               styles.badgeText,
-              { color: isScheduled ? "green" : "#9e6002" },
+              {
+                color: badgeTextColor,
+              },
             ]}
           >
-            {isScheduled ? "Booked" : "Pending"}
+            {badgeText}
           </Text>
         </View>
       </View>
@@ -67,18 +92,26 @@ function ManageAppointmentCard({
       </View>
 
       <View style={styles.actionRow}>
-        <TouchableOpacity style={styles.actionBtn} onPress={onEdit}>
+        <TouchableOpacity
+          style={[styles.actionBtn, isCancelled && { opacity: 0.3 }]}
+          onPress={onEdit}
+          disabled={isCancelled}
+        >
           <View style={styles.actionButton}>
             <Feather name="edit-3" size={18} color="blue" />
             <Text style={[styles.actionText, { color: "blue" }]}> Edit</Text>
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.actionBtn} onPress={onDelete}>
+        <TouchableOpacity
+          style={[styles.actionBtn, isCancelled && { opacity: 0.3 }]}
+          onPress={onDelete}
+          disabled={isCancelled}
+        >
           <View style={styles.actionButton}>
-            <FontAwesome6 name="trash-can" size={18} color="red" />
+            <MaterialCommunityIcons name="cancel" size={18} color="red" />
             <Text style={[styles.actionText, { color: "#EF4444" }]}>
-              Delete
+              Cancel
             </Text>
           </View>
         </TouchableOpacity>

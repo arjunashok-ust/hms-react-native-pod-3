@@ -89,10 +89,14 @@ export default function ViewAppointmentsScreen() {
     [navigation],
   );
 
-  const executeDeletion = useCallback(
+  const executeCancellation = useCallback(
     async (appointment: Appointment) => {
       try {
-        await appointmentService.deleteAppointment(appointment.appointmentCode);
+        const payload={status:"Cancelled"}
+        await appointmentService.updateAppointment(
+          appointment.appointmentCode,
+          payload,
+        );
         Toast.show({
           type: "success",
           text1: "Success",
@@ -115,7 +119,7 @@ export default function ViewAppointmentsScreen() {
 
   const handleDelete = useCallback(
     (appointment: Appointment) => {
-      const onConfirmDelete = () => executeDeletion(appointment);
+      const onConfirmDelete = () => executeCancellation(appointment);
 
       Alert.alert(
         "Cancel Appointment",
@@ -130,7 +134,7 @@ export default function ViewAppointmentsScreen() {
         ],
       );
     },
-    [executeDeletion],
+    [executeCancellation],
   );
 
   const navigateToBookAppointment = useCallback(
