@@ -24,8 +24,11 @@ export default function MedicalRecordsScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<any>>();
   const [records, setRecords] = useState<MedicalRecord[]>([]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -35,38 +38,59 @@ export default function MedicalRecordsScreen() {
     };
   }, []);
 
-  const fetchRecords = useCallback(async () => {
-    try {
-      const data = await recordService.getMyRecords();
-      if (isMounted.current) {
-        setRecords(data);
+  const fetchRecords = useCallback(
+    async (loadPage: number) => {
+      const isInitialLoad = loadPage === 1;
+
+      if (isInitialLoad) {
+        setIsLoading(true);
+        setRecords(EMPTY_ARRAY); 
+      } else {
+        setIsLoadingMore(true);
       }
-    } catch (err: any) {
-      console.error("Fetch Records Failed:", err);
-      Toast.show({
-        type: "error",
-        text1: "Fetch Failed",
-        text2: err.message || "Could not load medical records.",
-      });
-    } finally {
-      if (isMounted.current) {
-        setIsLoading(false);
-        setRefreshing(false);
+
+      try {
+        const response = await recordService.getMyRecords(loadPage);
+        const { data, pagination } = response;
+
+        if (isMounted.current) {
+          setRecords((prevRecords) =>
+            isInitialLoad ? data : [...prevRecords, ...data],
+          );
+          setHasMore(loadPage < pagination.pages);
+          setPage(loadPage);
+        }
+      } catch (err: any) {
+        console.error("Fetch Records Failed:", err);
+        Toast.show({
+          type: "error",
+          text1: "Fetch Failed",
+          text2:
+            err.response?.data?.message || "Could not load medical records.",
+        });
+      } finally {
+        if (isMounted.current) {
+          setIsLoading(false);
+          setRefreshing(false);
+          setIsLoadingMore(false);
+        }
       }
-    }
-  }, []);
+    },
+    [], 
+  );
 
   useFocusEffect(
     useCallback(() => {
-      fetchRecords();
-    }, [fetchRecords]),
+      // Reset state and fetch the first page
+      fetchRecords(1);
+    }, []),
   );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", () => {
       if (navigation.isFocused()) {
         setRefreshing(true);
-        fetchRecords();
+        fetchRecords(1);
       }
     });
     return unsubscribe;
@@ -74,8 +98,14 @@ export default function MedicalRecordsScreen() {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchRecords();
+    fetchRecords(1);
   }, [fetchRecords]);
+
+  const handleLoadMore = useCallback(() => {
+    if (!isLoadingMore && hasMore) {
+      fetchRecords(page + 1);
+    }
+  }, [isLoadingMore, hasMore, page, fetchRecords]);
 
   const keyExtractor = useCallback(
     (item: MedicalRecord) => item._id || item.recordCode,
@@ -92,13 +122,20 @@ export default function MedicalRecordsScreen() {
       <View style={styles.headerContainer}>
         <Text style={styles.mainTitle}>My</Text>
         <Text style={styles.boldTitle}>Medical Records</Text>
-        <Text style={styles.subtitle}>
-          Records from your visits.
-        </Text>
+        <Text style={styles.subtitle}>Records from your visits.</Text>
       </View>
     ),
     [],
   );
+
+  const renderListFooter = useCallback(() => {
+    if (!isLoadingMore) return null;
+    return (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size="large" color="#6C4EDB" />
+      </View>
+    );
+  }, [isLoadingMore]);
 
   return (
     <ImageBackground
@@ -107,7 +144,7 @@ export default function MedicalRecordsScreen() {
       imageStyle={{ opacity: 0.3 }}
     >
       <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
-        {isLoading && !refreshing ? (
+        {isLoading ? (
           <View style={styles.center}>
             <ActivityIndicator size="large" color="#6C4EDB" />
             <Text style={styles.loadingText}>Loading records...</Text>
@@ -118,12 +155,15 @@ export default function MedicalRecordsScreen() {
             keyExtractor={keyExtractor}
             renderItem={renderRecordItem}
             ListHeaderComponent={renderListHeader}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
             contentContainerStyle={styles.listContent}
-            initialNumToRender={5}
-            maxToRenderPerBatch={5}
-            windowSize={7}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={10}
             removeClippedSubviews={true}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={renderListFooter}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -149,7 +189,7 @@ export default function MedicalRecordsScreen() {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    backgroundColor: "#F5F6FA", 
+    backgroundColor: "#F5F6FA",
   },
   safe: {
     flex: 1,
@@ -179,7 +219,7 @@ const styles = StyleSheet.create({
   boldTitle: {
     fontSize: 36,
     fontFamily: "Lexend",
-    color: "#6C4EDB", 
+    color: "#6C4EDB",
     marginBottom: 8,
   },
   subtitle: {

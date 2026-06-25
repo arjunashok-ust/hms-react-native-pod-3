@@ -166,6 +166,7 @@ export default function HomeScreen() {
           </View>
           <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
         </TouchableOpacity>
+        
       </View>
     ),
     [navigateToBookDoctor],
@@ -219,7 +220,16 @@ export default function HomeScreen() {
           />
         </View>
 
-        {!searchQuery.trim() ? (
+        {searchQuery.trim() ? (
+          <View style={styles.searchResultsContainer}>
+            <Text style={styles.subHeading}>Search Results</Text>
+            {filteredDoctors.length === 0 && (
+              <Text style={styles.noResultsText}>
+                No doctors found matching your search.
+              </Text>
+            )}
+          </View>
+        ) : (
           <View style={styles.specialtiesContainer}>
             <Text style={styles.subHeading}>Specialties</Text>
             <View style={styles.specialtiesGrid}>
@@ -234,17 +244,8 @@ export default function HomeScreen() {
               ))}
             </View>
           </View>
-        ) : (
-          <View style={styles.searchResultsContainer}>
-            <Text style={styles.subHeading}>Search Results</Text>
-            {filteredDoctors.length === 0 && (
-              <Text style={styles.noResultsText}>
-                No doctors found matching your search.
-              </Text>
-            )}
-          </View>
         )}
-        <HealthSummaryCard profile={profile} />
+        
       </>
     ),
     [
@@ -256,6 +257,14 @@ export default function HomeScreen() {
       navigateToViewAppointments,
     ],
   );
+
+  const renderListFooter = useCallback(() => {
+    return (
+      <View style={{ marginTop: 24 }}>
+        <HealthSummaryCard profile={profile} />
+      </View>
+    );
+  }, [profile, searchQuery]);
 
   return (
     <ImageBackground
@@ -278,6 +287,7 @@ export default function HomeScreen() {
             maxToRenderPerBatch={10}
             windowSize={11}
             removeClippedSubviews={true}
+            ListFooterComponent={renderListFooter}
             ListHeaderComponent={renderListHeader()} 
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
