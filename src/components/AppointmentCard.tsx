@@ -17,8 +17,6 @@ interface Props {
   appointment: Appointment;
 }
 
-// 🟢 FIXED: Moved helper functions completely outside the component function
-// This prevents them from being re-allocated in memory every time the card renders.
 const formatDate = (isoString: string) => {
   const dateObj = new Date(isoString);
   return dateObj.toLocaleDateString("en-GB", {

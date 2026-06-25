@@ -17,7 +17,6 @@ import { recordService } from "../services/recordService";
 import MedicalRecordCard from "../components/MedicalRecordCard";
 import { MedicalRecord } from "../features/auth/types";
 
-// Stable empty array reference to prevent FlatList re-renders
 const EMPTY_ARRAY: MedicalRecord[] = [];
 
 export default function MedicalRecordsScreen() {
@@ -38,7 +37,6 @@ export default function MedicalRecordsScreen() {
 
   const fetchRecords = useCallback(async () => {
     try {
-      // Backend automatically sorts by latest date based on your schema
       const data = await recordService.getMyRecords();
       if (isMounted.current) {
         setRecords(data);
@@ -58,14 +56,12 @@ export default function MedicalRecordsScreen() {
     }
   }, []);
 
-  // Fetch when screen focuses
   useFocusEffect(
     useCallback(() => {
       fetchRecords();
     }, [fetchRecords]),
   );
 
-  // Fetch when the tab icon is pressed while already focused
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", () => {
       if (navigation.isFocused()) {
@@ -81,19 +77,16 @@ export default function MedicalRecordsScreen() {
     fetchRecords();
   }, [fetchRecords]);
 
-  // Stable Key Extractor
   const keyExtractor = useCallback(
     (item: MedicalRecord) => item._id || item.recordCode,
     [],
   );
 
-  // Stable Render Item
   const renderRecordItem = useCallback(
     ({ item }: { item: MedicalRecord }) => <MedicalRecordCard record={item} />,
     [],
   );
 
-  // Memoized Header Component
   const renderListHeader = useCallback(
     () => (
       <View style={styles.headerContainer}>
@@ -127,7 +120,6 @@ export default function MedicalRecordsScreen() {
             ListHeaderComponent={renderListHeader}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.listContent}
-            // Performance Tweaks
             initialNumToRender={5}
             maxToRenderPerBatch={5}
             windowSize={7}
@@ -157,7 +149,7 @@ export default function MedicalRecordsScreen() {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    backgroundColor: "#F5F6FA", // Matches your app's base background
+    backgroundColor: "#F5F6FA", 
   },
   safe: {
     flex: 1,

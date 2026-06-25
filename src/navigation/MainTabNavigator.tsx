@@ -9,7 +9,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import BookAppointmentScreen from "../screens/BookAppointmentScreen";
 import ViewAppointmentsScreen from "../screens/ViewAppointmentsScreen";
 import EditAppointmentScreen from "../screens/EditAppointmentScreens";
-import MedicalRecordsScreen from "../screens/MedicalRecordsScreen"; // 🟢 Imported new screen
+import MedicalRecordsScreen from "../screens/MedicalRecordsScreen"; 
 
 import { AppointmentStackParamList } from "../types/navigation";
 

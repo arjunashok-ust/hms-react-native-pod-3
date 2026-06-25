@@ -143,10 +143,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   badgeFinal: {
-    backgroundColor: "#10B981", // Emerald green
+    backgroundColor: "#10B981", 
   },
   badgeDraft: {
-    backgroundColor: "#F59E0B", // Amber
+    backgroundColor: "#F59E0B", 
   },
   statusText: {
     color: "#FFFFFF",

@@ -3,7 +3,6 @@ import * as SecureStore from "expo-secure-store";
 import { resetToLogin } from "../navigation/RootNavigation";
 import Toast from "react-native-toast-message";
 
-// --- Concurrency Handlers ---
 let isRefreshing = false;
 let failedQueue: { resolve: any; reject: any }[] = [];
 
@@ -18,7 +17,6 @@ const processQueue = (error: any, token: string | null = null) => {
     failedQueue = [];
 };
 
-// --- Extracted Logic: Error Mapping ---
 const getErrorMessage = (status: number, serverMessage: string | undefined, isAuthRequest: boolean): string => {
     if (status === 401 || status === 403) {
         if (isAuthRequest) return serverMessage || "Authentication failed.";
@@ -31,11 +29,9 @@ const getErrorMessage = (status: number, serverMessage: string | undefined, isAu
     if (status === 422) return "Invalid request. Please check your data.";
     if (status >= 500) return "The server is experiencing issues. Please try again later.";
 
-    // Fallback replaces the original "useless assignment"
     return serverMessage || "Invalid request. Please check your data.";
 };
 
-// --- Extracted Logic: Token Refresh ---
 const handleTokenRefresh = async (client: AxiosInstance, originalRequest: any) => {
     if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -46,7 +42,7 @@ const handleTokenRefresh = async (client: AxiosInstance, originalRequest: any) =
                 return client(originalRequest);
             })
             .catch((err) => {
-                throw err; // ✅ FIXED: Prefer throw over Promise.reject
+                throw err; 
             });
     }
 
@@ -77,13 +73,12 @@ const handleTokenRefresh = async (client: AxiosInstance, originalRequest: any) =
             text2: "Please log in again.",
         });
 
-        throw refreshError; // ✅ FIXED: Prefer throw over Promise.reject
+        throw refreshError; 
     } finally {
         isRefreshing = false;
     }
 };
 
-// --- Main Interceptor ---
 export const attachErrorInterceptor = (client: AxiosInstance) => {
     client.interceptors.response.use(
         (response) => response,
@@ -98,14 +93,10 @@ export const attachErrorInterceptor = (client: AxiosInstance) => {
                     originalRequest?.url?.includes('login') ||
                     originalRequest?.url?.includes('signup') ||
                     originalRequest?.url?.includes('refresh');
-
-                // 1. Handle Token Refresh Flow
                 if (status === 401 && !isAuthRequest && !originalRequest._retry) {
                     return handleTokenRefresh(client, originalRequest);
                 }
 
-                // 2. Handle Standard UI Errors
-                // ✅ FIXED: Useless assignment removed. Complexity drastically reduced.
                 error.message = getErrorMessage(status, serverMessage, isAuthRequest);
 
             } else if (error.request) {

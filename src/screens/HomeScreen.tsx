@@ -23,13 +23,13 @@ import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 import { PatientProfile } from "../features/auth/types";
 import AppointmentCard, { Appointment } from "../components/AppointmentCard";
-import DoctorCarousel, { Doctor } from "../components/DoctorCarousel";
+import { Doctor } from "../components/DoctorCarousel";
 import HealthSummaryCard from "../components/HealthSummaryCard";
 import { appointmentService } from "../services/appointmentService";
 import { Ionicons } from "@expo/vector-icons";
 import SearchBar from "../components/SearchBar";
 
-// 🟢 FIXED: Create a stable empty array reference outside the component
+
 const EMPTY_ARRAY: Doctor[] = [];
 
 export default function HomeScreen() {
@@ -145,7 +145,6 @@ export default function HomeScreen() {
     [navigation],
   );
 
-  // 🟢 FIXED: Extracted inline navigation function for the upcoming appointment
   const navigateToViewAppointments = useCallback(() => {
     navigation.navigate("AppointmentsTab", {
       screen: "ViewAppointments",
@@ -172,13 +171,11 @@ export default function HomeScreen() {
     [navigateToBookDoctor],
   );
 
-  // 🟢 FIXED: Memoized the Key Extractor
   const keyExtractor = useCallback(
     (item: Doctor) => item._id || item.employeeCode,
     [],
   );
 
-  // 🟢 FIXED: Extracted the massive inline ListHeaderComponent into a memoized function
   const renderListHeader = useCallback(
     () => (
       <>
@@ -274,8 +271,8 @@ export default function HomeScreen() {
           </View>
         ) : (
           <FlatList
-            data={searchQuery.trim() ? filteredDoctors : EMPTY_ARRAY} // 🟢 FIXED: Passed stable empty array
-            keyExtractor={keyExtractor} // 🟢 FIXED: Passed stable key extractor
+            data={searchQuery.trim() ? filteredDoctors : EMPTY_ARRAY} 
+            keyExtractor={keyExtractor} 
             renderItem={renderDoctorResult}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
