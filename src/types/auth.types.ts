@@ -1,7 +1,7 @@
 export type LoginRequestModel = {
   email: string;
   password: string;
-  isClientApp: boolean,
+  isClientApp: boolean;
 };
 
 export type SignUpRequestModel = {
@@ -13,6 +13,8 @@ export type SignUpRequestModel = {
   phone: string;
   gender: string;
   address: string;
+  bloodGroup: string;
+  allergies: string;
   dob: Date;
   emergencyContact: string;
 };

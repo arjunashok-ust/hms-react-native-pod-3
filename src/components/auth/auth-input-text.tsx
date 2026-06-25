@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 14,
     height: "100%",
+    flex:1,
     width: "100%",
     borderRadius: 16,
     color: "black",

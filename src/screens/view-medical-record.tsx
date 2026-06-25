@@ -349,13 +349,18 @@ export default function ViewMedicalRecordScreen() {
         />
         <View style={styles.container}>
           <FormHeader title="HISTORY" value="Your Medical Records" />
+          {records.length === 0 && (
+            <Text style={[styles.noRecordsText, styles.text]}>
+              No records found.
+            </Text>
+          )}
           <FlatList
             data={records}
             keyExtractor={(item) => item.medicalRecordId}
             renderItem={renderItem}
-            initialNumToRender={2}
-            maxToRenderPerBatch={2}
-            windowSize={2}
+            initialNumToRender={3}
+            maxToRenderPerBatch={5}
+            windowSize={5}
             onEndReached={fetchMedicalRecords}
             onEndReachedThreshold={0.5}
             ListFooterComponent={
@@ -559,6 +564,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "rgba(127, 27, 131, 0.1)",
+    padding: 10,
+  },
+  noRecordsText: {
+    color: "white",
+    fontSize: 12,
+    lineHeight: 12,
+    textAlign: "center",
+    backgroundColor: "rgb(75, 12, 67)",
     padding: 10,
   },
   createdBar: { flexDirection: "row", alignItems: "center" },

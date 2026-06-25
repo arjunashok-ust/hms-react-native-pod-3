@@ -45,6 +45,8 @@ export default function SignUpScreen() {
   const [dob, setDob] = useState(new Date());
   const [isDobSet, setIsDobSet] = useState(false);
   const [address, setAddress] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
+  const [allergies, setAllergies] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [status, setStatus] = useState("Active");
 
@@ -58,6 +60,7 @@ export default function SignUpScreen() {
     phone: "",
     gender: "",
     address: "",
+    bloodGroup: "",
     dob: "",
     emergencyContact: "",
   });
@@ -77,6 +80,7 @@ export default function SignUpScreen() {
       phone: validatePhone(phone),
       gender: validateRequired(gender, "Gender"),
       address: validateRequired(address, "Address"),
+      bloodGroup: validateRequired(bloodGroup, "Blood group"),
       dob: validateDob(dob),
       emergencyContact: validatePhone(phone, emergencyContact),
     };
@@ -100,6 +104,8 @@ export default function SignUpScreen() {
         phone: phone,
         gender: gender,
         address: address,
+        bloodGroup: bloodGroup,
+        allergies: allergies,
         dob: dob,
         emergencyContact: emergencyContact,
       };
@@ -209,6 +215,41 @@ export default function SignUpScreen() {
               innerText="Address"
               getData={(value: string) => setAddress(value)}
               iconName="location-outline"
+            />
+            {!!errors.address && (
+              <Text style={styles.errorText}>{errors.address}</Text>
+            )}
+            <View style={styles.dropdownHolder}>
+              <Picker
+                selectedValue={bloodGroup}
+                onValueChange={(value) => {
+                  if (value != "") setBloodGroup(value);
+                }}
+                style={styles.picker}
+                dropdownIconColor="#828282"
+              >
+                <Picker.Item
+                  label="Blood Group"
+                  value=""
+                  style={styles.picker}
+                />
+                <Picker.Item label="A+" value="A+" style={styles.picker} />
+                <Picker.Item label="A-" value="A-" style={styles.picker} />
+                <Picker.Item label="B+" value="B+" style={styles.picker} />
+                <Picker.Item label="B-" value="B-" style={styles.picker} />
+                <Picker.Item label="AB+" value="AB+" style={styles.picker} />
+                <Picker.Item label="AB-" value="AB-" style={styles.picker} />
+                <Picker.Item label="O+" value="O+" style={styles.picker} />
+                <Picker.Item label="O-" value="O-" style={styles.picker} />
+              </Picker>
+            </View>
+            {!!errors.gender && (
+              <Text style={styles.errorText}>{errors.bloodGroup}</Text>
+            )}
+            <AuthInputText
+              innerText="Allergies"
+              getData={(value: string) => setAllergies(value)}
+              iconName="medkit-outline"
             />
             {!!errors.address && (
               <Text style={styles.errorText}>{errors.address}</Text>
