@@ -217,6 +217,7 @@ export default function HomeScreen() {
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Search by name, specialty, or designation"
+            
           />
         </View>
 
@@ -418,6 +419,10 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend",
     color: "#4B5563",
     marginBottom: 12,
+    borderRadius: 20,
+    backgroundColor: "#e6e6fb",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   specialtiesGrid: {
     flexDirection: "row",
@@ -425,7 +430,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   specialtyPill: {
-    backgroundColor: "#e6e6fb",
+    backgroundColor: "#ffffff",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
