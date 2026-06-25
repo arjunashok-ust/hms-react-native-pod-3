@@ -259,12 +259,12 @@ export default function HomeScreen() {
   );
 
   const renderListFooter = useCallback(() => {
-    return (
-      <View style={{ marginTop: 24 }}>
-        <HealthSummaryCard profile={profile} />
-      </View>
-    );
-  }, [profile, searchQuery]);
+    // Hide summary card if a search is active to keep focus on results.
+    if (searchQuery.trim()) {
+      return null;
+    }
+    return <HealthSummaryCard profile={profile} />;
+  }, [profile]);
 
   return (
     <ImageBackground
@@ -287,8 +287,8 @@ export default function HomeScreen() {
             maxToRenderPerBatch={10}
             windowSize={11}
             removeClippedSubviews={true}
-            ListFooterComponent={renderListFooter}
-            ListHeaderComponent={renderListHeader()} 
+            ListFooterComponent={searchQuery.trim() ? null : renderListFooter} 
+            ListHeaderComponent={renderListHeader}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
@@ -457,5 +457,9 @@ const styles = StyleSheet.create({
     color: "#9CA3AF",
     fontFamily: "Lexend",
     fontStyle: "italic",
+  },
+  healthSummaryContainer: {
+    marginTop: 24,
+    paddingHorizontal: 20,
   },
 });

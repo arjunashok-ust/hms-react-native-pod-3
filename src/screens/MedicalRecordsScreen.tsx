@@ -38,46 +38,42 @@ export default function MedicalRecordsScreen() {
     };
   }, []);
 
-  const fetchRecords = useCallback(
-    async (loadPage: number) => {
-      const isInitialLoad = loadPage === 1;
+  const fetchRecords = useCallback(async (loadPage: number) => {
+    const isInitialLoad = loadPage === 1;
 
-      if (isInitialLoad) {
-        setIsLoading(true);
-        setRecords(EMPTY_ARRAY); 
-      } else {
-        setIsLoadingMore(true);
+    if (isInitialLoad) {
+      setIsLoading(true);
+      setRecords(EMPTY_ARRAY);
+    } else {
+      setIsLoadingMore(true);
+    }
+
+    try {
+      const response = await recordService.getMyRecords(loadPage);
+      const { data, pagination } = response;
+
+      if (isMounted.current) {
+        setRecords((prevRecords) =>
+          isInitialLoad ? data : [...prevRecords, ...data],
+        );
+        setHasMore(loadPage < pagination.pages);
+        setPage(loadPage);
       }
-
-      try {
-        const response = await recordService.getMyRecords(loadPage);
-        const { data, pagination } = response;
-
-        if (isMounted.current) {
-          setRecords((prevRecords) =>
-            isInitialLoad ? data : [...prevRecords, ...data],
-          );
-          setHasMore(loadPage < pagination.pages);
-          setPage(loadPage);
-        }
-      } catch (err: any) {
-        console.error("Fetch Records Failed:", err);
-        Toast.show({
-          type: "error",
-          text1: "Fetch Failed",
-          text2:
-            err.response?.data?.message || "Could not load medical records.",
-        });
-      } finally {
-        if (isMounted.current) {
-          setIsLoading(false);
-          setRefreshing(false);
-          setIsLoadingMore(false);
-        }
+    } catch (err: any) {
+      console.error("Fetch Records Failed:", err);
+      Toast.show({
+        type: "error",
+        text1: "Fetch Failed",
+        text2: err.response?.data?.message || "Could not load medical records.",
+      });
+    } finally {
+      if (isMounted.current) {
+        setIsLoading(false);
+        setRefreshing(false);
+        setIsLoadingMore(false);
       }
-    },
-    [], 
-  );
+    }
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -137,6 +133,15 @@ export default function MedicalRecordsScreen() {
     );
   }, [isLoadingMore]);
 
+  const renderEmptyList = useCallback(
+    () => (
+      <View style={styles.emptyListCard}>
+        <Text style={styles.emptyListText}>No medical records found.</Text>
+      </View>
+    ),
+    [],
+  );
+
   return (
     <ImageBackground
       source={backgroundImage}
@@ -172,13 +177,7 @@ export default function MedicalRecordsScreen() {
                 tintColor="#4B1D76"
               />
             }
-            ListEmptyComponent={
-              <View style={styles.emptyListCard}>
-                <Text style={styles.emptyListText}>
-                  No medical records found.
-                </Text>
-              </View>
-            }
+            ListEmptyComponent={renderEmptyList}
           />
         )}
       </SafeAreaView>
