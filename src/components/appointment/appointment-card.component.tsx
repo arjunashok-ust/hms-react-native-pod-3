@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { UserModel } from "../../types/user.types";
 import { useEffect, useState, memo } from "react";
 import {
-  deleteAppointment,
   editAppointmentStatus,
   getDoctorByEmployeeId,
 } from "../../services/appointment.service";
@@ -39,35 +38,6 @@ export const AppointmentCardComponent = (props: any) => {
   useEffect(() => {
     fetchDoctor();
   }, [props.doctorEmployeeId]);
-
-  const deleteAppointmentByPatient = async () => {
-    Alert.alert(
-      "Delete Appointment",
-      "Are you sure you want to delete this appointment",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            void (async () => {
-              try {
-                const appointmentId: string = props.appointmentId;
-                await deleteAppointment(appointmentId);
-                props.onAppointmentChange?.();
-                Alert.alert("Success", "Appointment deleted sucessfully");
-              } catch (err) {
-                console.error(err);
-              }
-            })();
-          },
-        },
-      ],
-    );
-  };
 
   const editAppointmentStatusByPatient = async () => {
     Alert.alert(

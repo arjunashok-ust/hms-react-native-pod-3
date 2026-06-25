@@ -43,11 +43,3 @@ export const editAppointmentStatus = async (payload: any) => {
   );
   return response;
 };
-
-// delete appointment
-export const deleteAppointment = async (appointmentId: string) => {
-  const response = await api.get("/appointment/deleteAppointment", {
-    params: { appointmentId },
-  });
-  return response;
-};

@@ -353,9 +353,16 @@ export default function ViewMedicalRecordScreen() {
             data={records}
             keyExtractor={(item) => item.medicalRecordId}
             renderItem={renderItem}
-            initialNumToRender={3}
-            maxToRenderPerBatch={5}
-            windowSize={5}
+            initialNumToRender={2}
+            maxToRenderPerBatch={2}
+            windowSize={2}
+            onEndReached={fetchMedicalRecords}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              loading ? (
+                <Text style={{ textAlign: "center" }}>Loading...</Text>
+              ) : null
+            }
           />
         </View>
       </View>
