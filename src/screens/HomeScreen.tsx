@@ -40,7 +40,8 @@ export default function HomeScreen() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
 
   const [profile, setProfile] = useState<PatientProfile | null>(null);
   const isMounted = useRef(true);
@@ -51,6 +52,17 @@ export default function HomeScreen() {
       isMounted.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1000); // 300ms delay
+
+    // Cleanup function to clear the timeout if the user types again
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
   const fetchDashboardData = useCallback(async () => {
     try {
@@ -125,15 +137,15 @@ export default function HomeScreen() {
   }, [doctors]);
 
   const filteredDoctors = useMemo(() => {
-    if (!searchQuery.trim()) return EMPTY_ARRAY;
-    const query = searchQuery.toLowerCase();
+    if (!debouncedSearchTerm.trim()) return EMPTY_ARRAY;
+    const query = debouncedSearchTerm.toLowerCase();
     return doctors.filter(
       (d) =>
         d.name.toLowerCase().includes(query) ||
         d.specialization?.toLowerCase().includes(query) ||
         d.designation?.toLowerCase().includes(query),
     );
-  }, [doctors, searchQuery]);
+  }, [doctors, debouncedSearchTerm]);
 
   const navigateToBookDoctor = useCallback(
     (doctorEmployeeCode: string) => {
@@ -214,14 +226,14 @@ export default function HomeScreen() {
 
         <View style={styles.searchContainer}>
           <SearchBar
-            value={searchQuery}
-            onChangeText={setSearchQuery}
+            value={searchTerm}
+            onChangeText={setSearchTerm}
             placeholder="Search by name, specialty, or designation"
             
           />
         </View>
 
-        {searchQuery.trim() ? (
+        {searchTerm.trim() ? (
           <View style={styles.searchResultsContainer}>
             <Text style={styles.subHeading}>Search Results</Text>
             {filteredDoctors.length === 0 && (
@@ -238,7 +250,7 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   key={spec}
                   style={styles.specialtyPill}
-                  onPress={() => setSearchQuery(spec)}
+                  onPress={() => setSearchTerm(spec)}
                 >
                   <Text style={styles.specialtyText}>{spec}</Text>
                 </TouchableOpacity>
@@ -252,18 +264,15 @@ export default function HomeScreen() {
     [
       profile,
       nextAppointment,
-      searchQuery,
+      searchTerm,
       specialties,
       filteredDoctors.length,
       navigateToViewAppointments,
+      profile, nextAppointment, specialties, navigateToViewAppointments
     ],
   );
 
   const renderListFooter = useCallback(() => {
-    // Hide summary card if a search is active to keep focus on results.
-    if (searchQuery.trim()) {
-      return null;
-    }
     return <HealthSummaryCard profile={profile} />;
   }, [profile]);
 
@@ -281,15 +290,15 @@ export default function HomeScreen() {
           </View>
         ) : (
           <FlatList
-            data={searchQuery.trim() ? filteredDoctors : EMPTY_ARRAY} 
+            data={debouncedSearchTerm.trim() ? filteredDoctors : EMPTY_ARRAY} 
             keyExtractor={keyExtractor} 
             renderItem={renderDoctorResult}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             windowSize={11}
             removeClippedSubviews={true}
-            ListFooterComponent={searchQuery.trim() ? null : renderListFooter} 
-            ListHeaderComponent={renderListHeader}
+            ListFooterComponent={renderListFooter} 
+            ListHeaderComponent={renderListHeader()}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}

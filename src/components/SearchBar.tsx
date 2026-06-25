@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 interface SearchBarProps {
@@ -8,7 +8,11 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-function SearchBar({ value, onChangeText, placeholder = "Search..." }: Readonly<SearchBarProps>) {
+function SearchBar({
+  value,
+  onChangeText,
+  placeholder = "Search...",
+}: Readonly<SearchBarProps>) {
   return (
     <View style={styles.container}>
       <Feather name="search" size={20} color="#9CA3AF" style={styles.icon} />
@@ -20,6 +24,16 @@ function SearchBar({ value, onChangeText, placeholder = "Search..." }: Readonly<
         placeholderTextColor="#9CA3AF"
         autoCorrect={false}
       />
+
+      {value.length > 0 && (
+        <TouchableOpacity
+          onPress={() => onChangeText("")}
+          style={styles.clearBtn}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Feather name="x-circle" size={20} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -39,4 +53,9 @@ const styles = StyleSheet.create({
   },
   icon: { marginRight: 8 },
   input: { flex: 1, fontSize: 15, color: "#1E1E3F", fontFamily: "Lexend" },
+  clearBtn: {
+    marginLeft: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

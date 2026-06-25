@@ -85,7 +85,7 @@ function MedicalRecordCard({ record }: Readonly<Props>) {
               </>
             )}
 
-            {record.notes && (
+            {!!(record.notes) && (
               <>
                 <Text style={styles.sectionTitle}>NOTES</Text>
                 <Text style={styles.notesText}>{record.notes}</Text>

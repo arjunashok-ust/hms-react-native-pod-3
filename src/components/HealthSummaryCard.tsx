@@ -40,7 +40,7 @@ export default React.memo(HealthSummaryCard);
 
 const styles = StyleSheet.create({
   summaryCard: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#e6e6fb",
     marginHorizontal: 20,
     padding: 20,
     borderRadius: 20,

@@ -55,6 +55,7 @@ function ManageAppointmentCard({
               appointment.doctorDept ||
               "General Medicine"}
           </Text>
+          <Text style={styles.aptCode}>{appointment.appointmentCode}</Text>
         </View>
 
         <View
@@ -156,6 +157,11 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend",
   },
   deptText: { fontSize: 14, color: "#9CA3AF", fontFamily: "Lexend" },
+  aptCode:{
+    fontSize:14,
+    color: "#7e4fed",
+    fontFamily: "Lexend",
+  },
   badge: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8 },
   badgeText: {
     color: "#FFF",
