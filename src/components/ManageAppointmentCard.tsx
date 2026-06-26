@@ -14,9 +14,7 @@ function ManageAppointmentCard({
   onDelete,
 }: Readonly<ManageAppointmentCardProps>) {
   const isScheduled = appointment.status === "Scheduled";
-
   const isCancelled = appointment.status === "Cancelled";
-
   const isCompleted = appointment.status === "Completed";
 
   let badgeBackgroundColor;
@@ -100,9 +98,12 @@ function ManageAppointmentCard({
 
       <View style={styles.actionRow}>
         <TouchableOpacity
-          style={[styles.actionBtn, isCancelled && { opacity: 0.3 }]}
+          style={[
+            styles.actionBtn,
+            (isCancelled || isCompleted) && { opacity: 0.3 },
+          ]}
           onPress={onEdit}
-          disabled={isCancelled}
+          disabled={isCancelled || isCompleted}
         >
           <View style={styles.actionButton}>
             <Feather name="edit-3" size={18} color="blue" />
@@ -111,9 +112,12 @@ function ManageAppointmentCard({
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.actionBtn, isCancelled && { opacity: 0.3 }]}
+          style={[
+            styles.actionBtn,
+            (isCancelled || isCompleted) && { opacity: 0.3 },
+          ]}
           onPress={onDelete}
-          disabled={isCancelled}
+          disabled={isCancelled || isCompleted}
         >
           <View style={styles.actionButton}>
             <MaterialCommunityIcons name="cancel" size={18} color="red" />

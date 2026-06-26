@@ -19,7 +19,7 @@ import { getPatientValidationSchema } from "../validations/patientValidations";
 
 interface PatientFormProps {
   initialValues: any;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => void | Promise<void>;
   isLoading: boolean;
   buttonText: string;
   isEditMode?: boolean;

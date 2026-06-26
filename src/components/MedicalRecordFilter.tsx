@@ -39,6 +39,15 @@ function MedicalRecordFilter({
     filters.appointmentId,
   );
 
+ useEffect(() => {
+   setFilters(initialFilters);
+   setAppointmentIdSearch(initialFilters.appointmentId || "");
+ }, [
+   initialFilters.appointmentId,
+   initialFilters.doctorId,
+   initialFilters.date?.getTime(), // Safely track date changes
+ ]);
+
   const filteredDoctors = useMemo(() => {
     if (!doctorSearch.trim()) return doctors;
     const query = doctorSearch.toLowerCase();
@@ -61,9 +70,8 @@ function MedicalRecordFilter({
   const handleClear = () => {
     const clearedFilters = { appointmentId: "", doctorId: null, date: null };
     setAppointmentIdSearch("");
-    setFilters(clearedFilters);
     setDoctorSearch("");
-    onFilterChange(clearedFilters); // Immediately clear
+    onFilterChange(clearedFilters);
   };
 
   const renderDoctorItem = useCallback<ListRenderItem<Doctor>>(
@@ -87,7 +95,7 @@ function MedicalRecordFilter({
           <SearchBar
             value={appointmentIdSearch}
             onChangeText={setAppointmentIdSearch}
-            placeholder="e.g., REC-000001"
+            placeholder="Search...."
             onSubmitEditing={handleAppointmentSearch}
           />
         </View>
@@ -185,7 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   filterBtn: {
-    backgroundColor: "#4B1D76",
+    backgroundColor: "#6C4EDB",
     padding: 12,
     borderRadius: 14,
     height: 50,
@@ -232,6 +240,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   clearButton: { backgroundColor: "#F3F4F6" },
-  applyButton: { backgroundColor: "#4B1D76" },
+  applyButton: { backgroundColor: "#6C4EDB" },
   btnText: { color: "#FFF", fontFamily: "Lexend", fontSize: 15 },
 });

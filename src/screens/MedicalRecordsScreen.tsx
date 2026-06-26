@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ImageBackground,
   RefreshControl,
+  ListRenderItemInfo,
 } from "react-native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,6 +24,7 @@ import { appointmentService } from "../services/appointmentService";
 import { Doctor } from "../components/DoctorCarousel";
 
 const EMPTY_ARRAY: MedicalRecord[] = [];
+const EMPTY_DOCTORS_ARRAY: Doctor[] = [];
 
 export default function MedicalRecordsScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
@@ -49,53 +51,62 @@ export default function MedicalRecordsScreen() {
     };
   }, []);
 
-  const fetchRecords = useCallback(async (loadPage: number, appliedFilters: RecordFilters) => {
-    const isInitialLoad = loadPage === 1;
+  const fetchRecords = useCallback(
+    async (loadPage: number, appliedFilters: RecordFilters) => {
+      const isInitialLoad = loadPage === 1;
 
-    if (isInitialLoad) {
-      setIsLoading(true);
-      setRecords(EMPTY_ARRAY);
-      // Fetch doctors only on initial load or refresh
-      if (doctors.length === 0) {
+      if (isInitialLoad) {
+        setIsLoading(true);
+        setRecords(EMPTY_ARRAY);
+        // Always fetch doctors on initial load/refresh to ensure filter is populated
         appointmentService.getDoctors().then((docs) => {
           if (isMounted.current) setDoctors(docs);
         });
+      } else {
+        setIsLoadingMore(true);
       }
-    } else {
-      setIsLoadingMore(true);
-    }
 
-    try {
-      const response = await recordService.getMyRecords(loadPage, 10, appliedFilters);
-      const { data, pagination } = response;
-
-      if (isMounted.current) {
-        setRecords((prevRecords) =>
-          isInitialLoad ? data : [...prevRecords, ...data],
+      try {
+        const response = await recordService.getMyRecords(
+          loadPage,
+          10,
+          appliedFilters,
         );
-        setHasMore(loadPage < pagination.pages);
-        setPage(loadPage);
-      }
-    } catch (err: any) {
-      console.error("Fetch Records Failed:", err);
-      Toast.show({
-        type: "error",
-        text1: "Fetch Failed",
-        text2: err.response?.data?.message || "Could not load medical records.",
-      });
-    } finally {
-      if (isMounted.current) {
-        setIsLoading(false);
-        setRefreshing(false);
-        setIsLoadingMore(false);
-      }
-    }
-  }, []);
+        const { data, pagination } = response;
 
-  const handleFilterChange = useCallback((newFilters: RecordFilters) => {
-    setFilters(newFilters);
-    fetchRecords(1, newFilters);
-  }, [fetchRecords]);
+        if (isMounted.current) {
+          setRecords((prevRecords) =>
+            isInitialLoad ? data : [...prevRecords, ...data],
+          );
+          setHasMore(loadPage < pagination.pages);
+          setPage(loadPage);
+        }
+      } catch (err: any) {
+        console.error("Fetch Records Failed:", err);
+        Toast.show({
+          type: "error",
+          text1: "Fetch Failed",
+          text2:
+            err.response?.data?.message || "Could not load medical records.",
+        });
+      } finally {
+        if (isMounted.current) {
+          setIsLoading(false);
+          setRefreshing(false);
+          setIsLoadingMore(false);
+        }
+      }
+    },
+    [],
+  );
+
+  const handleFilterChange = useCallback(
+    (newFilters: RecordFilters) => {
+      setFilters(newFilters);
+      fetchRecords(1, newFilters);
+    },
+    [fetchRecords],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -117,6 +128,7 @@ export default function MedicalRecordsScreen() {
   const onRefresh = useCallback(() => {
     const clearedFilters = { appointmentId: "", doctorId: null, date: null };
     setFilters(clearedFilters);
+    setDoctors(EMPTY_DOCTORS_ARRAY);
     setRefreshing(true);
     fetchRecords(1, clearedFilters);
   }, [fetchRecords]);
@@ -133,7 +145,9 @@ export default function MedicalRecordsScreen() {
   );
 
   const renderRecordItem = useCallback(
-    ({ item }: { item: MedicalRecord }) => <MedicalRecordCard record={item} />,
+    ({ item }: ListRenderItemInfo<MedicalRecord>) => (
+      <MedicalRecordCard record={item} />
+    ),
     [],
   );
 
@@ -143,16 +157,16 @@ export default function MedicalRecordsScreen() {
         <Text style={styles.mainTitle}>My</Text>
         <Text style={styles.boldTitle}>Medical Records</Text>
         <Text style={styles.subtitle}>Records from your visits.</Text>
-        <View style={{marginTop: 20}}>
-        <MedicalRecordFilter
-          doctors={doctors}
-          initialFilters={filters}
-          onFilterChange={handleFilterChange}
-        />
+        <View style={{ marginTop: 20 }}>
+          <MedicalRecordFilter
+            doctors={doctors}
+            initialFilters={filters}
+            onFilterChange={handleFilterChange}
+          />
         </View>
       </View>
     ),
-    [],
+    [doctors, filters, handleFilterChange],
   );
 
   const renderListFooter = useCallback(() => {

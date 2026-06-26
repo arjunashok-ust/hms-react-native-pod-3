@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   NativeSyntheticEvent,
-  TextInputSubmitEditingEventData,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
@@ -13,9 +12,7 @@ interface SearchBarProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
-  onSubmitEditing?: (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
-  ) => void;
+  onSubmitEditing?: (e: NativeSyntheticEvent<{ text: string }>) => void;
 }
 
 function SearchBar({

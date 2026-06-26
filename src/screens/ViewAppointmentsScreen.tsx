@@ -92,7 +92,7 @@ export default function ViewAppointmentsScreen() {
   const executeCancellation = useCallback(
     async (appointment: Appointment) => {
       try {
-        const payload={status:"Cancelled"}
+        const payload = { status: "Cancelled" };
         await appointmentService.updateAppointment(
           appointment.appointmentCode,
           payload,
@@ -129,7 +129,9 @@ export default function ViewAppointmentsScreen() {
           {
             text: "Yes, Cancel",
             style: "destructive",
-            onPress: onConfirmDelete,
+            onPress: () => {
+              void onConfirmDelete();
+            },
           },
         ],
       );
@@ -174,7 +176,6 @@ export default function ViewAppointmentsScreen() {
           {isLoading ? (
             <ActivityIndicator size="large" color="#4B1D76" />
           ) : (
-            
             <FlatList
               data={appointments}
               keyExtractor={(item) => item.appointmentCode || item._id}

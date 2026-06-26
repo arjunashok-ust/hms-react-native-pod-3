@@ -25,6 +25,7 @@ function MedicalRecordCard({ record }: Readonly<Props>) {
         {/* Header Row */}
         <View style={styles.headerRow}>
           <Text style={styles.recordCode}>{record.recordCode}</Text>
+
           <View
             style={[
               styles.statusBadge,
@@ -35,6 +36,7 @@ function MedicalRecordCard({ record }: Readonly<Props>) {
           </View>
         </View>
 
+        <Text style={styles.appointmentId}>{record.appointmentId}</Text>
         {/* Doctor Info */}
         <Text style={styles.doctorName}>
           {record.doctorName
@@ -215,5 +217,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: "Lexend",
     fontWeight: "600",
+  },
+  appointmentId: {
+    color: "#000000",
+    fontSize: 14,
+    fontFamily: "ShareTech",
   },
 });

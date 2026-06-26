@@ -173,7 +173,9 @@ export default function ProfileScreen() {
       {
         text: "Logout",
         style: "destructive",
-        onPress: executeLogout,
+        onPress: () => {
+          void executeLogout();
+        },
       },
     ]);
   }, [executeLogout]);
