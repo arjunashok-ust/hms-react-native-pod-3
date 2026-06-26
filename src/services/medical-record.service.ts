@@ -7,6 +7,7 @@ export const getMedicalRecords = async (page: number, patientId: string) => {
       page: page,
       limit: 5,
       patientId: patientId,
+      isClientApp: true,
     },
   });
   return response;

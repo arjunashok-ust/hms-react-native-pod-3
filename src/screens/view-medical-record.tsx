@@ -380,8 +380,9 @@ const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: "rgba(255, 255, 255, 0.8)" },
   container: {
     flex: 1,
-    borderRadius: 35,
-    margin: 20,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius:35,
+    marginTop:30,
     borderColor: "rgba(207, 75, 255, 0.2)",
     backgroundColor: "#f2f2f2",
     borderWidth: 1,

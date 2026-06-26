@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   ListRenderItem,
+  ActivityIndicator,
 } from "react-native";
 import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
 import { AppointmentCard } from "../components/appointment/appointment-card.component";
@@ -18,11 +19,16 @@ import { useNavigation } from "@react-navigation/native";
 import { getAppointmentsByPatientId } from "../services/appointment.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FormHeader } from "../components/appointment/form-header.component";
+import SearchBox from "../components/home/search-box.component";
 
 export default function ViewAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
-
   const [appointments, setAppointments] = useState<AppointmentModel[]>([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const renderItem: ListRenderItem<AppointmentModel> = useCallback(
     ({ item }) => (
@@ -49,14 +55,47 @@ export default function ViewAppointmentScreen() {
     fetchAppointments();
   }, []);
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = async (isLoadMore = false, searchText?: string) => {
     try {
       const patientId = await AsyncStorage.getItem("patientId");
-      const data = await getAppointmentsByPatientId(patientId || "");
-      setAppointments(data);
+      const currentPage = isLoadMore ? page + 1 : page;
+
+      if (isLoadMore && currentPage > totalPages) return;
+      if (isLoading) return;
+
+      setIsLoading(true);
+
+      const response = await getAppointmentsByPatientId(
+        patientId ?? "",
+        searchText ?? "",
+        currentPage,
+        limit,
+      );
+
+      setTotalPages(response.data.totalPages);
+      setAppointments((prev) =>
+        isLoadMore
+          ? [...prev, ...(response.data.data as AppointmentModel[])]
+          : (response.data.data as AppointmentModel[]),
+      );
+
+      setPage(currentPage);
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.error(err);
     }
+  };
+
+  const onPageEnd = () => {
+    if (isLoading || page >= totalPages) return;
+    fetchAppointments(true);
+  };
+
+  const onSearch = (text: string) => {
+    setPage(1);
+    setAppointments([]);
+    fetchAppointments(false, text);
   };
 
   return (
@@ -75,6 +114,8 @@ export default function ViewAppointmentScreen() {
           onAction={goToHome}
         />
 
+        <SearchBox placeholder="Search appointment" onChangeText={onSearch} />
+
         <View style={styles.container}>
           <FormHeader title="SCHEDULE" value="Your Appointments" />
 
@@ -91,6 +132,13 @@ export default function ViewAppointmentScreen() {
             initialNumToRender={1}
             maxToRenderPerBatch={3}
             windowSize={3}
+            onEndReached={onPageEnd}
+            onEndReachedThreshold={0.3}
+            ListFooterComponent={
+              isLoading ? (
+                <ActivityIndicator size="small" color="rgb(108, 19, 109)" />
+              ) : null
+            }
           ></FlatList>
         </View>
       </View>
@@ -112,7 +160,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 35,
-    margin: 20,
+    marginTop: 10,
     borderColor: "rgba(207, 75, 255, 0.2)",
     backgroundColor: "#f2f2f2",
     borderWidth: 1,

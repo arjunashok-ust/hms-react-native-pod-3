@@ -9,13 +9,21 @@ export const createAppointment = async (payload: AppointmentModel) => {
 };
 
 // get appointment by patient id
-export const getAppointmentsByPatientId = async (patientId: string) => {
-  const response = await api.get("/appointment/getAppointmentsByPatientId", {
+export const getAppointmentsByPatientId = async (
+  patientId: string,
+  selectedText: string,
+  page: number,
+  limit: number,
+) => {
+  const response = await api.get<any>("/appointment/getAppointmentsByPatientId", {
     params: {
       patientId,
+      selectedText,
+      page,
+      limit,
     },
   });
-  return response.data as AppointmentModel[];
+  return response;
 };
 
 // get doctor by employee id
