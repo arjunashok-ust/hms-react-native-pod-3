@@ -1,17 +1,28 @@
 import React from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  NativeSyntheticEvent,
+  TextInputSubmitEditingEventData,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 interface SearchBarProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  onSubmitEditing?: (
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
+  ) => void;
 }
 
 function SearchBar({
   value,
   onChangeText,
   placeholder = "Search...",
+  onSubmitEditing,
 }: Readonly<SearchBarProps>) {
   return (
     <View style={styles.container}>
@@ -22,6 +33,8 @@ function SearchBar({
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor="#9CA3AF"
+        onSubmitEditing={onSubmitEditing}
+        returnKeyType="search"
         autoCorrect={false}
       />
 

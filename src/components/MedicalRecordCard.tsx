@@ -37,7 +37,9 @@ function MedicalRecordCard({ record }: Readonly<Props>) {
 
         {/* Doctor Info */}
         <Text style={styles.doctorName}>
-          {record.doctorName || `Dr. ${record.doctorEmployeeId}`}
+          {record.doctorName
+            ? `Dr.${record.doctorName}`
+            : `Dr. ${record.doctorEmployeeId}`}
         </Text>
         <Text style={styles.specialization}>
           {record.doctorSpecialization || "General Medicine"}
@@ -85,7 +87,7 @@ function MedicalRecordCard({ record }: Readonly<Props>) {
               </>
             )}
 
-            {!!(record.notes) && (
+            {!!record.notes && (
               <>
                 <Text style={styles.sectionTitle}>NOTES</Text>
                 <Text style={styles.notesText}>{record.notes}</Text>
@@ -143,10 +145,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   badgeFinal: {
-    backgroundColor: "#10B981", 
+    backgroundColor: "#10B981",
   },
   badgeDraft: {
-    backgroundColor: "#F59E0B", 
+    backgroundColor: "#F59E0B",
   },
   statusText: {
     color: "#FFFFFF",

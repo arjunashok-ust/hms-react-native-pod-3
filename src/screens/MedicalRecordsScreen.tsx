@@ -15,13 +15,19 @@ import Toast from "react-native-toast-message";
 
 import { recordService } from "../services/recordService";
 import MedicalRecordCard from "../components/MedicalRecordCard";
+import MedicalRecordFilter, {
+  RecordFilters,
+} from "../components/MedicalRecordFilter";
 import { MedicalRecord } from "../features/auth/types";
+import { appointmentService } from "../services/appointmentService";
+import { Doctor } from "../components/DoctorCarousel";
 
 const EMPTY_ARRAY: MedicalRecord[] = [];
 
 export default function MedicalRecordsScreen() {
   const backgroundImage = require("../../assets/images/hospital3.jpg");
   const navigation = useNavigation<BottomTabNavigationProp<any>>();
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,6 +35,11 @@ export default function MedicalRecordsScreen() {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [filters, setFilters] = useState<RecordFilters>({
+    appointmentId: "",
+    doctorId: null,
+    date: null,
+  });
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -38,18 +49,24 @@ export default function MedicalRecordsScreen() {
     };
   }, []);
 
-  const fetchRecords = useCallback(async (loadPage: number) => {
+  const fetchRecords = useCallback(async (loadPage: number, appliedFilters: RecordFilters) => {
     const isInitialLoad = loadPage === 1;
 
     if (isInitialLoad) {
       setIsLoading(true);
       setRecords(EMPTY_ARRAY);
+      // Fetch doctors only on initial load or refresh
+      if (doctors.length === 0) {
+        appointmentService.getDoctors().then((docs) => {
+          if (isMounted.current) setDoctors(docs);
+        });
+      }
     } else {
       setIsLoadingMore(true);
     }
 
     try {
-      const response = await recordService.getMyRecords(loadPage);
+      const response = await recordService.getMyRecords(loadPage, 10, appliedFilters);
       const { data, pagination } = response;
 
       if (isMounted.current) {
@@ -75,31 +92,38 @@ export default function MedicalRecordsScreen() {
     }
   }, []);
 
+  const handleFilterChange = useCallback((newFilters: RecordFilters) => {
+    setFilters(newFilters);
+    fetchRecords(1, newFilters);
+  }, [fetchRecords]);
+
   useFocusEffect(
     useCallback(() => {
       // Reset state and fetch the first page
-      fetchRecords(1);
-    }, []),
+      fetchRecords(1, filters);
+    }, [fetchRecords]), // filters are not included to avoid re-fetching on every keystroke in search
   );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", () => {
       if (navigation.isFocused()) {
         setRefreshing(true);
-        fetchRecords(1);
+        fetchRecords(1, filters);
       }
     });
     return unsubscribe;
   }, [navigation, fetchRecords]);
 
   const onRefresh = useCallback(() => {
+    const clearedFilters = { appointmentId: "", doctorId: null, date: null };
+    setFilters(clearedFilters);
     setRefreshing(true);
-    fetchRecords(1);
+    fetchRecords(1, clearedFilters);
   }, [fetchRecords]);
 
   const handleLoadMore = useCallback(() => {
     if (!isLoadingMore && hasMore) {
-      fetchRecords(page + 1);
+      fetchRecords(page + 1, filters);
     }
   }, [isLoadingMore, hasMore, page, fetchRecords]);
 
@@ -119,6 +143,13 @@ export default function MedicalRecordsScreen() {
         <Text style={styles.mainTitle}>My</Text>
         <Text style={styles.boldTitle}>Medical Records</Text>
         <Text style={styles.subtitle}>Records from your visits.</Text>
+        <View style={{marginTop: 20}}>
+        <MedicalRecordFilter
+          doctors={doctors}
+          initialFilters={filters}
+          onFilterChange={handleFilterChange}
+        />
+        </View>
       </View>
     ),
     [],

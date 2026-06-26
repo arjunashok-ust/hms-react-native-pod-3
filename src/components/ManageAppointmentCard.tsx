@@ -17,17 +17,23 @@ function ManageAppointmentCard({
 
   const isCancelled = appointment.status === "Cancelled";
 
+  const isCompleted = appointment.status === "Completed";
+
   let badgeBackgroundColor;
   let badgeTextColor;
   let badgeText;
 
   if (isScheduled) {
-    badgeBackgroundColor = "#c5ead5";
-    badgeTextColor = "green";
+    badgeBackgroundColor = "#c7c5ea";
+    badgeTextColor = "blue";
     badgeText = "Booked";
   } else if (isCancelled) {
     badgeBackgroundColor = "#f3c7c7";
     badgeTextColor = "red";
+    badgeText = appointment.status;
+  } else if (isCompleted) {
+    badgeBackgroundColor = "#bef0bf";
+    badgeTextColor = "green";
     badgeText = appointment.status;
   } else {
     badgeBackgroundColor = "#f7d7a6";
@@ -157,8 +163,8 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend",
   },
   deptText: { fontSize: 14, color: "#9CA3AF", fontFamily: "Lexend" },
-  aptCode:{
-    fontSize:14,
+  aptCode: {
+    fontSize: 14,
     color: "#7e4fed",
     fontFamily: "Lexend",
   },
