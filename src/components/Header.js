@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 
 import { clearStorage } from "../storage/authStorage";
 import { resetToLogin } from "../navigation/navigationRef";
+import { logoutPatient } from "../services/patientApi";
 
 const Header = ({ title }) => {
   const handleLogout = () => {
@@ -14,6 +15,13 @@ const Header = ({ title }) => {
         text: "Logout",
         style: "destructive",
         onPress: async () => {
+          /* Revoke the refresh session server-side first; clear local + reset
+             regardless of the result so logout always completes. */
+          try {
+            await logoutPatient();
+          } catch {
+            // ignore — still clear locally below
+          }
           await clearStorage();
           resetToLogin();
         },

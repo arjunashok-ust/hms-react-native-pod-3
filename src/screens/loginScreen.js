@@ -53,6 +53,7 @@ const LoginScreen = ({ navigation }) => {
 
       await saveLoginData(
         response.data.token,
+        response.data.refreshToken,
         response.data.user,
         response.data.patient,
       );

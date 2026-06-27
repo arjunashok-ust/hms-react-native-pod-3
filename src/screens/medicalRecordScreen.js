@@ -1,36 +1,70 @@
 import { useState, useCallback } from "react";
 import {
   Text,
-  ScrollView,
   FlatList,
   View,
   StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import MedicalRecordCard from "../components/MedicalRecordCard";
 import Header from "../components/Header";
 import { getMyMedicalRecords } from "../services/patientApi";
 
+const PAGE_SIZE = 10;
+
 const MedicalRecordScreen = () => {
   const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadRecords();
-    }, []),
-  );
+  const [loading, setLoading] = useState(true); // first load
+  const [loadingMore, setLoadingMore] = useState(false); // appending next page
+  const [refreshing, setRefreshing] = useState(false); // pull-to-refresh
 
-  const loadRecords = async () => {
+  
+  const loadFirstPage = async () => {
     try {
-      setLoading(true);
-      const response = await getMyMedicalRecords();
-      setRecords(response.data || []);
+      const res = await getMyMedicalRecords(1, PAGE_SIZE);
+      setRecords(res.data || []);
+      setHasNextPage(res.meta?.hasNextPage || false);
+      setPage(1);
     } catch (error) {
       console.log(error);
       setRecords([]);
+      setHasNextPage(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      loadFirstPage().finally(() => setLoading(false));
+    }, []),
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadFirstPage();
+    setRefreshing(false);
+  }, []);
+
+  /* Append the next page when the user scrolls near the bottom. */
+  const loadMore = async () => {
+    if (loadingMore || !hasNextPage) return;
+
+    setLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const res = await getMyMedicalRecords(nextPage, PAGE_SIZE);
+      setRecords((prev) => [...prev, ...(res.data || [])]);
+      setHasNextPage(res.meta?.hasNextPage || false);
+      setPage(nextPage);
+    } catch (error) {
+      console.log(error);
     } finally {
-      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -39,32 +73,55 @@ const MedicalRecordScreen = () => {
     [],
   );
 
-  return (
-    <View style={{ flex: 1 }}>
-      <Header title="Medical Records" />
-
-      <ScrollView contentContainerStyle={styles.container}>
+  const ListHeader = (
+    <>
       <Text style={styles.heading}>My</Text>
       <Text style={styles.headingHighlight}>Medical Records</Text>
       <Text style={styles.subHeading}>
         Finalized records from your visits, shared by your doctor.
       </Text>
+    </>
+  );
 
-      {loading ? (
-        <Text style={styles.info}>Loading records...</Text>
-      ) : records.length > 0 ? (
-        <FlatList
-          data={records}
-          keyExtractor={(item) => item._id}
-          renderItem={renderRecord}
-          scrollEnabled={false}
-        />
-      ) : (
-        <View style={styles.card}>
-          <Text style={styles.info}>No medical records available yet.</Text>
-        </View>
-      )}
-      </ScrollView>
+  const ListEmpty = loading ? (
+    <Text style={styles.info}>Loading records...</Text>
+  ) : (
+    <View style={styles.card}>
+      <Text style={styles.info}>No medical records available yet.</Text>
+    </View>
+  );
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Header title="Medical Records" />
+
+      <FlatList
+        data={records}
+        keyExtractor={(item) => item._id}
+        renderItem={renderRecord}
+        contentContainerStyle={styles.container}
+        ListHeaderComponent={ListHeader}
+        ListEmptyComponent={ListEmpty}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.4}
+        ListFooterComponent={
+          loadingMore ? (
+            <ActivityIndicator
+              size="small"
+              color="#6B46C1"
+              style={{ marginVertical: 16 }}
+            />
+          ) : null
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#6B46C1"]}
+            tintColor="#6B46C1"
+          />
+        }
+      />
     </View>
   );
 };

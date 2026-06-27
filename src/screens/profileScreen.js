@@ -13,9 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import {
   getPatient,
-  getToken,
-  getUser,
-  saveLoginData,
+  savePatient,
 } from "../storage/authStorage";
 
 import { updatePatientProfile } from "../services/patientApi";
@@ -65,8 +63,6 @@ const ProfileScreen = () => {
     try {
       setLoading(true);
 
-      const token = await getToken();
-
       const requestBody = {
         name: form.name,
         phone: form.phone,
@@ -83,8 +79,7 @@ const ProfileScreen = () => {
       };
 
       const response = await updatePatientProfile(requestBody);
-      const user = await getUser();
-      await saveLoginData(token, user, response.data.patient);
+      await savePatient(response.data.patient);
       setPatient(response.data.patient);
       setIsEditing(false);
 

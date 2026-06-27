@@ -6,6 +6,8 @@ import {
   ScrollView,
   View,
   FlatList,
+  RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
@@ -35,6 +37,12 @@ const AppointmentScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [appointments, setAppointments] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  /* Infinite-scroll pagination state for the appointments list. */
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -74,15 +82,63 @@ const AppointmentScreen = () => {
     }
   };
 
+  const PAGE_SIZE = 10;
+
+  /* Load page 1 (focus / refresh / after book or cancel) — replaces the list. */
   const loadAppointments = async () => {
     try {
-      const response = await getPatientAppointments();
+      const response = await getPatientAppointments(1, PAGE_SIZE);
 
       setAppointments(response.data || []);
+      setHasNextPage(response.meta?.hasNextPage || false);
+      setPage(1);
     } catch (error) {
       console.log(error);
     }
   };
+
+  /* Append the next page when the user scrolls near the bottom. */
+  const loadMore = async () => {
+    if (loadingMore || !hasNextPage) return;
+
+    setLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const response = await getPatientAppointments(nextPage, PAGE_SIZE);
+
+      setAppointments((prev) => [...prev, ...(response.data || [])]);
+      setHasNextPage(response.meta?.hasNextPage || false);
+      setPage(nextPage);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  /* The appointments list lives inside a ScrollView (below the booking form),
+     so infinite scroll is driven by the ScrollView's scroll position rather
+     than a FlatList onEndReached. */
+  const handleScroll = ({ nativeEvent }) => {
+    const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+    const distanceFromBottom =
+      contentSize.height - (contentOffset.y + layoutMeasurement.height);
+
+    if (distanceFromBottom < 300) {
+      loadMore();
+    }
+  };
+
+  /* PULL-TO-REFRESH — reloads doctors + appointments so admin-side status
+     changes show up without leaving the screen. */
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([loadDoctors(), loadAppointments()]);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
   const handleDoctorChange = (employeeId) => {
     setForm((prev) => ({
@@ -182,7 +238,19 @@ const AppointmentScreen = () => {
     <View style={{ flex: 1 }}>
       <Header title="Appointments" />
 
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        onScroll={handleScroll}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#6B46C1"]}
+            tintColor="#6B46C1"
+          />
+        }
+      >
       <Text style={styles.heading}>Book</Text>
 
       <Text style={styles.headingHighlight}>Appointment</Text>
@@ -304,6 +372,14 @@ const AppointmentScreen = () => {
         renderItem={renderAppointment}
         scrollEnabled={false}
       />
+
+      {loadingMore && (
+        <ActivityIndicator
+          size="small"
+          color="#6B46C1"
+          style={{ marginVertical: 16 }}
+        />
+      )}
 
       </ScrollView>
     </View>

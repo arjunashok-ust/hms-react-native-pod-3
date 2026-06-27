@@ -35,8 +35,10 @@ export const createAppointment = async (data) => {
   return response.data;
 };
 
-export const getPatientAppointments = async () => {
-  const response = await axiosInstance.get("/api/patientApp/getAppointments");
+export const getPatientAppointments = async (page = 1, limit = 10) => {
+  const response = await axiosInstance.get("/api/patientApp/getAppointments", {
+    params: { page, limit },
+  });
 
   return response.data;
 };
@@ -54,8 +56,16 @@ export const getAvailableSlots = async (doctorEmployeeId,date) => {
   return response.data;
 };
 
-export const getMyMedicalRecords = async () => {
-  const response = await axiosInstance.get("/api/patientApp/medicalRecords");
+export const getMyMedicalRecords = async (page = 1, limit = 10) => {
+  const response = await axiosInstance.get("/api/patientApp/medicalRecords", {
+    params: { page, limit },
+  });
+
+  return response.data;
+};
+
+export const logoutPatient = async () => {
+  const response = await axiosInstance.post("/api/patientApp/logout", {});
 
   return response.data;
 };
