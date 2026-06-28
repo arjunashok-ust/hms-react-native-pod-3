@@ -7,12 +7,9 @@ import {
 } from "../storage/authStorage";
 import { Alert } from "react-native";
 import { resetToLogin } from "../navigation/navigationRef";
+import { API_BASE_URL } from "../config/env";
 
-const USE_PHYSICAL_DEVICE = false;
-
-const baseURL = USE_PHYSICAL_DEVICE
-  ? "http://10.11.64.135:5000" // your PC's LAN IP
-  : "http://10.0.2.2:5000";
+const baseURL = API_BASE_URL;
 
 const axiosInstance = axios.create({
   baseURL,
