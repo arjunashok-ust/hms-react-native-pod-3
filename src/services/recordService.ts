@@ -15,7 +15,7 @@ interface PaginatedRecordsResponse {
 export const recordService = {
     getMyRecords: async (
         page = 1,
-        limit = 10,
+        limit = 5,
         filters: Partial<RecordFilters> = {},
     ): Promise<PaginatedRecordsResponse> => {
         const params = new URLSearchParams({

@@ -69,7 +69,7 @@ export default function MedicalRecordsScreen() {
       try {
         const response = await recordService.getMyRecords(
           loadPage,
-          10,
+          5,
           appliedFilters,
         );
         const { data, pagination } = response;
@@ -112,7 +112,7 @@ export default function MedicalRecordsScreen() {
     useCallback(() => {
       // Reset state and fetch the first page
       fetchRecords(1, filters);
-    }, [fetchRecords]), // filters are not included to avoid re-fetching on every keystroke in search
+    }, [fetchRecords]),
   );
 
   useEffect(() => {
@@ -207,8 +207,8 @@ export default function MedicalRecordsScreen() {
             ListHeaderComponent={renderListHeader}
             showsVerticalScrollIndicator={true}
             contentContainerStyle={styles.listContent}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
+            initialNumToRender={5}
+            maxToRenderPerBatch={5}
             windowSize={10}
             removeClippedSubviews={true}
             onEndReached={handleLoadMore}
