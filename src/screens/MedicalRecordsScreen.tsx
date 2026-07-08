@@ -1,3 +1,17 @@
+/**
+ * @file MedicalRecordsScreen.tsx
+ * @overview Screen to view a list of the patient's medical records.
+ * @description This screen fetches and displays a paginated list of the patient's medical records.
+ * It includes pull-to-refresh and infinite scroll (load more) functionalities. It also integrates the
+ * `MedicalRecordFilter` component to allow users to search and filter their records.
+ * @routes This screen is a main tab in the `MainTabNavigator`.
+ * @connections
+ * - On focus/refresh -> `fetchRecords()` -> `recordService.getMyRecords()` -> Fetches paginated records.
+ * - `handleFilterChange` (callback from `MedicalRecordFilter`) -> `fetchRecords(1, newFilters)` -> Re-fetches records with new filter criteria.
+ * - `FlatList` scrolls to end -> `handleLoadMore()` -> `fetchRecords(page + 1, ...)` -> Fetches next page of data.
+ * - Renders `MedicalRecordCard` for each item in the `records` state array.
+ */
+
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,

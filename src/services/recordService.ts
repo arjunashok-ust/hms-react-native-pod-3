@@ -1,3 +1,13 @@
+/**
+ * @file recordService.ts
+ * @overview A service layer for medical record-related API calls.
+ * @description This file abstracts the API endpoints for fetching a patient's medical records,
+ * supporting pagination and filtering.
+ * @connections
+ * - `MedicalRecordsScreen.tsx` -> Calls `recordService.getMyRecords()`.
+ * - `recordService` -> Constructs URL with query parameters -> `apiClient.get` -> Backend records endpoint.
+ */
+
 import apiClient from "./apiClient";
 import { MedicalRecord } from "../features/auth/types";
 import { RecordFilters } from "../components/MedicalRecordFilter";
