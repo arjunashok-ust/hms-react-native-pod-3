@@ -1,79 +1,84 @@
-import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
-export const DoctorCard = (props: any) => {
+const DoctorCardComponent = (props: any) => {
   return (
-    <TouchableOpacity style={styles.doctorContainer}>
-      <LinearGradient
-         colors={["rgba(206, 11, 131, 0.9)", "rgb(255, 0, 68)"]}
+    <TouchableOpacity style={styles.doctorContainer} onPress={props.onPress}>
+      <View
         style={styles.doctorAvatar}
       >
-        <Text style={[styles.text,styles.doctorPrefix]}>{props.prefix}</Text>
-      </LinearGradient>
+        <Text style={[styles.text, styles.doctorPrefix]}>{props.prefix}</Text>
+      </View>
       <View style={styles.doctorDetails}>
-        <Text style={[styles.text,styles.doctorName]}>{props.name}</Text>
-        <Text style={[styles.text,styles.doctorDesignation]}>{props.designation}</Text>
+        <Text style={[styles.text, styles.doctorName]}>{props.name}</Text>
+        <Text style={[styles.text, styles.doctorDesignation]}>
+          {props.designation}
+        </Text>
       </View>
       <View style={styles.doctorFooter}>
-        <Text style={[styles.text,styles.doctorDepartment]}>{props.department}</Text>
+        <Text style={[styles.text, styles.doctorSpecialization]}>
+          {props.specialization}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 };
 
+export const DoctorCard = React.memo(DoctorCardComponent);
+
 const styles = StyleSheet.create({
   doctorContainer: {
-    height: 100,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    borderWidth:1,
-    borderColor:"rgba(229, 57, 255, 0.2)",
+    backgroundColor: "rgb(236, 236, 236)",
     borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
     padding: 20,
-    marginTop:10,
+    marginTop: 10,
+    marginRight:10,
   },
   doctorAvatar: {
-    flex: 1,
-    borderRadius: 8,
+    height: 50,
+    width: 50,
+    backgroundColor: "#4c1c77",
     justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
-    padding:8,
+    borderRadius:100,
+    elevation:3,
   },
   text: {
-    fontFamily: 'Sans',
+    fontFamily: "Sans",
   },
   doctorPrefix: {
-    fontSize: 13,
+    fontSize: 18,
+    lineHeight: 18,
     color: "white",
   },
   doctorDetails: {
-    flex: 4,
-    marginHorizontal: 10,
+    flexDirection: "column",
+    justifyContent: "center",
   },
   doctorName: {
-    color: "white",
+    color: "#545454",
     fontSize: 16,
     lineHeight: 28,
   },
   doctorDesignation: {
-    color: "white",
+    color: "#a6a6a6",
     fontSize: 12,
     lineHeight: 12,
   },
   doctorFooter: {
-    flex: 2,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    width: "100%",
+    backgroundColor: "rgba(170, 170, 170, 0.2)",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
     padding: 10,
-    elevation: 8,
   },
-  doctorDepartment: {
+  doctorSpecialization: {
     fontSize: 12,
     lineHeight: 12,
-    color: "white",
+    color: "#8e8e8e",
+    textAlign: "center",
   },
 });

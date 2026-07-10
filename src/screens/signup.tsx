@@ -7,7 +7,6 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
@@ -21,6 +20,19 @@ import { signUp } from "../services/auth.service";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
+import Toast from "react-native-toast-message";
+
+import {
+  validateName,
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validatePhone,
+  validateDob,
+  validateRequired,
+  maxDobLimit,
+  minDobLimit,
+} from "../utils/validators";
 
 export default function SignUpScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -33,10 +45,13 @@ export default function SignUpScreen() {
   const [dob, setDob] = useState(new Date());
   const [isDobSet, setIsDobSet] = useState(false);
   const [address, setAddress] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
+  const [allergies, setAllergies] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
-  const [status, setStatus] = useState("Pending");
+  const [status, setStatus] = useState("Active");
 
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -45,15 +60,10 @@ export default function SignUpScreen() {
     phone: "",
     gender: "",
     address: "",
+    bloodGroup: "",
     dob: "",
     emergencyContact: "",
   });
-
-  const [isFormValid, setIsFormValid] = useState(false);
-
-  const nameRegex = /^[a-z ]*$/i;
-  const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
-  const phoneRegex = /^\d*$/;
 
   const onDateChange = (event: DateTimePickerEvent, selectedDob?: any) => {
     setShow(false);
@@ -61,85 +71,30 @@ export default function SignUpScreen() {
     if (selectedDob) setDob(selectedDob);
   };
 
-  const validateName = (name: string) => {
-    if (!name) return "Name is required.";
-    if (!nameRegex.test(name)) return "Only characters are allowed.";
-    if (name.length < 2) return "Minimum 2 characters are required.";
-    return "";
-  };
-
-  const validateEmail = (email: string) => {
-    if (!email) return "Email is required";
-    if (!emailRegex.test(email)) return "Email is invalid";
-    return "";
-  };
-
-  const validatePassword = (password: string) => {
-    if (!password) return "Password is required.";
-    if (password.length < 8) return "Minimum 8 characters are required.";
-    return "";
-  };
-
-  const validateConfirmPassword = (confirmPassword: string) => {
-    if (!confirmPassword) return "Confirm Password is required.";
-    if (password != confirmPassword) return "Passwords doesnt match.";
-    return "";
-  };
-
-  const validatePhone = (value: string, isConfirmPhone: boolean) => {
-    if (isConfirmPhone && !value) return "";
-    if (!value) return "Phone is required.";
-    if (!phoneRegex.test(value)) return "Only digits are allowed.";
-    if (value.length > 10) return "Maximum 10 digits are allowed.";
-    if (value.length < 10) return "Please enter a valid 10 digit number.";
-    if (value === phone && isConfirmPhone)
-      return "Emergency contact must be different from the primary contact number.";
-    return "";
-  };
-
-  const validateDob = (dob: any) => {
-    let inputDate = new Date(dob);
-    let today = new Date();
-
-    today.setHours(0, 0, 0, 0);
-    inputDate.setHours(0, 0, 0, 0);
-
-    // initially dob is set to Date()
-    if (inputDate.getTime() === today.getTime()) return "DOB is required";
-
-    if (inputDate > today) return "Future date are not allowed.";
-    return "";
-  };
-
-  const validateRequired = (value: string, fieldName: string) => {
-    if (!value) return `${fieldName} is required.`;
-    return "";
-  };
-
   const validateSignUp = () => {
     let newErrors = {
       name: validateName(name),
       email: validateEmail(email),
       password: validatePassword(password),
-      confirmPassword: validateConfirmPassword(confirmPassword),
-      phone: validatePhone(phone, false),
+      confirmPassword: validateConfirmPassword(confirmPassword, password),
+      phone: validatePhone(phone),
       gender: validateRequired(gender, "Gender"),
       address: validateRequired(address, "Address"),
+      bloodGroup: validateRequired(bloodGroup, "Blood group"),
       dob: validateDob(dob),
-      emergencyContact: validatePhone(emergencyContact, true),
+      emergencyContact: validatePhone(phone, emergencyContact),
     };
 
     setErrors(newErrors);
-    // check for no errors
+
     const isValid = Object.values(newErrors).every((error) => error === "");
-    setIsFormValid(isValid);
     return isValid;
   };
 
-  const sendSignUp = () => {
+  const sendSignUp = async () => {
     const validForm = validateSignUp();
     if (validForm) {
-      setStatus("Pending");
+      setStatus("Active");
       const payload: SignUpRequestModel = {
         name: name,
         email: email,
@@ -149,18 +104,33 @@ export default function SignUpScreen() {
         phone: phone,
         gender: gender,
         address: address,
+        bloodGroup: bloodGroup,
+        allergies: allergies,
         dob: dob,
         emergencyContact: emergencyContact,
       };
-      // api call to server
-      signUp(payload);
-      Alert.alert("Success", "Account created sucessfully.");
-      navigator.navigate("login");
+
+      try {
+        setIsLoading(true);
+        await signUp(payload);
+
+        Toast.show({
+          type: "success",
+          text1: "Success.",
+          text2: "Account created successfully.",
+        });
+        navigator.navigate("login");
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      Alert.alert(
-        "Validation failed.",
-        "Please check your input and try again.",
-      );
+      Toast.show({
+        type: "error",
+        text1: "Validation failed.",
+        text2: "Please check your input and try again.",
+      });
     }
   };
 
@@ -227,11 +197,15 @@ export default function SignUpScreen() {
                   if (value != "") setGender(value);
                 }}
                 style={styles.picker}
-                dropdownIconColor="white"
+                dropdownIconColor="#828282"
               >
-                <Picker.Item label="Gender" value="" />
-                <Picker.Item label="Male" value="Male" />
-                <Picker.Item label="Female" value="Female" />
+                <Picker.Item label="Gender" value="" style={styles.picker} />
+                <Picker.Item label="Male" value="Male" style={styles.picker} />
+                <Picker.Item
+                  label="Female"
+                  value="Female"
+                  style={styles.picker}
+                />
               </Picker>
             </View>
             {!!errors.gender && (
@@ -241,6 +215,41 @@ export default function SignUpScreen() {
               innerText="Address"
               getData={(value: string) => setAddress(value)}
               iconName="location-outline"
+            />
+            {!!errors.address && (
+              <Text style={styles.errorText}>{errors.address}</Text>
+            )}
+            <View style={styles.dropdownHolder}>
+              <Picker
+                selectedValue={bloodGroup}
+                onValueChange={(value) => {
+                  if (value != "") setBloodGroup(value);
+                }}
+                style={styles.picker}
+                dropdownIconColor="#828282"
+              >
+                <Picker.Item
+                  label="Blood Group"
+                  value=""
+                  style={styles.picker}
+                />
+                <Picker.Item label="A+" value="A+" style={styles.picker} />
+                <Picker.Item label="A-" value="A-" style={styles.picker} />
+                <Picker.Item label="B+" value="B+" style={styles.picker} />
+                <Picker.Item label="B-" value="B-" style={styles.picker} />
+                <Picker.Item label="AB+" value="AB+" style={styles.picker} />
+                <Picker.Item label="AB-" value="AB-" style={styles.picker} />
+                <Picker.Item label="O+" value="O+" style={styles.picker} />
+                <Picker.Item label="O-" value="O-" style={styles.picker} />
+              </Picker>
+            </View>
+            {!!errors.gender && (
+              <Text style={styles.errorText}>{errors.bloodGroup}</Text>
+            )}
+            <AuthInputText
+              innerText="Allergies"
+              getData={(value: string) => setAllergies(value)}
+              iconName="medkit-outline"
             />
             {!!errors.address && (
               <Text style={styles.errorText}>{errors.address}</Text>
@@ -256,6 +265,8 @@ export default function SignUpScreen() {
                 <DateTimePicker
                   value={dob}
                   mode="date"
+                  minimumDate={minDobLimit()}
+                  maximumDate={maxDobLimit()}
                   onChange={onDateChange}
                 />
               )}
@@ -269,7 +280,10 @@ export default function SignUpScreen() {
             {!!errors.emergencyContact && (
               <Text style={styles.errorText}>{errors.emergencyContact}</Text>
             )}
-            <AuthSubmitButton titleText="Signup" onSubmit={sendSignUp} />
+            <AuthSubmitButton
+              titleText={isLoading ? "Signing In..." : "Signup"}
+              onSubmit={sendSignUp}
+            />
             <TouchableOpacity
               style={styles.signUpFooter}
               onPress={() => navigator.navigate("login")}
@@ -277,7 +291,10 @@ export default function SignUpScreen() {
               <Text style={styles.signUpFooterText}>
                 Already have an account?
               </Text>
-              <Text style={[styles.signUpFooterText, styles.login]}> Login</Text>
+              <Text style={[styles.signUpFooterText, styles.login]}>
+                {" "}
+                Login
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -292,8 +309,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgb(0,0,0,0.7)",
     justifyContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 
   welcomeTextContainer: {
@@ -315,7 +332,7 @@ const styles = StyleSheet.create({
   loginTextMain: {
     fontSize: 48,
     lineHeight: 48,
-    color: "rgb(255, 107, 107)",
+    color: "#4c1c77",
   },
   loginTextSub: {
     fontSize: 12,
@@ -326,40 +343,44 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   container: {
-    flex: 1,
-    backgroundColor: "rgba(238, 238, 238, 0.9)",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingTop: 40,
-    alignItems: "center",
+    height: "60%",
+    backgroundColor: "#f2f2f2",
+    borderRadius: 30,
+    margin: 20,
+    paddingVertical: 40,
+    elevation: 5,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#ef2121",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#cd1717",
     borderRadius: 4,
+    marginTop: 5,
     paddingHorizontal: 10,
   },
   dropdownHolder: {
-    borderBottomWidth: 2,
-    borderColor: "black",
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    borderColor: "rgba(0,0,0,0.2)",
+    borderWidth: 1,
     width: "80%",
     height: 50,
     marginVertical: 10,
-    borderRadius: 2,
   },
   picker: {
-    color: "black",
+    color: "#828282",
     fontFamily: "Sans",
-    marginTop: -12,
+    fontSize: 14,
   },
   dobText: {
     fontFamily: "Sans",
-    fontSize: 16,
-    color: "black",
-    paddingHorizontal: 12,
+    fontSize: 12,
+    color: "#828282",
+    paddingHorizontal: 10,
+    marginTop: 10,
   },
   signUpFooter: {
     marginTop: 40,
@@ -372,6 +393,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   login: {
-    color: "rgb(255, 107, 107)",
+    color: "#4c1c77",
   },
 });

@@ -39,3 +39,10 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# sonar qube configs
+sonar-project.properties
+.scannerwork/
+
+# environment variables
+.env

@@ -6,24 +6,42 @@ export const ProfileCard = (props: any) => {
   return (
     <LinearGradient
       style={styles.profileHeader}
-      colors={["rgba(20, 4, 30,0.8)", "rgba(106, 27, 34, 0.6)"]}
+      colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
     >
       <LinearGradient
         style={styles.avatar}
-        colors={["rgb(207, 75, 255)", "rgb(255, 27, 110)"]}
+        colors={["rgba(146, 39, 213, 0.9)", "rgb(79, 62, 67)"]}
       >
         <Text style={[styles.text, styles.textPrefix]}>{props.prefix}</Text>
       </LinearGradient>
       <View style={styles.doctorDetails}>
-        <Text style={[styles.text, styles.doctorText]}>{props.name}</Text>
-        <Text style={[styles.text, styles.designationText]}>{props.designation}</Text>
+        <Text
+          style={[styles.text, styles.doctorText]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.name}
+        </Text>
+        <Text
+          style={[styles.text, styles.designationText]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.designation}
+        </Text>
         <View style={styles.empIdBadge}>
           <Ionicons
             name="id-card-outline"
             size={17}
             color="rgba(255,255,255,0.5)"
           ></Ionicons>
-          <Text style={[styles.empIdText, styles.text]}>{props.id}</Text>
+          <Text
+            style={[styles.empIdText, styles.text]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {props.id}
+          </Text>
         </View>
       </View>
     </LinearGradient>

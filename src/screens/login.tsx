@@ -3,7 +3,6 @@ import { useState } from "react";
 import { LoginRequestModel } from "../types/auth.types";
 import { login } from "../services/auth.service";
 import {
-  Alert,
   View,
   Text,
   StyleSheet,
@@ -16,41 +15,37 @@ import { WelcomeTextContainer } from "../components/auth/welcome-text-container"
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "../types/navigation.types";
+import Toast from "react-native-toast-message";
 
 export default function LoginScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email, password });
-  const [isFormValid, setFormStatus] = useState<boolean>(false);
+
+  const emailRegex = /^[a-z0-9_.]+@[a-z0-9]+\.[a-z]{2,}$/i;
+
+  const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
-    let error = { email: "", password: "" };
-    const emailRegex = /^[a-z0-9._]+@[a-z]+\.[a-z]{2,}$/i;
+    let error = { emailError: "", passwordError: "" };
 
     if (!email) {
-      error.email = "Email is required.";
+      error.emailError = "Email is required.";
     } else if (!emailRegex.test(email)) {
-      error.email = "Email is invalid.";
+      error.emailError = "Email is invalid.";
     }
 
     if (!password) {
-      error.password = "Password is required";
+      error.passwordError = "Password is required"; // NOSONAR
     } else if (password.length < 8) {
-      error.password = "Minimum 8 characters required";
+      error.passwordError = "Minimum 8 characters required"; // NOSONAR
     }
 
-    if(!error.email && !error.password){
-      setFormStatus(true);
-      return true;
-    }
-    else{
-      return false;
-      setFormStatus(false);
-    }
-  
     setErrors(error);
+
+    return !error.emailError && !error.passwordError;
   };
 
   const sendLogin = async () => {
@@ -59,20 +54,32 @@ export default function LoginScreen() {
       const payload: LoginRequestModel = {
         email: email,
         password: password,
+        isClientApp: true,
       };
 
-      const isValid = await login(payload);
+      try {
+        setIsLoading(true);
+        await login(payload);
+        Toast.show({
+          type: "success",
+          text1: "Success.",
+          text2: "Login Sucessfull",
+        });
 
-      setTimeout(() => {
-        if (isValid) {
-          Alert.alert("Success", "Login Sucessfull");
-          navigator.replace("tabs");
-        } else {
-          Alert.alert("Failed", "Invalid Credentials");
-        }
-      },500);
+        navigator.replace("tabs", {
+          screen: "home",
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      Alert.alert("Server error during login");
+      Toast.show({
+        type: "error",
+        text1: "Validation Failed",
+        text2: "Please check the input fields",
+      });
     }
   };
 
@@ -93,8 +100,8 @@ export default function LoginScreen() {
             }}
             iconName="mail-outline"
           />
-          {!!errors.email && (
-            <Text style={styles.errorText}>{errors.email}</Text>
+          {!!errors.emailError && (
+            <Text style={styles.errorText}>{errors.emailError}</Text>
           )}
           <AuthInputText
             innerText="Password"
@@ -104,10 +111,13 @@ export default function LoginScreen() {
             isPassword={true}
             iconName="key-outline"
           />
-          {!!errors.password && (
-            <Text style={styles.errorText}>{errors.password}</Text>
+          {!!errors.passwordError && (
+            <Text style={styles.errorText}>{errors.passwordError}</Text>
           )}
-          <AuthSubmitButton titleText="Login" onSubmit={sendLogin} />
+          <AuthSubmitButton
+            titleText={isLoading ? "Logging In..." : "Login"}
+            onSubmit={sendLogin}
+          />
           <TouchableOpacity
             style={styles.loginFooter}
             onPress={() => navigator.navigate("signup")}
@@ -124,11 +134,12 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    backgroundColor: "#e1e1e1",
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgb(0,0,0,0.7)",
     justifyContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 
   welcomeTextContainer: {
@@ -141,20 +152,21 @@ const styles = StyleSheet.create({
   },
   container: {
     height: "50%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingTop: 40,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 30,
+    margin: 20,
     justifyContent: "center",
     alignItems: "center",
+    elevation: 5,
   },
   errorText: {
-    color: "rgb(255, 107, 107)",
+    color: "#ef2121",
     fontSize: 13,
     width: "80%",
     borderLeftWidth: 4,
-    borderColor: "white",
+    borderColor: "#cd1717",
     borderRadius: 4,
+    marginTop: 5,
     paddingHorizontal: 10,
   },
   loginFooter: {
@@ -167,6 +179,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signUp: {
-    color: "rgb(255, 107, 107)",
+    color: "#4c1c77",
   },
 });
