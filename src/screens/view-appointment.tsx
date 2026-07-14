@@ -21,6 +21,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FormHeader } from "../components/appointment/form-header.component";
 import SearchBox from "../components/home/search-box.component";
 
+const PRIMARY_COLOR = "rgb(108, 19, 109)";
+
 export default function ViewAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
   const [appointments, setAppointments] = useState<AppointmentModel[]>([]);
@@ -80,10 +82,10 @@ export default function ViewAppointmentScreen() {
       );
 
       setPage(currentPage);
-      setIsLoading(false);
     } catch (err) {
-      setIsLoading(false);
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -136,7 +138,7 @@ export default function ViewAppointmentScreen() {
             onEndReachedThreshold={0.3}
             ListFooterComponent={
               isLoading ? (
-                <ActivityIndicator size="small" color="rgb(108, 19, 109)" />
+                <ActivityIndicator size="small" color={PRIMARY_COLOR} />
               ) : null
             }
           ></FlatList>
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
   },
   formHeaderIcon: {
     padding: 15,
-    backgroundColor: "rgb(108, 19, 109)",
+    backgroundColor: PRIMARY_COLOR,
     borderRadius: 100,
   },
   formHeaderTextHolder: {
