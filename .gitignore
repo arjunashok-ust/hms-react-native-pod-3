@@ -46,3 +46,12 @@ sonar-project.properties
 
 # environment variables
 .env
+
+
+
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
+.nx/polygraph
+.claude/worktrees
+.claude/settings.local.json
