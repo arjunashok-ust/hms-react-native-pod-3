@@ -40,7 +40,20 @@ yarn-error.*
 /ios
 /android
 
+# sonar qube configs
+sonar-project.properties
+.scannerwork/
 
-# plan 
-migration-plan.md 
+# environment variables
+.env
+
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
+.nx/polygraph
+.claude/worktrees
+.claude/settings.local.json
+
+# plan
+migration-plan.md
 migration-rn.md
