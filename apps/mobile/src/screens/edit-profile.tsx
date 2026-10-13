@@ -6,24 +6,22 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { Picker } from "@react-native-picker/picker";
-import { useEffect, useState } from "react";
-import {
-  getPatientProfile,
-  updatePatientProfile,
-} from "@hms/data-access";
-import { PatientModel } from "@hms/models";
+import { createElement, useEffect, useState } from "react";
+import { useStoredEmail } from "@hms/data-access";
+import { PatientProfile, trpc } from "@hms/trpc-client";
+import { Gender } from "@hms/models";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 
 import {
@@ -35,7 +33,7 @@ import {
   maxDobLimit,
   minDobLimit,
   validateAddress,
-} from "@hms/shared-ui";
+} from "@hms/shared-util";
 
 
 
@@ -50,7 +48,6 @@ export default function EditProfileScreen() {
   const [emergencyContact, setEmergencyContact] = useState("");
 
   const [isShow, setIsShow] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [errors, setErrors] = useState({
     name: "",
@@ -64,36 +61,43 @@ export default function EditProfileScreen() {
 
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
+  const utils = trpc.useUtils();
+  const storedEmail = useStoredEmail();
+
+  const { data: profile } = trpc.user.getPatientProfile.useQuery(
+    { email: storedEmail ?? "" },
+    { enabled: !!storedEmail },
+  );
+
+  const updateProfileMutation = trpc.user.updatePatientProfile.useMutation({
+    onSuccess: async () => {
+      await utils.user.getPatientProfile.invalidate();
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Patient profile updated successfully",
+      });
+      navigator.navigate("tabs", {
+        screen: "profile",
+      });
+    },
+  });
+
+  // Seed the form once the profile arrives.
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (profile) populateForm(profile);
+  }, [profile]);
 
-  const fetchData = async () => {
-    try {
-      const email = await AsyncStorage.getItem("email");
-      const data = await getPatientProfile(email ?? "");
-      setData(data);
-    } catch (err) {
-      console.error(err);
-    }
+  const populateForm = (data: PatientProfile) => {
+    setPatientId(data.uhid);
+    setName(data.name);
+    setGender(data.gender ?? "");
+    setDob(data.dob ? new Date(data.dob) : new Date());
+    setEmail(data.email);
+    setAddress(data.address ?? "");
+    setPhone(data.phone ?? "");
+    setEmergencyContact(data.emergencyContact ?? "");
   };
-
-  const setData = async (data: PatientModel) => {
-    try {
-      const inputDate = new Date(data?.dob ?? "");
-      setPatientId(data?.uhid ?? "");
-      setName(data?.name ?? "");
-      setGender(data?.gender ?? "");
-      setDob(inputDate);
-      setEmail(data?.email ?? "");
-      setAddress(data?.address ?? "");
-      setPhone(data?.phone ?? "");
-      setEmergencyContact(data?.emergencyContact ?? "Emergency Contact");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
 
   const goToProfile = () => {
     navigator.navigate("tabs", {
@@ -105,6 +109,9 @@ export default function EditProfileScreen() {
     setDob(date);
     setIsShow(false);
   };
+
+  // The native picker is unavailable on web, so web uses an HTML date input.
+  const toInputDate = (d: Date) => d.toISOString().split("T")[0];
 
   const validateUpdateProfile = () => {
     let newErrors = {
@@ -123,41 +130,24 @@ export default function EditProfileScreen() {
     return valid;
   };
 
-  const updateProfile = async () => {
-    const isValid = validateUpdateProfile();
-
-    if (!isValid)
-      return Toast.show({
+  const updateProfile = () => {
+    if (!validateUpdateProfile()) {
+      Toast.show({
         type: "error",
         text1: "Validation Failed",
         text2: "Please check the input fields",
       });
-
-    const payload = {
-      patientId: patientId,
-      name: name,
-      gender: gender,
-      dob: dob,
-      address: address,
-      emergencyContact: emergencyContact,
-    };
-
-    try {
-      setIsLoading(true);
-      await updatePatientProfile(payload);
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "Patient profile updated successfully",
-      });
-      navigator.navigate("tabs", {
-        screen: "profile",
-      });
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
+      return;
     }
+
+    updateProfileMutation.mutate({
+      patientId,
+      name,
+      gender: gender as Gender,
+      dob,
+      address,
+      emergencyContact,
+    });
   };
 
   return (
@@ -236,30 +226,53 @@ export default function EditProfileScreen() {
               </Text>
             )}
             <Text style={[styles.text, styles.placeholderText]}>DOB</Text>
-            <TouchableOpacity
-              onPress={() => {
-                setIsShow(true);
-              }}
-              style={styles.dateHolder}
-            >
-              <View style={styles.dateHeader}>
-                <Ionicons
-                  name="alarm-outline"
-                  size={22}
-                  color={"#cfcfcf"}
-                  style={styles.dateIcon}
-                />
-                <Text style={[styles.dateTitle, styles.text]}>
-                  {dob ? dob?.toDateString() : "DOB"}
-                </Text>
+            {Platform.OS === "web" ? (
+              <View style={styles.dateHolder}>
+                {createElement("input", {
+                  type: "date",
+                  value: toInputDate(dob),
+                  min: toInputDate(minDobLimit()),
+                  max: toInputDate(maxDobLimit()),
+                  onChange: (e: any) => {
+                    if (e.target.value) onDateChange(new Date(e.target.value));
+                  },
+                  style: {
+                    flex: 1,
+                    border: "none",
+                    background: "transparent",
+                    fontSize: 16,
+                    fontFamily: "inherit",
+                    outline: "none",
+                    marginLeft: 13,
+                  },
+                })}
               </View>
-              <Ionicons
-                name="chevron-down-outline"
-                size={15}
-                color={"black"}
-                style={{ marginRight: 13 }}
-              />
-            </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  setIsShow(true);
+                }}
+                style={styles.dateHolder}
+              >
+                <View style={styles.dateHeader}>
+                  <Ionicons
+                    name="alarm-outline"
+                    size={22}
+                    color={"#cfcfcf"}
+                    style={styles.dateIcon}
+                  />
+                  <Text style={[styles.dateTitle, styles.text]}>
+                    {dob ? dob?.toDateString() : "DOB"}
+                  </Text>
+                </View>
+                <Ionicons
+                  name="chevron-down-outline"
+                  size={15}
+                  color={"black"}
+                  style={{ marginRight: 13 }}
+                />
+              </TouchableOpacity>
+            )}
             {!!errors.dob && (
               <Text style={[styles.text, styles.errorText]}>{errors.dob}</Text>
             )}
@@ -322,7 +335,7 @@ export default function EditProfileScreen() {
               </Text>
             )}
             <ProfileButton
-              title={isLoading ? "UPDATING..." : "UPDATE PROFILE"}
+              title={updateProfileMutation.isPending ? "UPDATING..." : "UPDATE PROFILE"}
               iconName="arrow-back-outline"
               onAction={updateProfile}
             />

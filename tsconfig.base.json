@@ -18,6 +18,9 @@
       ],
       "@hms/feature-medical-records": [
         "./libs/features/medical-records/src/index.ts"
+      ],
+      "@hms/trpc-client": [
+        "./libs/trpc-client/src/index.ts"
       ]
     }
   }

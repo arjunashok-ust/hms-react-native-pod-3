@@ -10,22 +10,25 @@ import {
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { FormHeader } from "@hms/shared-ui";
-import { useCallback, useEffect, useState, memo } from "react";
+import { useCallback, useMemo, useState, memo } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { MedicalRecordModel } from "@hms/models";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getMedicalRecords } from "@hms/data-access";
+import { MedicalRecord } from "@hms/trpc-client";
+import { useStoredPatientId } from "@hms/data-access";
+import { useMedicalRecords } from "./use-medical-records";
 
-const formatDate = (iso: string) => new Date(iso).toDateString();
+type DateInput = Date | string | null | undefined;
 
-const formatDateTime = (iso: string) => {
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
+const formatDate = (value: DateInput) =>
+  value ? new Date(value).toDateString() : "—";
+
+const formatDateTime = (value: DateInput) =>
+  value
+    ? new Date(value).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "—";
 
 const ClinicalRow = ({
   icon,
@@ -34,7 +37,7 @@ const ClinicalRow = ({
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
-  value?: string;
+  value?: string | null;
 }) => (
   <View style={styles.clinicalRow}>
     <View style={styles.clinicalLabelRow}>
@@ -45,7 +48,7 @@ const ClinicalRow = ({
   </View>
 );
 
-const RecordDetails = ({ record }: { record: MedicalRecordModel }) => (
+const RecordDetails = ({ record }: { record: MedicalRecord }) => (
   <View>
     <View style={styles.divider} />
     <View style={styles.metaRow}>
@@ -66,7 +69,7 @@ const RecordDetails = ({ record }: { record: MedicalRecordModel }) => (
           style={styles.appointmentIcon}
         />
         <Text style={[styles.text, styles.footerText]}>
-          {formatDate(record.created_at.toString())}
+          {formatDate(record.created_at)}
         </Text>
       </View>
     </View>
@@ -201,7 +204,7 @@ const RecordDetails = ({ record }: { record: MedicalRecordModel }) => (
               <Text style={styles.pillBlue}>{obs.metricValue}</Text>
             </View>
             <Text style={[styles.text, styles.tableCell, { flex: 2 }]}>
-              {formatDateTime(obs.recordedTime.toString())}
+              {formatDateTime(obs.recordedTime)}
             </Text>
           </View>
         ))}
@@ -242,7 +245,7 @@ const MedicalRecordCardComponent = ({
   isExpanded,
   onToggle,
 }: {
-  record: MedicalRecordModel;
+  record: MedicalRecord;
   isExpanded: boolean;
   onToggle: () => void;
 }) => (
@@ -255,7 +258,7 @@ const MedicalRecordCardComponent = ({
       <View style={styles.appointmentIconAndText}>
         <View style={styles.avatarIcon}>
           <Text style={[styles.avatarText, styles.text]}>
-            {record.diagnosis.slice(0, 2).toUpperCase()}
+            {(record.diagnosis ?? "").slice(0, 2).toUpperCase()}
           </Text>
         </View>
         <View style={styles.appointmentTextHolder}>
@@ -271,7 +274,7 @@ const MedicalRecordCardComponent = ({
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {formatDate(record.created_at.toString())}
+            {formatDate(record.created_at)}
           </Text>
         </View>
       </View>
@@ -299,35 +302,25 @@ const MedicalRecordCard = memo(MedicalRecordCardComponent);
 export function ViewMedicalRecordScreen() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const [records, setRecords] = useState<MedicalRecordModel[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const patientId = useStoredPatientId();
+  const { data, isFetching, hasNextPage, fetchNextPage } =
+    useMedicalRecords(patientId);
 
-  useEffect(() => {
-    fetchMedicalRecords();
-  }, []);
+  const records = useMemo(
+    () => data?.pages.flatMap((page) => page.data) ?? [],
+    [data],
+  );
 
-  const fetchMedicalRecords = async () => {
-    if (loading || page > totalPages) return;
-
-    setLoading(true);
-
-    const patientId = await AsyncStorage.getItem("patientId");
-    const response = await getMedicalRecords(page, patientId ?? "");
-
-    setRecords((prev) => [...prev, ...response.data.data]);
-    setTotalPages(response.data.totalPages);
-    setPage((prev) => prev + 1);
-
-    setLoading(false);
+  const loadMore = () => {
+    if (isFetching || !hasNextPage) return;
+    fetchNextPage();
   };
 
   const handleToggle = useCallback((id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
   }, []);
 
-  const renderItem: ListRenderItem<MedicalRecordModel> = useCallback(
+  const renderItem: ListRenderItem<MedicalRecord> = useCallback(
     ({ item }) => (
       <MedicalRecordCard
         record={item}
@@ -349,7 +342,7 @@ export function ViewMedicalRecordScreen() {
         />
         <View style={styles.container}>
           <FormHeader title="HISTORY" value="Your Medical Records" />
-          {records.length === 0 && (
+          {records.length === 0 && !isFetching && (
             <Text style={[styles.noRecordsText, styles.text]}>
               No records found.
             </Text>
@@ -361,10 +354,10 @@ export function ViewMedicalRecordScreen() {
             initialNumToRender={3}
             maxToRenderPerBatch={5}
             windowSize={5}
-            onEndReached={fetchMedicalRecords}
+            onEndReached={loadMore}
             onEndReachedThreshold={0.5}
             ListFooterComponent={
-              loading ? (
+              isFetching ? (
                 <Text style={{ textAlign: "center" }}>Loading...</Text>
               ) : null
             }

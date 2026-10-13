@@ -1,7 +1,7 @@
 const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import { useState } from "react";
-import { LoginRequestModel } from "@hms/models";
-import { login } from "@hms/data-access";
+import { trpc, tokenStorage, TOKEN_KEY } from "@hms/trpc-client";
+import { clearSession, saveSession } from "@hms/data-access";
 import {
   View,
   Text,
@@ -28,6 +28,9 @@ export default function LoginScreen() {
   const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
   const [isLoading, setIsLoading] = useState(false);
 
+  const utils = trpc.useUtils();
+  const loginMutation = trpc.auth.login.useMutation();
+
   const validateForm = () => {
     let error = { emailError: "", passwordError: "" };
 
@@ -49,37 +52,45 @@ export default function LoginScreen() {
   };
 
   const sendLogin = async () => {
-    const valid = validateForm();
-    if (valid) {
-      const payload: LoginRequestModel = {
-        email: email,
-        password: password,
-        isClientApp: true,
-      };
-
-      try {
-        setIsLoading(true);
-        await login(payload);
-        Toast.show({
-          type: "success",
-          text1: "Success.",
-          text2: "Login Sucessfull",
-        });
-
-        navigator.replace("tabs", {
-          screen: "home",
-        });
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
+    if (!validateForm()) {
       Toast.show({
         type: "error",
         text1: "Validation Failed",
         text2: "Please check the input fields",
       });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const { token, email: userEmail } = await loginMutation.mutateAsync({
+        email,
+        password,
+        isClientApp: true,
+      });
+
+      // the patient lookup below authenticates from stored token
+      await tokenStorage.setItem(TOKEN_KEY, token);
+      const { patientId } = await utils.user.getPatientId.fetch({
+        email: userEmail,
+      });
+      await saveSession({ token, email: userEmail, patientId });
+
+      Toast.show({
+        type: "success",
+        text1: "Success.",
+        text2: "Login Sucessfull",
+      });
+
+      navigator.replace("tabs", {
+        screen: "home",
+      });
+    } catch {
+      // never leave a half-initialised session behind (the error is already toasted)
+      await clearSession();
+    } finally {
+      setIsLoading(false);
     }
   };
 

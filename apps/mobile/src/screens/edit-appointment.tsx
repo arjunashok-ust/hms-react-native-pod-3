@@ -1,5 +1,5 @@
 const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
-import { View, ImageBackground, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
@@ -7,10 +7,10 @@ import Toast from "react-native-toast-message";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
-import { editAppointmentData, editAppointmentStatus } from "@hms/data-access";
+import { trpc } from "@hms/trpc-client";
 import { useAppointmentForm } from "../hooks/useAppointmentForm";
+import { useInvalidateAppointments } from "../hooks/useAppointments";
 import { AppointmentFormBody } from "../components/appointment/appointment-form-body-component";
-import React from "react";
 
 export default function EditAppointmentScreen() {
   const route = useRoute<RouteProp<NavigationModel, "editAppointment">>();
@@ -18,53 +18,53 @@ export default function EditAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
   const {
-    doctors, isShow, setIsShow, isDateSet, isLoading, setIsLoading,
+    doctors, isShow, setIsShow, isDateSet,
     patientId, doctorId, date, availableSlots, timeSlot, setTimeSlot, errors,
     onDateChange, setDoctor, validateAppointment, showValidationError,
     maxDateLimit, goToAppointments,
   } = useAppointmentForm({ initialAppointment: appointment });
 
-  const [isCancelLoading, setIsCancelLoading] = React.useState(false);
+  const utils = trpc.useUtils();
+  const invalidateAppointments = useInvalidateAppointments();
 
-  const cancelAppointment = async () => {
-    try {
-      setIsCancelLoading(true);
-      const response = await editAppointmentStatus({
-        appointmentId: appointment.appointmentId,
-        status: "Cancelled",
-      });
-      Alert.alert("Success", response?.data?.message);
-      navigator.navigate("viewAppointment");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsCancelLoading(false);
-    }
+  const onMutationSuccess = async (message: string) => {
+    Toast.show({ type: "success", text1: "Success", text2: message });
+    // slots free up or get taken, and the list shows the new state
+    await Promise.all([
+      utils.user.getAvailableTimeSlots.invalidate(),
+      invalidateAppointments(),
+    ]);
+    navigator.navigate("viewAppointment");
   };
 
-  const editAppointment = async () => {
+  const editAppointment = trpc.appointment.editAppointment.useMutation({
+    onSuccess: ({ message }) => onMutationSuccess(message),
+  });
+
+  const cancelAppointment = trpc.appointment.editAppointmentStatus.useMutation({
+    onSuccess: ({ message }) => onMutationSuccess(message),
+  });
+
+  const saveAppointment = () => {
     if (!validateAppointment()) {
       showValidationError();
       return;
     }
-    try {
-      setIsLoading(true);
-      const response = await editAppointmentData({
-        appointmentId: appointment.appointmentId,
-        patientId,
-        doctorEmployeeId: doctorId,
-        timeSlot,
-        date,
-        status: "Pending",
-      });
-      Toast.show({ type: "success", text1: "Success", text2: response?.data?.message });
-      navigator.navigate("viewAppointment");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+    editAppointment.mutate({
+      appointmentId: appointment.appointmentId,
+      patientId,
+      doctorEmployeeId: doctorId,
+      timeSlot,
+      date,
+      status: "Pending",
+    });
   };
+
+  const cancel = () =>
+    cancelAppointment.mutate({
+      appointmentId: appointment.appointmentId,
+      status: "Cancelled",
+    });
 
   return (
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
@@ -82,21 +82,21 @@ export default function EditAppointmentScreen() {
             isDateSet={isDateSet}
             setIsShow={setIsShow}
             doctors={doctors}
-            doctorId={appointment.doctorEmployeeId}
+            doctorId={doctorId}
             setDoctor={setDoctor}
             availableSlots={availableSlots}
             timeSlot={timeSlot}
             setTimeSlot={setTimeSlot}
             errors={errors}
-            primaryLabel={isLoading ? "SAVING..." : "SAVE"}
-            onPrimaryAction={editAppointment}
+            primaryLabel={editAppointment.isPending ? "SAVING..." : "SAVE"}
+            onPrimaryAction={saveAppointment}
           />
         </ScrollView>
 
         <ProfileButton
-          title={isCancelLoading ? "CANCELING..." : "CANCEL APPOINTMENT"}
+          title={cancelAppointment.isPending ? "CANCELING..." : "CANCEL APPOINTMENT"}
           iconName="close-outline"
-          onAction={cancelAppointment}
+          onAction={cancel}
         />
         <ProfileButton title="VIEW APPOINTMENTS" iconName="eye-outline" onAction={goToAppointments} />
 

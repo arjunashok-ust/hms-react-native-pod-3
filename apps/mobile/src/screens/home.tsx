@@ -9,36 +9,47 @@ import {
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { DoctorCard } from "../components/home/doctor-card.component";
-import { useCallback, useEffect, useState } from "react";
-import { UserModel } from "@hms/models";
-import { getDoctors } from "@hms/data-access";
+import { useCallback, useMemo, useState } from "react";
+import { Doctor, Specialization, trpc } from "@hms/trpc-client";
 import SearchBox from "../components/home/search-box.component";
 import SelectHolder from "../components/home/select-holder.component";
-import { getSpecializations } from "@hms/data-access";
-import { SpecializationModel } from "@hms/models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationModel } from "@hms/models";
 
+const NO_DOCTORS: Doctor[] = [];
+const NO_SPECIALIZATIONS: Specialization[] = [];
+
+const normalize = (text: string) => text.toLowerCase().trim();
+
 export default function HomeScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
-  const [doctors, setDoctors] = useState<UserModel[]>([]);
-  const [filteredDoctors, setFilteredDoctors] = useState<UserModel[]>([]);
+  const { data: doctors = NO_DOCTORS } = trpc.appointment.getDoctors.useQuery();
+  const { data: specializations = NO_SPECIALIZATIONS } =
+    trpc.ui.getSpecializations.useQuery();
 
-  const [specializations, setSpecializations] = useState<SpecializationModel[]>(
-    [],
-  );
-
+  // Free-text search and the specialization chips share one filter, last input wins.
+  const [filterText, setFilterText] = useState("");
   const [selectedSpecialization, setSelectedSpecialization] = useState("");
 
-  const renderItem: ListRenderItem<UserModel> = useCallback(
+  const filteredDoctors = useMemo(() => {
+    const query = normalize(filterText);
+    if (!query) return doctors;
+    return doctors.filter(
+      (doctor) =>
+        normalize(doctor.name).includes(query) ||
+        normalize(doctor.specialization ?? "").includes(query),
+    );
+  }, [doctors, filterText]);
+
+  const renderItem: ListRenderItem<Doctor> = useCallback(
     ({ item }) => (
       <DoctorCard
         prefix={item.name.slice(0, 2).toUpperCase()}
         name={item.name}
-        designation={item.designation}
-        specialization={item.specialization}
+        designation={item.designation ?? ""}
+        specialization={item.specialization ?? ""}
         onPress={() => {
           navigator.navigate("tabs", {
             screen: "appointment",
@@ -52,7 +63,7 @@ export default function HomeScreen() {
     [],
   );
 
-  const renderSpecialization: ListRenderItem<SpecializationModel> = useCallback(
+  const renderSpecialization: ListRenderItem<Specialization> = useCallback(
     ({ item }) => (
       <SelectHolder
         name={item.specialization_name}
@@ -62,49 +73,13 @@ export default function HomeScreen() {
               ? ""
               : item.specialization_name;
           setSelectedSpecialization(newValue);
-          filterData(newValue);
+          setFilterText(newValue);
         }}
         isSelected={selectedSpecialization === item.specialization_name}
       />
     ),
     [selectedSpecialization],
   );
-
-  useEffect(() => {
-    fetchDoctors();
-    fetchSpecializations();
-  }, []);
-
-  const fetchDoctors = async () => {
-    const data = await getDoctors();
-    setDoctors(data);
-    setFilteredDoctors(data);
-  };
-
-  const fetchSpecializations = async () => {
-    const data = await getSpecializations();
-    setSpecializations(data);
-  };
-
-  const filterData = async (value: string) => {
-    if (!normalize(value)) {
-      setFilteredDoctors(doctors);
-      return;
-    }
-
-    const data = doctors.filter((doctor) => {
-      const doctor_search = normalize(doctor.name).includes(normalize(value));
-      const specialization_search = normalize(doctor.specialization).includes(
-        normalize(value),
-      );
-      return doctor_search || specialization_search;
-    });
-    setFilteredDoctors(data);
-  };
-
-  const normalize = (text: string) => {
-    return text.toLowerCase().trim();
-  };
 
   return (
     <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
@@ -117,7 +92,7 @@ export default function HomeScreen() {
         />
         <SearchBox
           placeholder="Search Doctor or Specialization"
-          onChangeText={filterData}
+          onChangeText={setFilterText}
         />
         <View style={styles.container}>
           <View style={styles.contentHolder}>
@@ -127,7 +102,7 @@ export default function HomeScreen() {
             <FlatList
               key="3-columns"
               data={specializations}
-              keyExtractor={(item) => item.specialization_id.toString()}
+              keyExtractor={(item) => item._id}
               renderItem={renderSpecialization}
               numColumns={3}
             ></FlatList>

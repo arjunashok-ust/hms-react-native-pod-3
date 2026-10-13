@@ -1,10 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { View, StyleSheet } from "react-native";
-import { UserModel } from "@hms/models";
+import { Doctor } from "@hms/trpc-client";
 
 type DoctorHolderProps = Readonly<{
-  doctors: UserModel[];
+  doctors: Doctor[];
   selectedDoctor: string;
   setDoctor: (value: string) => void;
 }>;
@@ -29,10 +29,10 @@ export default function DoctorHolder({
         selectedValue={selectedDoctor}
       >
         <Picker.Item label="Doctor" value=""/>
-        {doctors.map((doctor: UserModel) => (
+        {doctors.map((doctor) => (
           <Picker.Item
             key={doctor.employeeCode}
-            label={`${doctor.name} (${doctor.specialization})`}
+            label={`${doctor.name} (${doctor.specialization ?? ""})`}
             value={doctor.employeeCode}
           />
         ))}

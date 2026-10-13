@@ -1,8 +1,5 @@
-// exporting all the services
+// Session storage (token, email, patientId) and the hooks that read it.
+// All API calls go through @hms/trpc-client.
 
-export * from  "./lib/appointment.service";
-export * from  "./lib/auth.service";
-export * from  "./lib/interceptor.service";
-export * from  "./lib/medical-record.service";
-export * from  "./lib/ui.service";
-export * from  "./lib/user.service";
+export * from "./lib/session.service";
+export * from "./lib/session.hooks";

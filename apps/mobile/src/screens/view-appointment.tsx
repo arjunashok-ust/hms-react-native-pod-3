@@ -10,37 +10,37 @@ import {
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { AppointmentCard } from "../components/appointment/appointment-card.component";
-import { useCallback, useEffect, useState } from "react";
-import { AppointmentModel } from "@hms/models";
+import { useCallback, useMemo, useState } from "react";
+import { AppointmentItem } from "@hms/trpc-client";
+import { useStoredPatientId } from "@hms/data-access";
 import ProfileButton from "../components/profile/profile-button.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
-import { getAppointmentsByPatientId } from "@hms/data-access";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FormHeader } from "@hms/shared-ui";
 import SearchBox from "../components/home/search-box.component";
+import { useAppointments } from "../hooks/useAppointments";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 export default function ViewAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
-  const [appointments, setAppointments] = useState<AppointmentModel[]>([]);
-  const [page, setPage] = useState(1);
-  const [limit] = useState(5);
-  const [totalPages, setTotalPages] = useState(1);
+  const patientId = useStoredPatientId();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState("");
+  const debouncedSearchText = useDebouncedValue(searchText);
 
-  const renderItem: ListRenderItem<AppointmentModel> = useCallback(
-    ({ item }) => (
-      <AppointmentCard
-        doctorEmployeeId={item.doctorEmployeeId}
-        status={item.status}
-        date={item.date}
-        timeSlot={item.timeSlot}
-        appointmentId={item.appointmentId}
-        onAppointmentChange={fetchAppointments}
-      />
-    ),
+  const { data, isFetching, hasNextPage, fetchNextPage } = useAppointments(
+    patientId,
+    debouncedSearchText,
+  );
+
+  const appointments = useMemo(
+    () => data?.pages.flatMap((page) => page.data) ?? [],
+    [data],
+  );
+
+  const renderItem: ListRenderItem<AppointmentItem> = useCallback(
+    ({ item }) => <AppointmentCard appointment={item} />,
     [],
   );
 
@@ -51,51 +51,9 @@ export default function ViewAppointmentScreen() {
     });
   };
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
-
-  const fetchAppointments = async (isLoadMore = false, searchText?: string) => {
-    try {
-      const patientId = await AsyncStorage.getItem("patientId");
-      const currentPage = isLoadMore ? page + 1 : page;
-
-      if (isLoadMore && currentPage > totalPages) return;
-      if (isLoading) return;
-
-      setIsLoading(true);
-
-      const response = await getAppointmentsByPatientId(
-        patientId ?? "",
-        searchText ?? "",
-        currentPage,
-        limit,
-      );
-
-      setTotalPages(response.data.totalPages);
-      setAppointments((prev) =>
-        isLoadMore
-          ? [...prev, ...(response.data.data as AppointmentModel[])]
-          : (response.data.data as AppointmentModel[]),
-      );
-
-      setPage(currentPage);
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      console.error(err);
-    }
-  };
-
   const onPageEnd = () => {
-    if (isLoading || page >= totalPages) return;
-    fetchAppointments(true);
-  };
-
-  const onSearch = (text: string) => {
-    setPage(1);
-    setAppointments([]);
-    fetchAppointments(false, text);
+    if (isFetching || !hasNextPage) return;
+    fetchNextPage();
   };
 
   return (
@@ -114,12 +72,12 @@ export default function ViewAppointmentScreen() {
           onAction={goToHome}
         />
 
-        <SearchBox placeholder="Search appointment" onChangeText={onSearch} />
+        <SearchBox placeholder="Search appointment" onChangeText={setSearchText} />
 
         <View style={styles.container}>
           <FormHeader title="SCHEDULE" value="Your Appointments" />
 
-          {appointments.length === 0 && (
+          {appointments.length === 0 && !isFetching && (
             <Text style={[styles.noAppointmentsText, styles.text]}>
               No appointments scheduled.
             </Text>
@@ -135,7 +93,7 @@ export default function ViewAppointmentScreen() {
             onEndReached={onPageEnd}
             onEndReachedThreshold={0.3}
             ListFooterComponent={
-              isLoading ? (
+              isFetching ? (
                 <ActivityIndicator size="small" color="rgb(108, 19, 109)" />
               ) : null
             }
