@@ -1,0 +1,24 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hms/models": [
+        "./libs/models/src/index.ts"
+      ],
+      "@hms/data-access": [
+        "./libs/data-access/src/index.ts"
+      ],
+      "@hms/shared-util": [
+        "./libs/shared/utils/src/index.ts"
+      ],
+      "@hms/shared-ui": [
+        "./libs/shared/ui/src/index.ts"
+      ],
+      "@hms/feature-medical-records": [
+        "./libs/features/medical-records/src/index.ts"
+      ]
+    }
+  }
+}
