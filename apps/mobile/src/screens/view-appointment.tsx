@@ -1,4 +1,4 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import {
   ImageBackground,
   View,
@@ -8,7 +8,7 @@ import {
   ListRenderItem,
   ActivityIndicator,
 } from "react-native";
-import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
+import { WelcomeTextContainer } from "@hms/shared-ui";
 import { AppointmentCard } from "../components/appointment/appointment-card.component";
 import { useCallback, useEffect, useState } from "react";
 import { AppointmentModel } from "@hms/models";
@@ -18,7 +18,7 @@ import { NavigationModel } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
 import { getAppointmentsByPatientId } from "@hms/data-access";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FormHeader } from "../components/appointment/form-header.component";
+import { FormHeader } from "@hms/shared-ui";
 import SearchBox from "../components/home/search-box.component";
 
 export default function ViewAppointmentScreen() {

@@ -1,4 +1,4 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import {
   Text,
   View,
@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
+import { WelcomeTextContainer } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
 import { SectionDivider } from "../components/profile/section-divider.component";
@@ -35,7 +35,7 @@ import {
   maxDobLimit,
   minDobLimit,
   validateAddress,
-} from "@hms/shared-util";
+} from "@hms/shared-ui";
 
 
 

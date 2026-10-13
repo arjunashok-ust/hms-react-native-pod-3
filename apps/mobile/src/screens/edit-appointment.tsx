@@ -1,6 +1,6 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import { View, ImageBackground, StyleSheet, ScrollView, Alert } from "react-native";
-import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
+import { WelcomeTextContainer } from "@hms/shared-ui";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import Toast from "react-native-toast-message";

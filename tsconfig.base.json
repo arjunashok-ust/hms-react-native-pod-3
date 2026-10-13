@@ -12,6 +12,12 @@
       ],
       "@hms/shared-util": [
         "./libs/shared/utils/src/index.ts"
+      ],
+      "@hms/shared-ui": [
+        "./libs/shared/ui/src/index.ts"
+      ],
+      "@hms/feature-medical-records": [
+        "./libs/features/medical-records/src/index.ts"
       ]
     }
   }

@@ -1,4 +1,4 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import { useState } from "react";
 import {
   View,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
-import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
+import { WelcomeTextContainer } from "@hms/shared-ui";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -32,7 +32,7 @@ import {
   validateRequired,
   maxDobLimit,
   minDobLimit,
-} from "@hms/shared-util";
+} from "@hms/shared-ui";
 
 export default function SignUpScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();

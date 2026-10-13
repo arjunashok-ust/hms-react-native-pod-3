@@ -1,4 +1,4 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import {
   ImageBackground,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   ListRenderItem,
   FlatList,
 } from "react-native";
-import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
+import { WelcomeTextContainer } from "@hms/shared-ui";
 import { DoctorCard } from "../components/home/doctor-card.component";
 import { useCallback, useEffect, useState } from "react";
 import { UserModel } from "@hms/models";

@@ -5,7 +5,7 @@ import { DateHolder } from "./date-holder.component";
 import DoctorHolder from "./doctor-holder.component";
 import TimeSlotComponent from "./time-slot.component";
 import ProfileButton from "../profile/profile-button.component";
-import { FormHeader } from "./form-header.component";
+import { FormHeader } from "@hms/shared-ui";
 import { UserModel } from "@hms/models";
 import { AppointmentFormErrors } from "../../hooks/useAppointmentForm";
 

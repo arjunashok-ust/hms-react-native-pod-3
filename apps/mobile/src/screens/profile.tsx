@@ -1,4 +1,4 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
 import {
   StyleSheet,
   View,

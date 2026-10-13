@@ -1,4 +1,4 @@
-const BgImage = require("../../assets/img/cover.jpg");
+const BgImage = require("../../../../../../../libs/shared/ui/assets/img/cover.jpg");
 import {
   ImageBackground,
   View,
@@ -8,8 +8,8 @@ import {
   ListRenderItem,
   TouchableOpacity,
 } from "react-native";
-import { WelcomeTextContainer } from "../components/auth/welcome-text-container";
-import { FormHeader } from "../components/appointment/form-header.component";
+import { WelcomeTextContainer } from "@hms/shared-ui";
+import { FormHeader } from "@hms/shared-ui";
 import { useCallback, useEffect, useState, memo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MedicalRecordModel } from "@hms/models";
@@ -296,7 +296,7 @@ const MedicalRecordCardComponent = ({
 
 const MedicalRecordCard = memo(MedicalRecordCardComponent);
 
-export default function ViewMedicalRecordScreen() {
+export function ViewMedicalRecordScreen() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const [records, setRecords] = useState<MedicalRecordModel[]>([]);
