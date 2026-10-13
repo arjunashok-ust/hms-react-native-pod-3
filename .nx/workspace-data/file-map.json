@@ -1,0 +1,1151 @@
+{
+  "version": "6.0",
+  "nxVersion": "23.2.1",
+  "pathMappings": {
+    "@hms/models": [
+      "./libs/models/src/index.ts"
+    ],
+    "@hms/data-access": [
+      "./libs/data-access/src/index.ts"
+    ],
+    "@hms/shared-util": [
+      "./libs/shared/utils/src/index.ts"
+    ],
+    "@hms/shared-ui": [
+      "./libs/shared/ui/src/index.ts"
+    ],
+    "@hms/feature-medical-records": [
+      "./libs/features/medical-records/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/expo/plugin",
+      "options": {
+        "startTargetName": "start",
+        "buildTargetName": "build",
+        "prebuildTargetName": "prebuild",
+        "serveTargetName": "serve",
+        "installTargetName": "install",
+        "exportTargetName": "export",
+        "submitTargetName": "submit",
+        "runIosTargetName": "run-ios",
+        "runAndroidTargetName": "run-android",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
+      "name": "@nx/js/typescript",
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        },
+        "build": false
+      }
+    },
+    {
+      "name": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "name": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  "fileMap": {
+    "nonProjectFiles": [],
+    "projectFileMap": {
+      "hms_app": [
+        {
+          "file": ".claude/settings.json",
+          "hash": "17184328634339478725"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "14528075770261013338"
+        },
+        {
+          "file": "CLAUDE.md",
+          "hash": "3693179293707062853"
+        },
+        {
+          "file": "assets/adaptive-icon.png",
+          "hash": "16102135492459408350"
+        },
+        {
+          "file": "assets/favicon.png",
+          "hash": "10556792184362654649"
+        },
+        {
+          "file": "assets/icon.png",
+          "hash": "14252482080276080187"
+        },
+        {
+          "file": "assets/splash-icon.png",
+          "hash": "16102135492459408350"
+        },
+        {
+          "file": "eslint.config.mjs",
+          "hash": "9002143704707986394",
+          "deps": [
+            "npm:@nx/eslint-plugin"
+          ]
+        },
+        {
+          "file": "frontend.md",
+          "hash": "15005365805461362374"
+        },
+        {
+          "file": "index.ts",
+          "hash": "15391975131071635545",
+          "deps": [
+            "npm:expo",
+            "mobile"
+          ]
+        },
+        {
+          "file": "jest.config.ts",
+          "hash": "14236175072743533737",
+          "deps": [
+            "npm:jest",
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "jest.preset.js",
+          "hash": "13737983450217408137",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "metro.config.js",
+          "hash": "8550731250757442881",
+          "deps": [
+            "npm:expo"
+          ]
+        },
+        {
+          "file": "migration-rn.md",
+          "hash": "3067756937441759297"
+        },
+        {
+          "file": "nx.json",
+          "hash": "16328396916797936596"
+        },
+        {
+          "file": "package-lock.json",
+          "hash": "17214281285993353110"
+        },
+        {
+          "file": "package.json",
+          "hash": "17929566397707600578",
+          "deps": [
+            "npm:@eslint/js",
+            "npm:@expo/cli",
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/expo",
+            "npm:@nx/jest",
+            "npm:@nx/js",
+            "npm:@nx/react",
+            "npm:@swc/helpers",
+            "npm:@testing-library/react-native",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:babel-jest",
+            "npm:babel-preset-expo",
+            "npm:eslint",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-import",
+            "npm:eslint-plugin-jsx-a11y",
+            "npm:eslint-plugin-react",
+            "npm:eslint-plugin-react-hooks",
+            "npm:jest",
+            "npm:jest-environment-jsdom",
+            "npm:jest-environment-node",
+            "npm:jest-expo",
+            "npm:jest-util",
+            "npm:jsonc-eslint-parser",
+            "npm:metro-config",
+            "npm:metro-resolver",
+            "npm:nx",
+            "npm:react-test-renderer",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
+            "npm:typescript-eslint",
+            "npm:@expo/metro-config",
+            "npm:@expo/metro-runtime",
+            "npm:@expo/vector-icons",
+            "npm:@react-native-async-storage/async-storage",
+            "npm:@react-native-community/datetimepicker",
+            "npm:@react-native-picker/picker",
+            "npm:@react-navigation/bottom-tabs",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:@tanstack/react-query",
+            "npm:@trpc/client",
+            "npm:@trpc/react-query",
+            "npm:@trpc/server",
+            "npm:axios",
+            "npm:expo",
+            "npm:expo-constants",
+            "npm:expo-font",
+            "npm:expo-linear-gradient",
+            "npm:expo-secure-store",
+            "npm:expo-splash-screen",
+            "npm:expo-status-bar",
+            "npm:expo-system-ui",
+            "npm:jwt-decode",
+            "npm:react",
+            "npm:react-dom",
+            "npm:react-native",
+            "npm:react-native-gesture-handler",
+            "npm:react-native-safe-area-context",
+            "npm:react-native-screens",
+            "npm:react-native-svg",
+            "npm:react-native-svg-transformer",
+            "npm:react-native-toast-message",
+            "npm:react-native-web",
+            "npm:tslib",
+            "npm:zod"
+          ]
+        },
+        {
+          "file": "tools/scripts/eas-build-post-install.mjs",
+          "hash": "3303477969536030668"
+        },
+        {
+          "file": "tsconfig.base.json",
+          "hash": "7424687467880116013"
+        },
+        {
+          "file": "tsconfig.json",
+          "hash": "8423900185019299371"
+        }
+      ],
+      "feature-medical-records": [
+        {
+          "file": "libs/features/medical-records/README.md",
+          "hash": "4291419919488708532"
+        },
+        {
+          "file": "libs/features/medical-records/eslint.config.mjs",
+          "hash": "14856556188239126082"
+        },
+        {
+          "file": "libs/features/medical-records/jest.config.cts",
+          "hash": "5521186001115802635"
+        },
+        {
+          "file": "libs/features/medical-records/project.json",
+          "hash": "2043066299020300018"
+        },
+        {
+          "file": "libs/features/medical-records/src/index.ts",
+          "hash": "12560091048215795317"
+        },
+        {
+          "file": "libs/features/medical-records/src/lib/screens/view-medical-record/view-medical-record.tsx",
+          "hash": "8267790577778425360",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:react",
+            "npm:@expo/vector-icons",
+            "models",
+            "npm:@react-native-async-storage/async-storage",
+            "data-access"
+          ]
+        },
+        {
+          "file": "libs/features/medical-records/tsconfig.json",
+          "hash": "9505886339790543345"
+        },
+        {
+          "file": "libs/features/medical-records/tsconfig.lib.json",
+          "hash": "7738733248058862540"
+        },
+        {
+          "file": "libs/features/medical-records/tsconfig.spec.json",
+          "hash": "5293637104839449688"
+        }
+      ],
+      "models": [
+        {
+          "file": "libs/models/README.md",
+          "hash": "493054618624579235"
+        },
+        {
+          "file": "libs/models/eslint.config.mjs",
+          "hash": "1965792974734046140"
+        },
+        {
+          "file": "libs/models/jest.config.cts",
+          "hash": "587635923723931227"
+        },
+        {
+          "file": "libs/models/project.json",
+          "hash": "10464582542208427445"
+        },
+        {
+          "file": "libs/models/src/index.ts",
+          "hash": "11436687209582188320"
+        },
+        {
+          "file": "libs/models/src/lib/appointment.schema.ts",
+          "hash": "15970564112981719833",
+          "deps": [
+            "npm:zod"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/auth.schema.ts",
+          "hash": "4221018185199364123",
+          "deps": [
+            "npm:zod"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/medical-record.schema.ts",
+          "hash": "3971358640081406957",
+          "deps": [
+            "npm:zod"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/navigation.types.ts",
+          "hash": "11123775134509450399",
+          "deps": [
+            "npm:@react-navigation/native"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/ui.schema.ts",
+          "hash": "14524938873130274147",
+          "deps": [
+            "npm:zod"
+          ]
+        },
+        {
+          "file": "libs/models/src/lib/user.schema.ts",
+          "hash": "7871593304203738319",
+          "deps": [
+            "npm:zod"
+          ]
+        },
+        {
+          "file": "libs/models/tsconfig.json",
+          "hash": "5070021987914214887"
+        },
+        {
+          "file": "libs/models/tsconfig.lib.json",
+          "hash": "3269066908872457000"
+        },
+        {
+          "file": "libs/models/tsconfig.spec.json",
+          "hash": "17313960998716361382"
+        }
+      ],
+      "data-access": [
+        {
+          "file": "libs/data-access/README.md",
+          "hash": "5712561892401178510"
+        },
+        {
+          "file": "libs/data-access/eslint.config.mjs",
+          "hash": "1965792974734046140"
+        },
+        {
+          "file": "libs/data-access/jest.config.cts",
+          "hash": "8683077013477860852"
+        },
+        {
+          "file": "libs/data-access/project.json",
+          "hash": "5970509469451152247"
+        },
+        {
+          "file": "libs/data-access/src/index.ts",
+          "hash": "1351977092584513653"
+        },
+        {
+          "file": "libs/data-access/src/lib/appointment.service.ts",
+          "hash": "8402261815542159035"
+        },
+        {
+          "file": "libs/data-access/src/lib/auth.service.ts",
+          "hash": "8702507951652883494",
+          "deps": [
+            "npm:expo-secure-store",
+            "npm:@react-native-async-storage/async-storage",
+            "models"
+          ]
+        },
+        {
+          "file": "libs/data-access/src/lib/interceptor.service.ts",
+          "hash": "2650037333655107927",
+          "deps": [
+            "npm:axios",
+            "npm:expo-secure-store",
+            "npm:react-native",
+            "npm:expo-constants",
+            "npm:jwt-decode"
+          ]
+        },
+        {
+          "file": "libs/data-access/src/lib/medical-record.service.ts",
+          "hash": "8902922609213860206"
+        },
+        {
+          "file": "libs/data-access/src/lib/ui.service.ts",
+          "hash": "2196817559891552629"
+        },
+        {
+          "file": "libs/data-access/src/lib/user.service.ts",
+          "hash": "16959109896928436770"
+        },
+        {
+          "file": "libs/data-access/tsconfig.json",
+          "hash": "5070021987914214887"
+        },
+        {
+          "file": "libs/data-access/tsconfig.lib.json",
+          "hash": "3269066908872457000"
+        },
+        {
+          "file": "libs/data-access/tsconfig.spec.json",
+          "hash": "17313960998716361382"
+        }
+      ],
+      "mobile": [
+        {
+          "file": "apps/mobile/.babelrc.js",
+          "hash": "5102923069046491571"
+        },
+        {
+          "file": "apps/mobile/App.tsx",
+          "hash": "10249364431064317751",
+          "deps": [
+            "npm:expo-font",
+            "npm:react-native-safe-area-context",
+            "npm:react-native",
+            "npm:react-native-toast-message"
+          ]
+        },
+        {
+          "file": "apps/mobile/android/.gitignore",
+          "hash": "4781979786618174016"
+        },
+        {
+          "file": "apps/mobile/android/app/build.gradle",
+          "hash": "17361354098967678898"
+        },
+        {
+          "file": "apps/mobile/android/app/debug.keystore",
+          "hash": "5037686243849261810"
+        },
+        {
+          "file": "apps/mobile/android/app/proguard-rules.pro",
+          "hash": "4481275573118336055"
+        },
+        {
+          "file": "apps/mobile/android/app/src/debug/AndroidManifest.xml",
+          "hash": "1585159791921382059"
+        },
+        {
+          "file": "apps/mobile/android/app/src/debugOptimized/AndroidManifest.xml",
+          "hash": "1585159791921382059"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/AndroidManifest.xml",
+          "hash": "4642323046439789632"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/java/com/anonymous/mobile/MainActivity.kt",
+          "hash": "6154740210329269614"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/java/com/anonymous/mobile/MainApplication.kt",
+          "hash": "8018431916741334263"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable-hdpi/splashscreen_logo.png",
+          "hash": "14898781473274423558"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable-mdpi/splashscreen_logo.png",
+          "hash": "17002036023158336290"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png",
+          "hash": "5784932256673858245"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png",
+          "hash": "1540325237939692582"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png",
+          "hash": "8410304342420418494"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable/ic_launcher_background.xml",
+          "hash": "14022140464391464271"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/drawable/rn_edit_text_material.xml",
+          "hash": "4466596183044014152"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+          "hash": "4058617789617427507"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+          "hash": "4058617789617427507"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.webp",
+          "hash": "3408603684149425512"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp",
+          "hash": "2962373093440029271"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp",
+          "hash": "11089648995589237189"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher.webp",
+          "hash": "63410979047458826"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp",
+          "hash": "666425901372760601"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp",
+          "hash": "10225706712288967755"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp",
+          "hash": "16747336737697830553"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp",
+          "hash": "2791302278633112577"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp",
+          "hash": "1225583749739701939"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp",
+          "hash": "1466545866339299744"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp",
+          "hash": "18325265845016146799"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp",
+          "hash": "5567761440238683120"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp",
+          "hash": "7686908756577964292"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp",
+          "hash": "10235622244998165571"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp",
+          "hash": "14995115231167924809"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/values-night/colors.xml",
+          "hash": "5530507333983355112"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/values/colors.xml",
+          "hash": "16368569479117383245"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/values/strings.xml",
+          "hash": "15964258265823516054"
+        },
+        {
+          "file": "apps/mobile/android/app/src/main/res/values/styles.xml",
+          "hash": "11392698839532041665"
+        },
+        {
+          "file": "apps/mobile/android/build.gradle",
+          "hash": "9610523714574692084"
+        },
+        {
+          "file": "apps/mobile/android/gradle.properties",
+          "hash": "8340627410217576497"
+        },
+        {
+          "file": "apps/mobile/android/gradle/wrapper/gradle-wrapper.jar",
+          "hash": "5961704579857758315"
+        },
+        {
+          "file": "apps/mobile/android/gradle/wrapper/gradle-wrapper.properties",
+          "hash": "926483970941658266"
+        },
+        {
+          "file": "apps/mobile/android/gradlew",
+          "hash": "2514925563185432526"
+        },
+        {
+          "file": "apps/mobile/android/gradlew.bat",
+          "hash": "7267036690545437270"
+        },
+        {
+          "file": "apps/mobile/android/settings.gradle",
+          "hash": "16727938275519962626"
+        },
+        {
+          "file": "apps/mobile/app.json",
+          "hash": "4394350960835713959"
+        },
+        {
+          "file": "apps/mobile/assets/fonts/GoogleSans.ttf",
+          "hash": "7539833616602846273"
+        },
+        {
+          "file": "apps/mobile/assets/images/adaptive-icon.png",
+          "hash": "16102135492459408350"
+        },
+        {
+          "file": "apps/mobile/assets/images/favicon.png",
+          "hash": "10556792184362654649"
+        },
+        {
+          "file": "apps/mobile/assets/images/icon.png",
+          "hash": "14252482080276080187"
+        },
+        {
+          "file": "apps/mobile/assets/images/splash-icon.png",
+          "hash": "16102135492459408350"
+        },
+        {
+          "file": "apps/mobile/assets/img/cover backup.jpg",
+          "hash": "654277984603897215"
+        },
+        {
+          "file": "apps/mobile/babel.config.json",
+          "hash": "13918569489643201829"
+        },
+        {
+          "file": "apps/mobile/eas.json",
+          "hash": "6330161018993400891"
+        },
+        {
+          "file": "apps/mobile/eslint.base.config.mjs",
+          "hash": "9002143704707986394",
+          "deps": [
+            "npm:@nx/eslint-plugin"
+          ]
+        },
+        {
+          "file": "apps/mobile/eslint.config.mjs",
+          "hash": "6404992339276933123",
+          "deps": [
+            "npm:@nx/eslint-plugin"
+          ]
+        },
+        {
+          "file": "apps/mobile/index.js",
+          "hash": "1184010334168630581",
+          "deps": [
+            "npm:expo"
+          ]
+        },
+        {
+          "file": "apps/mobile/jest.config.cts",
+          "hash": "817122142246331321",
+          "deps": [
+            [
+              "npm:jest-expo",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/mobile/metro.config.js",
+          "hash": "8108629579745375001",
+          "deps": [
+            "npm:@nx/expo",
+            "npm:@expo/metro-config",
+            "npm:metro-config",
+            "npm:react-native-svg-transformer"
+          ]
+        },
+        {
+          "file": "apps/mobile/package.json",
+          "hash": "561893725504461974",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:@expo/metro-config",
+            "npm:@react-native-async-storage/async-storage",
+            "npm:@react-native-community/datetimepicker",
+            "npm:@react-native-picker/picker",
+            "npm:@react-navigation/bottom-tabs",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:@testing-library/react-native",
+            "npm:expo",
+            "npm:expo-constants",
+            "npm:expo-linear-gradient",
+            "npm:expo-secure-store",
+            "npm:expo-splash-screen",
+            "npm:expo-status-bar",
+            "npm:expo-system-ui",
+            "npm:jest-expo",
+            "npm:metro-config",
+            "npm:metro-resolver",
+            "npm:react",
+            "npm:react-native",
+            "npm:react-native-gesture-handler",
+            "npm:react-native-safe-area-context",
+            "npm:react-native-screens",
+            "npm:react-native-svg",
+            "npm:react-native-svg-transformer",
+            "npm:react-native-toast-message",
+            "npm:react-native-web"
+          ]
+        },
+        {
+          "file": "apps/mobile/project.json",
+          "hash": "1635971388740467770"
+        },
+        {
+          "file": "apps/mobile/src/app/App.spec.tsx",
+          "hash": "4230139627563221101",
+          "deps": [
+            "npm:react",
+            "npm:@testing-library/react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/app/App.tsx",
+          "hash": "12392059791095959467",
+          "deps": [
+            "npm:react",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:react-native",
+            "models"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/appointment/appointment-card.component.tsx",
+          "hash": "18007841481446917102",
+          "deps": [
+            "npm:react-native",
+            "npm:@expo/vector-icons",
+            "models",
+            "npm:react",
+            "data-access",
+            "npm:@react-navigation/native-stack",
+            "npm:@react-navigation/native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/appointment/appointment-form-body-component.tsx",
+          "hash": "2885720832980153373",
+          "deps": [
+            "npm:react-native",
+            "shared-ui",
+            "models"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/appointment/appointment-input-card.component.tsx",
+          "hash": "15736698749376586651",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/appointment/date-holder.component.tsx",
+          "hash": "7040522030169687405",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/appointment/doctor-holder.component.tsx",
+          "hash": "747788649740248651",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:@react-native-picker/picker",
+            "npm:react-native",
+            "models"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/appointment/time-slot.component.tsx",
+          "hash": "12968896149836521702",
+          "deps": [
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/auth/auth-input-text.tsx",
+          "hash": "9749041809043727932",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/auth/auth-submit-button.tsx",
+          "hash": "4858371632188552984",
+          "deps": [
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/home/doctor-card.component.tsx",
+          "hash": "4063244011600775472",
+          "deps": [
+            "npm:react",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/home/search-box.component.tsx",
+          "hash": "11564361679733073226",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/home/select-holder.component.tsx",
+          "hash": "4382855552187674660",
+          "deps": [
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/home/stat-card.component.tsx",
+          "hash": "17493571786357063469",
+          "deps": [
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/profile/info-card.component.tsx",
+          "hash": "11943879268413830489",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/profile/profile-button.component.tsx",
+          "hash": "368028601352882875",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/profile/profile-card.component.tsx",
+          "hash": "3393498813637313926",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:expo-linear-gradient",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/profile/section-divider.component.tsx",
+          "hash": "7779412635681828532",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/profile/time-slot-holder.tsx",
+          "hash": "404424147748816801",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/hooks/useAppointmentForm.ts",
+          "hash": "10495392308506021742",
+          "deps": [
+            "npm:react",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:@react-native-async-storage/async-storage",
+            "npm:react-native-toast-message",
+            "data-access",
+            "models"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/navigation/AppNavigator.tsx",
+          "hash": "3260190288046061817",
+          "deps": [
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/navigation/TabNavigator.tsx",
+          "hash": "2290207103407171712",
+          "deps": [
+            "npm:@react-navigation/bottom-tabs",
+            "npm:@expo/vector-icons",
+            "feature-medical-records"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/appointment.tsx",
+          "hash": "3494258136577298947",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:@react-native-community/datetimepicker",
+            "npm:react-native-toast-message",
+            "models",
+            "data-access",
+            "npm:@react-navigation/native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/edit-appointment.tsx",
+          "hash": "3538435140708856916",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:@react-native-community/datetimepicker",
+            "npm:react-native-toast-message",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "models",
+            "data-access",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/edit-profile.tsx",
+          "hash": "15285662727755693318",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:@expo/vector-icons",
+            "npm:@react-native-picker/picker",
+            "npm:react",
+            "data-access",
+            "models",
+            "npm:@react-native-community/datetimepicker",
+            "npm:@react-navigation/native-stack",
+            "npm:@react-navigation/native",
+            "npm:@react-native-async-storage/async-storage",
+            "npm:react-native-toast-message"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/home.tsx",
+          "hash": "3614003314157650167",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:react",
+            "models",
+            "data-access",
+            "npm:@react-navigation/native-stack",
+            "npm:@react-navigation/native"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/login.tsx",
+          "hash": "16627968368121011812",
+          "deps": [
+            "shared-ui",
+            "npm:react",
+            "models",
+            "data-access",
+            "npm:react-native",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:react-native-toast-message"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/profile.tsx",
+          "hash": "7233773043315835048",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "data-access",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "models",
+            "npm:react",
+            "npm:@react-native-async-storage/async-storage"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/signup.tsx",
+          "hash": "12270212533187542856",
+          "deps": [
+            "shared-ui",
+            "npm:react",
+            "npm:react-native",
+            "npm:@react-native-picker/picker",
+            "npm:@react-native-community/datetimepicker",
+            "models",
+            "data-access",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:react-native-toast-message"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/screens/view-appointment.tsx",
+          "hash": "9527976982877660028",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:react",
+            "models",
+            "npm:@react-navigation/native-stack",
+            "npm:@react-navigation/native",
+            "data-access",
+            "npm:@react-native-async-storage/async-storage"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/test-setup.ts",
+          "hash": "3379590947864820804"
+        },
+        {
+          "file": "apps/mobile/tsconfig.app.json",
+          "hash": "2968697786543422834"
+        },
+        {
+          "file": "apps/mobile/tsconfig.json",
+          "hash": "7555827017988728897"
+        },
+        {
+          "file": "apps/mobile/tsconfig.spec.json",
+          "hash": "13207781208490614934"
+        }
+      ],
+      "utils": [
+        {
+          "file": "libs/shared/utils/README.md",
+          "hash": "14342862180974447819"
+        },
+        {
+          "file": "libs/shared/utils/eslint.config.mjs",
+          "hash": "14856556188239126082"
+        },
+        {
+          "file": "libs/shared/utils/jest.config.cts",
+          "hash": "12251520988127128191"
+        },
+        {
+          "file": "libs/shared/utils/project.json",
+          "hash": "12209198749366689120"
+        },
+        {
+          "file": "libs/shared/utils/src/index.ts",
+          "hash": "9203006912709042603"
+        },
+        {
+          "file": "libs/shared/utils/src/lib/validators.ts",
+          "hash": "4465968599551409199"
+        },
+        {
+          "file": "libs/shared/utils/tsconfig.json",
+          "hash": "9505886339790543345"
+        },
+        {
+          "file": "libs/shared/utils/tsconfig.lib.json",
+          "hash": "8313728930318913154"
+        },
+        {
+          "file": "libs/shared/utils/tsconfig.spec.json",
+          "hash": "506429930721730329"
+        }
+      ],
+      "shared-ui": [
+        {
+          "file": "libs/shared/ui/README.md",
+          "hash": "1173670062938964454"
+        },
+        {
+          "file": "libs/shared/ui/assets/img/cover.jpg",
+          "hash": "7737710123914626386"
+        },
+        {
+          "file": "libs/shared/ui/eslint.config.mjs",
+          "hash": "14856556188239126082"
+        },
+        {
+          "file": "libs/shared/ui/jest.config.cts",
+          "hash": "16863150161260245185"
+        },
+        {
+          "file": "libs/shared/ui/project.json",
+          "hash": "11474857336960766532"
+        },
+        {
+          "file": "libs/shared/ui/src/index.ts",
+          "hash": "14491046984558449615"
+        },
+        {
+          "file": "libs/shared/ui/src/lib/form-header.component.tsx",
+          "hash": "12656246160034531958",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/src/lib/welcome-text-container.tsx",
+          "hash": "11498661133864176948",
+          "deps": [
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.json",
+          "hash": "9505886339790543345"
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.lib.json",
+          "hash": "7738733248058862540"
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.spec.json",
+          "hash": "17362963146207982380"
+        }
+      ]
+    }
+  },
+  "externalNodesHash": "9709998373158235242"
+}

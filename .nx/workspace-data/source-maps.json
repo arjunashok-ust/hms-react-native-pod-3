@@ -1,0 +1,2896 @@
+{
+  "apps/mobile": {
+    "root": [
+      "apps/mobile/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.start": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.start.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.start.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.options.cwd": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.options.args.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.options.args": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.options.command": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.serve.options": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-ios": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-ios.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-ios.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-ios.options.cwd": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-ios.options.command": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-ios.options": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-android": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-android.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-android.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-android.options.cwd": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-android.options.command": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.run-android.options": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.cache": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.dependsOn.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.dependsOn": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.inputs.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.inputs.1": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.inputs.2": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.inputs": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.outputs.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.outputs": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.options.cwd": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.options.args.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.options.args": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.options.command": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.export.options": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.install": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.install.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.install.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.prebuild": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.prebuild.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.prebuild.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.build": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.build.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.build.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.submit": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.submit.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.submit.options.cwd": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.submit.options.command": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.submit.options": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.build-deps": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.build-deps.dependsOn.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.build-deps.dependsOn": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps.continuous": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps.dependsOn.0": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps.dependsOn": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps.executor": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps.options.command": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.watch-deps.options": [
+      "apps/mobile/app.json",
+      "@nx/expo/plugin"
+    ],
+    "targets.typecheck": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn.0": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.cache": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.0": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.1": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.2": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.3": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.4": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.5": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.6": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.7": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.8": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.9": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.10": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.11": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.12": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.13": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.14": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.15": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.16": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.17": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.18": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.19": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.20": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.21": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.22": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.23": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.24": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.25": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.26": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.27": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.28": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.0": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.1": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.2": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.3": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators.0": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.executor": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.cwd": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.command": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.description": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "apps/mobile/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.lint": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.0": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.1": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.2": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.3": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.4": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.5": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs.0": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "apps/mobile/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.test": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.cache": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.0": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.1": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.2": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.3": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs.0": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.executor": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.cwd": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.env": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.command": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies.0": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.description": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.command": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.example": [
+      "apps/mobile/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.android": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.cache": [
+      "nx.json#targetDefaults.android",
+      "nx/target-defaults"
+    ],
+    "targets.android.executor": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "apps/mobile/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install.executor": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install.metadata": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install.options.script": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install.options": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install.metadata.scriptContent": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.eas-build-post-install.metadata.runCommand": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.metadata": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.options.script": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.options": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.metadata.scriptContent": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.metadata.runCommand": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.executor": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.metadata": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.options.script": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.options": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.metadata.scriptContent": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.metadata.runCommand": [
+      "apps/mobile/package.json",
+      "nx/core/package-json"
+    ],
+    "$schema": [
+      "apps/mobile/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/mobile/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/mobile/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "apps/mobile/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/data-access": {
+    "root": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn.0": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.cache": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.0": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.1": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.2": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.3": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.4": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.5": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.6": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.7": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.8": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.9": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.10": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.11": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.12": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.13": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.14": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.15": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.16": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.17": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.18": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.0": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.1": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.2": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.3": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators.0": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.executor": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.cwd": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.command": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.description": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "libs/data-access/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.lint": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.0": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.1": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.2": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.3": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.4": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.5": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs.0": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "libs/data-access/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.test": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.cache": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.0": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.1": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.2": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.3": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.4": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs.0": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.executor": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.cwd": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.env": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.command": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies.0": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.description": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.command": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.example": [
+      "libs/data-access/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "name": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/data-access/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/features/medical-records": {
+    "root": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn.0": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.cache": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.0": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.1": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.2": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.3": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.4": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.5": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.6": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.7": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.8": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.9": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.10": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.11": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.12": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.13": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.14": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.15": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.16": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.17": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.18": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.19": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.20": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.21": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.0": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.1": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.2": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.3": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators.0": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.executor": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.cwd": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.command": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.description": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "libs/features/medical-records/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.lint": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.0": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.1": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.2": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.3": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.4": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.5": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs.0": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "libs/features/medical-records/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.test": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.cache": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.0": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.1": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.2": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.3": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.4": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs.0": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.executor": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.cwd": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.env": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.command": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies.0": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.description": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.command": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.example": [
+      "libs/features/medical-records/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "name": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/medical-records/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/models": {
+    "root": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn.0": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.cache": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.0": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.1": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.2": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.3": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.4": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.5": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.6": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.7": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.8": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.9": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.10": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.11": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.12": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.13": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.14": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.15": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.16": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.17": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.18": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.0": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.1": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.2": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.3": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators.0": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.executor": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.cwd": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.command": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.description": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "libs/models/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.lint": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.0": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.1": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.2": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.3": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.4": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.5": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs.0": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "libs/models/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.test": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.cache": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.0": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.1": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.2": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.3": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.4": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs.0": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.executor": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.cwd": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.env": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.command": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies.0": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.description": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.command": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.example": [
+      "libs/models/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "name": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/models/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/shared/ui": {
+    "root": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn.0": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.cache": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.0": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.1": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.2": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.3": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.4": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.5": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.6": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.7": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.8": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.9": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.10": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.11": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.12": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.13": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.14": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.15": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.16": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.17": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.18": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.19": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.20": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.21": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.0": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.1": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.2": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.3": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators.0": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.executor": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.cwd": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.command": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.description": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "libs/shared/ui/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.lint": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.0": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.1": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.2": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.3": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.4": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.5": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs.0": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "libs/shared/ui/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.test": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.cache": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.0": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.1": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.2": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.3": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.4": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs.0": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.executor": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.cwd": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.env": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.command": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies.0": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.description": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.command": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.example": [
+      "libs/shared/ui/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "name": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/shared/ui/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/shared/utils": {
+    "root": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn.0": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.dependsOn": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.cache": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.0": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.1": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.2": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.3": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.4": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.5": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.6": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.7": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.8": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.9": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.10": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.11": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.12": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.13": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.14": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.15": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.16": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.17": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs.18": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.inputs": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.0": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.1": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.2": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs.3": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.outputs": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators.0": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.syncGenerators": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.executor": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.cwd": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options.command": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.options": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.description": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "libs/shared/utils/tsconfig.json",
+      "@nx/js/typescript"
+    ],
+    "targets.lint": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.0": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.1": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.2": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.3": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.4": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs.5": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs.0": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "libs/shared/utils/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.test": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.cache": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.0": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.1": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.2": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.3": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs.4": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.inputs": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs.0": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.outputs": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.executor": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.cwd": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.env": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options.command": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.options": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.technologies.0": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.description": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.command": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "targets.test.metadata.help.example": [
+      "libs/shared/utils/jest.config.cts",
+      "@nx/jest/plugin"
+    ],
+    "name": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/shared/utils/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  ".": {
+    "root": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "nx.json#targetDefaults.android",
+      "nx/target-defaults"
+    ],
+    "targets.android": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.cache": [
+      "nx.json#targetDefaults.android",
+      "nx/target-defaults"
+    ],
+    "targets.android.executor": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web.cache": [
+      "nx.json#targetDefaults.web",
+      "nx/target-defaults"
+    ],
+    "targets.web.executor": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.3": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageMain": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.executor": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options.script": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.scriptContent": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.runCommand": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.metadata": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.options.script": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.options": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.metadata.scriptContent": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.android.metadata.runCommand": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.executor": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.metadata": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.options.script": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.options": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.metadata.scriptContent": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.ios.metadata.runCommand": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web.metadata": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web.options.script": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web.options": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web.metadata.scriptContent": [
+      "package.json",
+      "nx/core/package-json"
+    ],
+    "targets.web.metadata.runCommand": [
+      "package.json",
+      "nx/core/package-json"
+    ]
+  }
+}
