@@ -1,4 +1,4 @@
-const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import {
   Text,
   View,
@@ -34,8 +34,6 @@ import {
   minDobLimit,
   validateAddress,
 } from "@hms/shared-util";
-
-
 
 export default function EditProfileScreen() {
   const [patientId, setPatientId] = useState("");
@@ -114,9 +112,9 @@ export default function EditProfileScreen() {
   const toInputDate = (d: Date) => d.toISOString().split("T")[0];
 
   const validateUpdateProfile = () => {
-    let newErrors = {
+    const newErrors = {
       name: validateName(name),
-      gender: validateRequired(gender,"Gender"),
+      gender: validateRequired(gender, "Gender"),
       dob: validateDob(dob),
       email: validateEmail(email),
       address: validateAddress(address),
@@ -151,7 +149,11 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground
+      source={coverImage}
+      resizeMode="cover"
+      style={styles.wrapper}
+    >
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="Edit your,"
@@ -312,7 +314,9 @@ export default function EditProfileScreen() {
               iconName="call-outline"
               title="Phone"
               value={phone}
-              getData={() => {}}
+              getData={() => {
+                /* noop */
+              }}
               isDisabled={true}
             />
             {!!errors.phone && (
@@ -335,7 +339,11 @@ export default function EditProfileScreen() {
               </Text>
             )}
             <ProfileButton
-              title={updateProfileMutation.isPending ? "UPDATING..." : "UPDATE PROFILE"}
+              title={
+                updateProfileMutation.isPending
+                  ? "UPDATING..."
+                  : "UPDATE PROFILE"
+              }
               iconName="arrow-back-outline"
               onAction={updateProfile}
             />

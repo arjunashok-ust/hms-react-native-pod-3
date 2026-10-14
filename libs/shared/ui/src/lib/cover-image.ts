@@ -1,0 +1,1 @@
+export const coverImage = require("../../assets/img/cover.jpg");

@@ -1,4 +1,4 @@
-const BgImage = require("../../../../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import {
   ImageBackground,
   View,
@@ -13,8 +13,8 @@ import { FormHeader } from "@hms/shared-ui";
 import { useCallback, useMemo, useState, memo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MedicalRecord } from "@hms/trpc-client";
-import { useStoredPatientId } from "@hms/data-access";
 import { useMedicalRecords } from "./use-medical-records";
+import {MicroAppProps} from "@hms/models";
 
 type DateInput = Date | string | null | undefined;
 
@@ -299,10 +299,10 @@ const MedicalRecordCardComponent = ({
 
 const MedicalRecordCard = memo(MedicalRecordCardComponent);
 
-export function ViewMedicalRecordScreen() {
+export function ViewMedicalRecord({host} : MicroAppProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const patientId = useStoredPatientId();
+  const patientId = host.patientId;
   const { data, isFetching, hasNextPage, fetchNextPage } =
     useMedicalRecords(patientId);
 
@@ -332,7 +332,7 @@ export function ViewMedicalRecordScreen() {
   );
 
   return (
-    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="View your,"

@@ -10,7 +10,6 @@ import { Doctor } from "@hms/trpc-client";
 import { AppointmentFormErrors } from "../../hooks/useAppointmentForm";
 
 interface AppointmentFormBodyProps {
-
   formTitle: string;
   formSubtitle: string;
 
@@ -28,7 +27,7 @@ interface AppointmentFormBodyProps {
 
   primaryLabel: string;
   onPrimaryAction: () => void;
-  
+
   secondaryLabel?: string;
   secondaryIcon?: string;
   onSecondaryAction?: () => void;
@@ -54,7 +53,6 @@ export function AppointmentFormBody({
   secondaryIcon,
   onSecondaryAction,
 }: Readonly<AppointmentFormBodyProps>) {
-    
   return (
     <View style={styles.container}>
       <FormHeader title={formTitle} value={formSubtitle} />
@@ -63,7 +61,9 @@ export function AppointmentFormBody({
         iconName="card-outline"
         title="PATIENT ID"
         value={patientId}
-        getData={() => {}}
+        getData={() => {
+          /* noop */
+        }}
         isDisabled
       />
 
@@ -78,7 +78,11 @@ export function AppointmentFormBody({
         <View>
           <SectionDivider title="DOCTOR" iconName="heart-outline" />
 
-          <DoctorHolder doctors={doctors} setDoctor={setDoctor} selectedDoctor={doctorId}/>
+          <DoctorHolder
+            doctors={doctors}
+            setDoctor={setDoctor}
+            selectedDoctor={doctorId}
+          />
           {!!errors.doctorEmployeeId && (
             <Text style={[styles.text, styles.errorText]}>
               {errors.doctorEmployeeId}

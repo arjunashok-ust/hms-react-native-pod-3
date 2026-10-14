@@ -1,5 +1,5 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { AppointmentModel } from "@hms/models";
+import { AppointmentModel } from "./appointment.schema";
 
 export type NavigationModel = {
   login: undefined;

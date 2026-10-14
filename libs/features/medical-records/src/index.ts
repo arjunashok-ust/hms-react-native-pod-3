@@ -1,1 +1,1 @@
-export * from "./lib/screens/view-medical-record/view-medical-record";
+export * from "./lib/micro-app";

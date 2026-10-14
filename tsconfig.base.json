@@ -21,6 +21,15 @@
       ],
       "@hms/trpc-client": [
         "./libs/trpc-client/src/index.ts"
+      ],
+      "@hms/feature-appointments": [
+        "./libs/features/appointments/src/index.ts"
+      ],
+      "@hms/feature-authentication": [
+        "./libs/features/authentication/src/index.ts"
+      ],
+      "@hms/feature-profile": [
+        "./libs/features/profile/src/index.ts"
       ]
     }
   }

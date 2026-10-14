@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/home";
 import { Ionicons } from "@expo/vector-icons";
-import ProfileScreen from "../screens/profile";
-import AppointmentScreen from "../screens/appointment";
-import { ViewMedicalRecordScreen } from "@hms/feature-medical-records";
+import ProfileHost from "../microapps/profile";
+import AppointmentHost from "../microapps/appointments";
+import MedicalRecordsHost from "../microapps/medicalrecords";
 
 const Tab = createBottomTabNavigator();
 
@@ -111,7 +111,7 @@ export default function TabNavigator() {
       ></Tab.Screen>
       <Tab.Screen
         name="appointment"
-        component={AppointmentScreen}
+        component={AppointmentHost}
         options={{
           tabBarIcon: AppointmentTabIcon,
           tabBarLabel: "APPOINTMENT",
@@ -119,7 +119,7 @@ export default function TabNavigator() {
       ></Tab.Screen>
       <Tab.Screen
         name="record"
-        component={ViewMedicalRecordScreen}
+        component={MedicalRecordsHost}
         options={{
           tabBarIcon: MedicalRecordTabIcon,
           tabBarLabel: "RECORD",
@@ -127,7 +127,7 @@ export default function TabNavigator() {
       ></Tab.Screen>
       <Tab.Screen
         name="profile"
-        component={ProfileScreen}
+        component={ProfileHost}
         options={{
           tabBarIcon: ProfileTabIcon,
           tabBarLabel: "PROFILE",

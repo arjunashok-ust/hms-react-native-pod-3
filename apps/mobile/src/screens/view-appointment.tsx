@@ -1,4 +1,4 @@
-const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import {
   ImageBackground,
   View,
@@ -57,7 +57,7 @@ export default function ViewAppointmentScreen() {
   };
 
   return (
-    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="View your,"

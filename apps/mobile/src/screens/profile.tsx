@@ -1,4 +1,4 @@
-const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import { StyleSheet, View, ImageBackground, ScrollView } from "react-native";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { InfoCard } from "../components/profile/info-card.component";
@@ -52,7 +52,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ImageBackground source={BgImage} style={styles.wrapper} resizeMode="cover">
+    <ImageBackground source={coverImage} style={styles.wrapper} resizeMode="cover">
       <View style={styles.overlay}>
         <ProfileCard
           prefix={patientData?.name.slice(0, 2).toUpperCase()}

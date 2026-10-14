@@ -1,4 +1,4 @@
-const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import { createElement, useState } from "react";
 import {
   View,
@@ -84,7 +84,7 @@ export default function SignUpScreen() {
   };
 
   const validateSignUp = () => {
-    let newErrors = {
+    const newErrors = {
       name: validateName(name),
       email: validateEmail(email),
       password: validatePassword(password),
@@ -144,7 +144,7 @@ export default function SignUpScreen() {
   };
 
   return (
-    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="New To,"

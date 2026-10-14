@@ -1,4 +1,4 @@
-const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import { View, ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -67,7 +67,7 @@ export default function EditAppointmentScreen() {
     });
 
   return (
-    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
         <WelcomeTextContainer text1="Edit your," text2="APPOINTMENT" text3="here." />
 

@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/features/medical-records/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type:feature"],
   "// targets": "to see all targets run: nx show project feature-medical-records --web",
   "targets": {}
 }

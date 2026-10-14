@@ -7,3 +7,4 @@ export * from "./lib/ui.schema";
 export * from "./lib/user.schema";
 export * from "./lib/navigation.types";
 export * from "./lib/api";
+export * from "./lib/micro-app.types";

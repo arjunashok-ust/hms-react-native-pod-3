@@ -1,4 +1,4 @@
-const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
+import { coverImage } from "@hms/shared-ui";
 import { useState } from "react";
 import { trpc, tokenStorage, TOKEN_KEY } from "@hms/trpc-client";
 import { clearSession, saveSession } from "@hms/data-access";
@@ -32,7 +32,7 @@ export default function LoginScreen() {
   const loginMutation = trpc.auth.login.useMutation();
 
   const validateForm = () => {
-    let error = { emailError: "", passwordError: "" };
+    const error = { emailError: "", passwordError: "" };
 
     if (!email) {
       error.emailError = "Email is required.";
@@ -95,7 +95,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground source={BgImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="Welcome To,"
