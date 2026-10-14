@@ -1,58 +1,50 @@
 const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
-import {
-  StyleSheet,
-  View,
-  ImageBackground,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { StyleSheet, View, ImageBackground, ScrollView } from "react-native";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { InfoCard } from "../components/profile/info-card.component";
 import { ProfileCard } from "../components/profile/profile-card.component";
-import { clearSecureStorage, deleteToken } from "@hms/data-access";
+import { clearSession, useStoredEmail } from "@hms/data-access";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
-import { useEffect, useState } from "react";
-import { PatientModel } from "@hms/models";
-import { getPatientProfile } from "@hms/data-access";
+import { useQueryClient } from "@tanstack/react-query";
+import { trpc } from "@hms/trpc-client";
 import ProfileButton from "../components/profile/profile-button.component";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const formatDate = (date?: Date | string | null) => {
+  if (!date) return "";
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return parsed.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
 
 export default function ProfileScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
-  const [patientData, setPatientData] = useState<PatientModel>();
+  const queryClient = useQueryClient();
+  const email = useStoredEmail();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { data: patientData } = trpc.user.getPatientProfile.useQuery(
+    { email: email ?? "" },
+    { enabled: !!email },
+  );
 
+  const logoutMutation = trpc.auth.logout.useMutation();
+
+  // Local session is cleared even if the server call fails (the failure is already toasted).
   const logout = async () => {
-    await deleteToken();
-    await clearSecureStorage();
-    navigator.replace("login");
-  };
-
-  const fetchData = async () => {
     try {
-      const email = await AsyncStorage.getItem("email");
-      const data = await getPatientProfile(email ?? "");
-      setPatientData(data);
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Failed", "Error fetching profile data");
+      await logoutMutation.mutateAsync();
+    } catch {
+      // handled by the global mutation error handler
+    } finally {
+      await clearSession();
+      queryClient.clear();
+      navigator.replace("login");
     }
-  };
-
-  const formatDate = (date: string) => {
-    const inputDate = new Date(date);
-    if (!inputDate) return "";
-    const formattedDate = new Date(inputDate).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-    return formattedDate;
   };
 
   const goToEditProfile = () => {
@@ -81,18 +73,18 @@ export default function ProfileScreen() {
             <InfoCard
               iconName="male-outline"
               title="GENDER"
-              value={patientData?.gender}
+              value={patientData?.gender ?? ""}
             />
             <InfoCard
               iconName="calendar-outline"
               title="DOB"
-              value={formatDate(patientData?.dob || "")}
+              value={formatDate(patientData?.dob)}
             />
             <SectionDivider iconName="call-outline" title="CONTACT INFO" />
             <InfoCard
               iconName="call-outline"
               title="PHONE"
-              value={patientData?.phone}
+              value={patientData?.phone ?? ""}
             />
             <InfoCard
               iconName="mail-outline"
@@ -102,7 +94,7 @@ export default function ProfileScreen() {
             <InfoCard
               iconName="location-outline"
               title="ADDRESS"
-              value={patientData?.address}
+              value={patientData?.address ?? ""}
             />
             <InfoCard
               iconName="alert-circle-outline"

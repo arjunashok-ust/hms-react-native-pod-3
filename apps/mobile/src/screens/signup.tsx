@@ -1,5 +1,5 @@
 const BgImage = require("../../../../libs/shared/ui/assets/img/cover.jpg");
-import { useState } from "react";
+import { createElement, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
@@ -15,12 +16,12 @@ import { Picker } from "@react-native-picker/picker";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { SignUpRequestModel } from "@hms/models";
-import { signUp } from "@hms/data-access";
+import { BLOOD_GROUPS, GENDERS } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
 import Toast from "react-native-toast-message";
+import { trpc } from "@hms/trpc-client";
 
 import {
   validateName,
@@ -32,7 +33,7 @@ import {
   validateRequired,
   maxDobLimit,
   minDobLimit,
-} from "@hms/shared-ui";
+} from "@hms/shared-util";
 
 export default function SignUpScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
@@ -65,10 +66,21 @@ export default function SignUpScreen() {
     emergencyContact: "",
   });
 
+  const signUpMutation = trpc.auth.patientSignUp.useMutation();
+
   const onDateChange = (event: DateTimePickerEvent, selectedDob?: any) => {
     setShow(false);
     setIsDobSet(true);
     if (selectedDob) setDob(selectedDob);
+  };
+
+  // The native picker is unavailable on web, so web uses an HTML date input.
+  const toInputDate = (d: Date) => d.toISOString().split("T")[0];
+
+  const onWebDateChange = (value: string) => {
+    if (!value) return;
+    setDob(new Date(value));
+    setIsDobSet(true);
   };
 
   const validateSignUp = () => {
@@ -94,25 +106,22 @@ export default function SignUpScreen() {
   const sendSignUp = async () => {
     const validForm = validateSignUp();
     if (validForm) {
-      setStatus("Active");
-      const payload: SignUpRequestModel = {
-        name: name,
-        email: email,
-        role: "Patient",
-        status: status,
-        password: password,
-        phone: phone,
-        gender: gender,
-        address: address,
-        bloodGroup: bloodGroup,
-        allergies: allergies,
-        dob: dob,
-        emergencyContact: emergencyContact,
-      };
-
       try {
         setIsLoading(true);
-        await signUp(payload);
+
+        await signUpMutation.mutateAsync({
+          name,
+          email,
+          status: "Active",
+          password,
+          phone,
+          gender: gender as (typeof GENDERS)[number],
+          address,
+          bloodGroup: bloodGroup as (typeof BLOOD_GROUPS)[number],
+          allergies,
+          dob,
+          emergencyContact,
+        });
 
         Toast.show({
           type: "success",
@@ -254,23 +263,43 @@ export default function SignUpScreen() {
             {!!errors.address && (
               <Text style={styles.errorText}>{errors.address}</Text>
             )}
-            <TouchableOpacity
-              onPress={() => setShow(true)}
-              style={styles.dropdownHolder}
-            >
-              <Text style={styles.dobText}>
-                {isDobSet ? dob.toDateString() : "DOB"}
-              </Text>
-              {show && (
-                <DateTimePicker
-                  value={dob}
-                  mode="date"
-                  minimumDate={minDobLimit()}
-                  maximumDate={maxDobLimit()}
-                  onChange={onDateChange}
-                />
-              )}
-            </TouchableOpacity>
+            {Platform.OS === "web" ? (
+              <View style={styles.dropdownHolder}>
+                {createElement("input", {
+                  type: "date",
+                  value: isDobSet ? toInputDate(dob) : "",
+                  min: toInputDate(minDobLimit()),
+                  max: toInputDate(maxDobLimit()),
+                  onChange: (e: any) => onWebDateChange(e.target.value),
+                  style: {
+                    flex: 1,
+                    border: "none",
+                    background: "transparent",
+                    fontSize: 16,
+                    fontFamily: "inherit",
+                    outline: "none",
+                  },
+                })}
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => setShow(true)}
+                style={styles.dropdownHolder}
+              >
+                <Text style={styles.dobText}>
+                  {isDobSet ? dob.toDateString() : "DOB"}
+                </Text>
+                {show && (
+                  <DateTimePicker
+                    value={dob}
+                    mode="date"
+                    minimumDate={minDobLimit()}
+                    maximumDate={maxDobLimit()}
+                    onChange={onDateChange}
+                  />
+                )}
+              </TouchableOpacity>
+            )}
             {!!errors.dob && <Text style={styles.errorText}>{errors.dob}</Text>}
             <AuthInputText
               innerText="Emergency Contact"

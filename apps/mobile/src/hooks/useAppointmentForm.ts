@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 
-import { getAvailableTimeSlots, getDoctors } from "@hms/data-access";
-import { UserModel } from "@hms/models";
-import { NavigationModel } from "@hms/models";
-import { AppointmentModel } from "@hms/models";
+import { useStoredPatientId } from "@hms/data-access";
+import { Doctor, trpc } from "@hms/trpc-client";
+import { AppointmentModel, NavigationModel } from "@hms/models";
 
 export interface AppointmentFormErrors {
   date: string;
@@ -20,120 +18,91 @@ export interface UseAppointmentFormOptions {
   initialDoctorId?: string;
 }
 
+const NO_DOCTORS: Doctor[] = [];
+const NO_SLOTS: string[] = [];
+
+const EMPTY_ERRORS: AppointmentFormErrors = {
+  date: "",
+  doctorEmployeeId: "",
+  timeSlot: "",
+};
+
+const validateDate = (d: Date): string => {
+  const input = new Date(d);
+  const today = new Date();
+  input.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  return input <= today
+    ? "Appointments cannot be booked for today or past dates."
+    : "";
+};
+
+const validateDoctorEmployeeId = (id: string): string =>
+  id ? "" : "Please select a doctor";
+
+const validateTimeSlot = (slot: string): string =>
+  slot ? "" : "Time slot is required";
+
+const maxDateLimit = (): Date => {
+  const d = new Date();
+  d.setMonth(d.getMonth() + 3);
+  return d;
+};
+
 export function useAppointmentForm({
   initialAppointment,
   initialDoctorId,
 }: UseAppointmentFormOptions = {}) {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
 
-  const [doctors, setDoctors] = useState<UserModel[]>([]);
   const [isShow, setIsShow] = useState(false);
-  const [isDateSet, setIsDateSet] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [patientId, setPatientId] = useState("");
+  const [isDateSet, setIsDateSet] = useState(Boolean(initialAppointment));
   const [doctorId, setDoctorId] = useState(
     initialAppointment?.doctorEmployeeId ?? initialDoctorId ?? "",
   );
-  const [date, setDate] = useState(new Date());
-  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [date, setDate] = useState(
+    () =>
+      initialAppointment ? new Date(initialAppointment.date) : new Date(),
+  );
   const [timeSlot, setTimeSlot] = useState(initialAppointment?.timeSlot ?? "");
-  const [errors, setErrors] = useState<AppointmentFormErrors>({
-    date: "",
-    doctorEmployeeId: "",
-    timeSlot: "",
-  });
+  const [errors, setErrors] = useState<AppointmentFormErrors>(EMPTY_ERRORS);
 
-  useEffect(() => {
-    const init = async () => {
-      await fetchDoctors();
-      const id = await AsyncStorage.getItem("patientId");
-      setPatientId(id ?? "");
+  const storedPatientId = useStoredPatientId();
+  const patientId = storedPatientId ?? "";
 
-      if (initialAppointment) {
-        setTimeSlot(initialAppointment.timeSlot);
-        setDate(new Date(initialAppointment.date));
-        setIsDateSet(true);
-      }
-    };
-    init();
-  }, []);
+  const { data: doctors = NO_DOCTORS } = trpc.appointment.getDoctors.useQuery();
 
-  useEffect(() => {
-    if (initialAppointment && doctors.length > 0) {
-      setDoctorId(initialAppointment.doctorEmployeeId);
-    }
-  }, [doctors]);
+  const { data: slotsData } = trpc.user.getAvailableTimeSlots.useQuery(
+    { employeeId: doctorId, date },
+    { enabled: !!doctorId && isDateSet },
+  );
 
-  useEffect(() => {
-    if (doctorId && isDateSet) {
-      fetchAvailableTimeSlots();
-    }
-  }, [doctorId, date, isDateSet]);
+  // When editing, the slot the appointment already holds stays selectable for its own doctor and date.
+  const initialSlotFor = (employeeId: string, day: Date): string => {
+    if (!initialAppointment) return "";
+    const isSameDoctor = initialAppointment.doctorEmployeeId === employeeId;
+    const isSameDate =
+      new Date(initialAppointment.date).toDateString() === day.toDateString();
+    return isSameDoctor && isSameDate ? initialAppointment.timeSlot : "";
+  };
 
+  const availableSlots = useMemo(() => {
+    const slots = slotsData?.slots ?? NO_SLOTS;
+    const heldSlot = initialSlotFor(doctorId, date);
+    return heldSlot && !slots.includes(heldSlot) ? [...slots, heldSlot] : slots;
+  }, [slotsData, doctorId, date, initialAppointment]);
+
+  // The tab screen stays mounted, so a doctor picked on Home arrives as a changed route param.
   useEffect(() => {
     if (!initialAppointment && initialDoctorId) {
-      const tommorow = new Date();
-      tommorow.setDate(tommorow.getDate() + 1);
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
 
       setDoctor(initialDoctorId);
-      setDate(tommorow);
+      setDate(tomorrow);
       setIsDateSet(true);
     }
   }, [initialDoctorId]);
-
-  const fetchDoctors = async () => {
-    try {
-      const result = await getDoctors();
-      setDoctors(result);
-      return result;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchAvailableTimeSlots = async () => {
-    try {
-      const data = await getAvailableTimeSlots(doctorId, date);
-
-      if (initialAppointment) {
-        const isSameDoctor = initialAppointment.doctorEmployeeId === doctorId;
-        const isSameDate =
-          new Date(initialAppointment.date).toDateString() ===
-          date.toDateString();
-
-        if (isSameDoctor && isSameDate) {
-          const merged = data.includes(initialAppointment.timeSlot)
-            ? data
-            : [...data, initialAppointment.timeSlot];
-          setAvailableSlots(merged);
-          setTimeSlot(initialAppointment.timeSlot);
-          return;
-        }
-      }
-
-      setAvailableSlots(data);
-      setTimeSlot("");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const validateDate = (d: Date): string => {
-    const input = new Date(d);
-    const today = new Date();
-    input.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    return input <= today
-      ? "Appointments cannot be booked for today or past dates."
-      : "";
-  };
-
-  const validateDoctorEmployeeId = (id: string): string =>
-    id ? "" : "Please select a doctor";
-
-  const validateTimeSlot = (slot: string): string =>
-    slot ? "" : "Time slot is required";
 
   const validateAppointment = (): boolean => {
     const newErrors: AppointmentFormErrors = {
@@ -145,18 +114,13 @@ export function useAppointmentForm({
     return Object.values(newErrors).every((e) => e === "");
   };
 
-  const maxDateLimit = (): Date => {
-    const d = new Date();
-    d.setMonth(d.getMonth() + 3);
-    return d;
-  };
-
   const onDateChange = (newDate: Date) => {
     const errorMessage = validateDate(newDate);
     setIsShow(false);
     if (errorMessage === "") {
       setDate(newDate);
       setIsDateSet(true);
+      setTimeSlot(initialSlotFor(doctorId, newDate));
       setErrors((prev) => ({ ...prev, date: "" }));
     } else {
       setErrors((prev) => ({ ...prev, date: errorMessage }));
@@ -164,15 +128,13 @@ export function useAppointmentForm({
   };
 
   const setDoctor = (employeeId: string) => {
-    setAvailableSlots([]);
     setDoctorId(employeeId);
-    setTimeSlot("");
+    setTimeSlot(initialSlotFor(employeeId, date));
   };
 
   const clearFields = () => {
     setTimeSlot("");
-    setErrors({ date: "", doctorEmployeeId: "", timeSlot: "" });
-    setAvailableSlots([]);
+    setErrors(EMPTY_ERRORS);
     setIsDateSet(false);
     setDoctorId("");
     setDate(new Date());
@@ -192,8 +154,6 @@ export function useAppointmentForm({
     isShow,
     setIsShow,
     isDateSet,
-    isLoading,
-    setIsLoading,
     patientId,
     doctorId,
     date,

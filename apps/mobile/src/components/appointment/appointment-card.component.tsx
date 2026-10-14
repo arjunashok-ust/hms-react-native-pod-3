@@ -1,72 +1,64 @@
 import { View, StyleSheet, Text, Alert } from "react-native";
+import Toast from "react-native-toast-message";
 import ProfileButton from "../profile/profile-button.component";
 import { Ionicons } from "@expo/vector-icons";
-import { UserModel } from "@hms/models";
-import { useEffect, useState, memo } from "react";
-import {
-  editAppointmentStatus,
-  getDoctorByEmployeeId,
-} from "@hms/data-access";
+import { memo } from "react";
+import { AppointmentItem, trpc } from "@hms/trpc-client";
+import { useInvalidateAppointments } from "../../hooks/useAppointments";
+import { AppointmentStatus, NavigationModel } from "@hms/models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationModel } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
 
-export const AppointmentCardComponent = (props: any) => {
+interface AppointmentCardProps {
+  appointment: AppointmentItem;
+}
+
+export const AppointmentCardComponent = ({
+  appointment,
+}: AppointmentCardProps) => {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+  const invalidateAppointments = useInvalidateAppointments();
 
-  const [doctor, setDoctor] = useState<UserModel | null>(null);
+  // Cached per doctor, so cards sharing a doctor trigger a single request.
+  const { data: doctor } = trpc.appointment.getDoctorByEmployeeId.useQuery({
+    employeeId: appointment.doctorEmployeeId,
+  });
 
-  const fetchDoctor = async () => {
-    const data = await getDoctorByEmployeeId(props.doctorEmployeeId);
-    setDoctor(data);
-  };
+  const cancelAppointment = trpc.appointment.editAppointmentStatus.useMutation({
+    onSuccess: async ({ message }) => {
+      await invalidateAppointments();
+      Toast.show({ type: "success", text1: "Success", text2: message });
+    },
+  });
 
   const goToEdit = () => {
     navigator.navigate("editAppointment", {
       appointment: {
-        appointmentId: props.appointmentId,
-        patientId: props.patientId,
-        doctorEmployeeId: props.doctorEmployeeId,
-        date: props.date,
-        timeSlot: props.timeSlot,
-        status: props.status,
-        createdByEmployeeId: "",
+        appointmentId: appointment.appointmentId,
+        patientId: appointment.patientId,
+        doctorEmployeeId: appointment.doctorEmployeeId,
+        date: new Date(appointment.date),
+        timeSlot: appointment.timeSlot,
+        status: appointment.status as AppointmentStatus,
+        createdByEmployeeId: appointment.createdByEmployeeId ?? "",
       },
     });
   };
 
-  useEffect(() => {
-    fetchDoctor();
-  }, [props.doctorEmployeeId]);
-
-  const editAppointmentStatusByPatient = async () => {
+  const confirmCancel = () => {
     Alert.alert(
       "Cancel Appointment",
       "Are you sure you want to cancel this appointment",
       [
-        {
-          text: "No",
-          style: "cancel",
-        },
+        { text: "No", style: "cancel" },
         {
           text: "Yes",
           style: "destructive",
-          onPress: () => {
-            void (async () => {
-              try {
-                const appointmentId: string = props.appointmentId;
-                const payload = {
-                  appointmentId,
-                  status: "Cancelled",
-                };
-                await editAppointmentStatus(payload);
-                props.onAppointmentChange?.();
-                Alert.alert("Success", "Appointment Cancelled Successfully");
-              } catch (err) {
-                console.error(err);
-              }
-            })();
-          },
+          onPress: () =>
+            cancelAppointment.mutate({
+              appointmentId: appointment.appointmentId,
+              status: "Cancelled",
+            }),
         },
       ],
     );
@@ -95,7 +87,7 @@ export const AppointmentCardComponent = (props: any) => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {`${doctor?.specialization}`}
+              {doctor?.specialization ?? ""}
             </Text>
           </View>
         </View>
@@ -103,14 +95,14 @@ export const AppointmentCardComponent = (props: any) => {
         <View
           style={[
             styles.appointmentStatus,
-            props.status === "Booked" && styles.booked,
-            props.status === "Cancelled" && styles.cancelled,
-            props.status === "Completed" && styles.completed,
-            props.status === "Pending" && styles.pending,
+            appointment.status === "Booked" && styles.booked,
+            appointment.status === "Cancelled" && styles.cancelled,
+            appointment.status === "Completed" && styles.completed,
+            appointment.status === "Pending" && styles.pending,
           ]}
         >
           <Text style={[styles.text, styles.appointmentStatusText]}>
-            {props.status}
+            {appointment.status}
           </Text>
         </View>
       </View>
@@ -125,29 +117,29 @@ export const AppointmentCardComponent = (props: any) => {
             size={20}
           />
           <Text style={[styles.footerText, styles.text]}>
-            {new Date(props.date).toDateString()}
+            {new Date(appointment.date).toDateString()}
           </Text>
           <Ionicons
             name="time-outline"
             style={styles.appointmentIcon}
             size={20}
           />
-          <Text style={[styles.footerText, styles.text]}>{props.timeSlot}</Text>
+          <Text style={[styles.footerText, styles.text]}>{appointment.timeSlot}</Text>
         </View>
 
         <View>
-          {props.status === "Booked" && (
+          {appointment.status === "Booked" && (
             <ProfileButton
               iconName="create-outline"
               title="Edit"
               onAction={goToEdit}
             />
           )}
-          {props.status === "Pending" && (
+          {appointment.status === "Pending" && (
             <ProfileButton
               iconName="close-outline"
               title="Cancel"
-              onAction={editAppointmentStatusByPatient}
+              onAction={confirmCancel}
             />
           )}
         </View>

@@ -3,7 +3,7 @@ import HomeScreen from "../screens/home";
 import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "../screens/profile";
 import AppointmentScreen from "../screens/appointment";
-import ViewMedicalRecordScreen from "@hms/feature-medical-records";
+import { ViewMedicalRecordScreen } from "@hms/feature-medical-records";
 
 const Tab = createBottomTabNavigator();
 

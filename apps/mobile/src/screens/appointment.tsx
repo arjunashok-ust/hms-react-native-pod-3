@@ -4,9 +4,9 @@ import { WelcomeTextContainer } from "@hms/shared-ui";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ProfileButton from "../components/profile/profile-button.component";
 import Toast from "react-native-toast-message";
-import { AppointmentModel } from "@hms/models";
-import { createAppointment } from "@hms/data-access";
+import { trpc } from "@hms/trpc-client";
 import { useAppointmentForm } from "../hooks/useAppointmentForm";
+import { useInvalidateAppointments } from "../hooks/useAppointments";
 import { AppointmentFormBody } from "../components/appointment/appointment-form-body-component";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { TabParamList } from "@hms/models";
@@ -22,8 +22,6 @@ export default function AppointmentScreen() {
     isShow,
     setIsShow,
     isDateSet,
-    isLoading,
-    setIsLoading,
     patientId,
     doctorId,
     date,
@@ -42,34 +40,33 @@ export default function AppointmentScreen() {
     initialDoctorId,
   });
 
-  const sendAppointment = async () => {
+  const utils = trpc.useUtils();
+  const invalidateAppointments = useInvalidateAppointments();
+
+  const createAppointment = trpc.appointment.createAppointment.useMutation({
+    onSuccess: async ({ message }) => {
+      Toast.show({ type: "success", text1: "Success", text2: message });
+      clearFields();
+      // the booked slot is gone and the patient's list has a new entry
+      await Promise.all([
+        utils.user.getAvailableTimeSlots.invalidate(),
+        invalidateAppointments(),
+      ]);
+    },
+  });
+
+  const sendAppointment = () => {
     if (!validateAppointment()) {
       showValidationError();
       return;
     }
-    try {
-      setIsLoading(true);
-      const payload: AppointmentModel = {
-        appointmentId: "",
-        status: "Pending",
-        patientId,
-        doctorEmployeeId: doctorId,
-        timeSlot,
-        date,
-        createdByEmployeeId: patientId,
-      };
-      const response = await createAppointment(payload);
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: response?.data?.message,
-      });
-      clearFields();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+    createAppointment.mutate({
+      patientId,
+      doctorEmployeeId: doctorId,
+      timeSlot,
+      date,
+      status: "Pending",
+    });
   };
 
   return (
@@ -97,7 +94,7 @@ export default function AppointmentScreen() {
             timeSlot={timeSlot}
             setTimeSlot={setTimeSlot}
             errors={errors}
-            primaryLabel={isLoading ? "CREATING..." : "CREATE"}
+            primaryLabel={createAppointment.isPending ? "CREATING..." : "CREATE"}
             onPrimaryAction={sendAppointment}
             secondaryLabel="CLEAR"
             secondaryIcon="close-outline"

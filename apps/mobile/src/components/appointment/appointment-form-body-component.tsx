@@ -6,7 +6,7 @@ import DoctorHolder from "./doctor-holder.component";
 import TimeSlotComponent from "./time-slot.component";
 import ProfileButton from "../profile/profile-button.component";
 import { FormHeader } from "@hms/shared-ui";
-import { UserModel } from "@hms/models";
+import { Doctor } from "@hms/trpc-client";
 import { AppointmentFormErrors } from "../../hooks/useAppointmentForm";
 
 interface AppointmentFormBodyProps {
@@ -18,7 +18,7 @@ interface AppointmentFormBodyProps {
   date: Date;
   isDateSet: boolean;
   setIsShow: (v: boolean) => void;
-  doctors: UserModel[];
+  doctors: Doctor[];
   doctorId: string;
   setDoctor: (id: string) => void;
   availableSlots: string[];
