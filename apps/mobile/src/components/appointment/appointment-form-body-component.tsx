@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet } from "react-native";
-import { AppointmentInputCard } from "./appointment-input-card.component";
+import { AppointmentInputCard } from "@hms/shared-ui";
 import { SectionDivider } from "../profile/section-divider.component";
 import { DateHolder } from "./date-holder.component";
 import DoctorHolder from "./doctor-holder.component";
 import TimeSlotComponent from "./time-slot.component";
-import ProfileButton from "../profile/profile-button.component";
+import { ProfileButton } from "@hms/shared-ui";
 import { FormHeader } from "@hms/shared-ui";
 import { Doctor } from "@hms/trpc-client";
 import { AppointmentFormErrors } from "../../hooks/useAppointmentForm";

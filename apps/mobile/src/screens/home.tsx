@@ -11,7 +11,7 @@ import { WelcomeTextContainer } from "@hms/shared-ui";
 import { DoctorCard } from "../components/home/doctor-card.component";
 import { useCallback, useMemo, useState } from "react";
 import { Doctor, Specialization, trpc } from "@hms/trpc-client";
-import SearchBox from "../components/home/search-box.component";
+import { SearchBox } from "@hms/shared-ui";
 import SelectHolder from "../components/home/select-holder.component";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";

@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, Alert } from "react-native";
 import Toast from "react-native-toast-message";
-import ProfileButton from "../profile/profile-button.component";
+import { ProfileButton } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { memo } from "react";
 import { AppointmentItem, trpc } from "@hms/trpc-client";

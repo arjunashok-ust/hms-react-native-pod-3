@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-export default function ProfileButton(props: any) {
+export function ProfileButton(props: any) {
   return (
     <TouchableOpacity style={styles.buttonHolder} onPress={props.onAction}>
       <Ionicons

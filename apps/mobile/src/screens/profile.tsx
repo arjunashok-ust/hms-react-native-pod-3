@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
 import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "@hms/trpc-client";
-import ProfileButton from "../components/profile/profile-button.component";
+import { ProfileButton } from "@hms/shared-ui";
 
 const formatDate = (date?: Date | string | null) => {
   if (!date) return "";

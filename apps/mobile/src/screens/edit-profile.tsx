@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
-import { AppointmentInputCard } from "../components/appointment/appointment-input-card.component";
+import { AppointmentInputCard } from "@hms/shared-ui";
 import { SectionDivider } from "../components/profile/section-divider.component";
 import { Picker } from "@react-native-picker/picker";
 import { createElement, useEffect, useState } from "react";
@@ -18,7 +18,7 @@ import { useStoredEmail } from "@hms/data-access";
 import { PatientProfile, trpc } from "@hms/trpc-client";
 import { Gender } from "@hms/models";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import ProfileButton from "../components/profile/profile-button.component";
+import { ProfileButton }  from "@hms/shared-ui";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";

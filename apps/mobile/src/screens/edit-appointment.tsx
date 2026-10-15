@@ -2,7 +2,7 @@ import { coverImage } from "@hms/shared-ui";
 import { View, ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import ProfileButton from "../components/profile/profile-button.component";
+import { ProfileButton } from "@hms/shared-ui";
 import Toast from "react-native-toast-message";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

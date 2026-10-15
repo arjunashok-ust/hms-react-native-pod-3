@@ -13,14 +13,14 @@ import { AppointmentCard } from "../components/appointment/appointment-card.comp
 import { useCallback, useMemo, useState } from "react";
 import { AppointmentItem } from "@hms/trpc-client";
 import { useStoredPatientId } from "@hms/data-access";
-import ProfileButton from "../components/profile/profile-button.component";
+import { ProfileButton } from "@hms/shared-ui";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationModel } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
 import { FormHeader } from "@hms/shared-ui";
-import SearchBox from "../components/home/search-box.component";
+import { SearchBox } from "@hms/shared-ui";
 import { useAppointments } from "../hooks/useAppointments";
-import { useDebouncedValue } from "../hooks/useDebouncedValue";
+import { useDebouncedValue } from "@hms/shared-util";
 
 export default function ViewAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();

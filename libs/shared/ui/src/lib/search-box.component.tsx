@@ -1,10 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput, View, StyleSheet } from "react-native";
 
-const SearchBox = (props: any) => {
+export function SearchBox(props: any) {
   return (
     <View style={styles.searchBox}>
-      <Ionicons name="search-outline" style={styles.searchIcon} size={20} color="rgb(61, 11, 105)" />
+      <Ionicons
+        name="search-outline"
+        style={styles.searchIcon}
+        size={20}
+        color="rgb(61, 11, 105)"
+      />
       <TextInput
         style={styles.searchInput}
         placeholder={props.placeholder}
@@ -12,9 +17,7 @@ const SearchBox = (props: any) => {
       />
     </View>
   );
-};
-
-export default SearchBox;
+}
 
 const styles = StyleSheet.create({
   text: {
