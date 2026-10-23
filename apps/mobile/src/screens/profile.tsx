@@ -1,6 +1,6 @@
 import { coverImage } from "@hms/shared-ui";
 import { StyleSheet, View, ImageBackground, ScrollView } from "react-native";
-import { SectionDivider } from "../components/profile/section-divider.component";
+import { SectionDivider } from "@hms/shared-ui";
 import { InfoCard } from "../components/profile/info-card.component";
 import { ProfileCard } from "../components/profile/profile-card.component";
 import { clearSession, useStoredEmail } from "@hms/data-access";

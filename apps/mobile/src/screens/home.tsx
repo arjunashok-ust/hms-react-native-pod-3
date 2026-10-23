@@ -55,6 +55,8 @@ export default function HomeScreen() {
             screen: "appointment",
             params: {
               doctorId: item.employeeCode,
+              // a fresh launch id resets the appointments stack, even for the same doctor
+              launchId: Date.now(),
             },
           });
         }}

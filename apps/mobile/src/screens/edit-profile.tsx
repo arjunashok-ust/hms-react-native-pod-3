@@ -11,7 +11,7 @@ import {
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { AppointmentInputCard } from "@hms/shared-ui";
-import { SectionDivider } from "../components/profile/section-divider.component";
+import { SectionDivider } from "@hms/shared-ui";
 import { Picker } from "@react-native-picker/picker";
 import { createElement, useEffect, useState } from "react";
 import { useStoredEmail } from "@hms/data-access";

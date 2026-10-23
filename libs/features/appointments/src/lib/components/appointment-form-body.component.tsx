@@ -1,13 +1,15 @@
 import { Text, View, StyleSheet } from "react-native";
-import { AppointmentInputCard } from "@hms/shared-ui";
-import { SectionDivider } from "../profile/section-divider.component";
+import {
+  AppointmentInputCard,
+  SectionDivider,
+  ProfileButton,
+  FormHeader,
+} from "@hms/shared-ui";
 import { DateHolder } from "./date-holder.component";
-import DoctorHolder from "./doctor-holder.component";
-import TimeSlotComponent from "./time-slot.component";
-import { ProfileButton } from "@hms/shared-ui";
-import { FormHeader } from "@hms/shared-ui";
+import { DoctorHolder } from "./doctor-holder.component";
+import { TimeSlotComponent } from "./time-slot.component";
 import { Doctor } from "@hms/trpc-client";
-import { AppointmentFormErrors } from "../../hooks/useAppointmentForm";
+import type { AppointmentFormErrors } from "../validation/appointment-form.validation";
 
 interface AppointmentFormBodyProps {
   formTitle: string;
@@ -26,6 +28,7 @@ interface AppointmentFormBodyProps {
   errors: AppointmentFormErrors;
 
   primaryLabel: string;
+  primaryIcon?: string;
   onPrimaryAction: () => void;
 
   secondaryLabel?: string;
@@ -48,6 +51,7 @@ export function AppointmentFormBody({
   setTimeSlot,
   errors,
   primaryLabel,
+  primaryIcon = "add-outline",
   onPrimaryAction,
   secondaryLabel,
   secondaryIcon,
@@ -104,7 +108,7 @@ export function AppointmentFormBody({
 
           <ProfileButton
             title={primaryLabel}
-            iconName="add-outline"
+            iconName={primaryIcon}
             onAction={onPrimaryAction}
           />
 

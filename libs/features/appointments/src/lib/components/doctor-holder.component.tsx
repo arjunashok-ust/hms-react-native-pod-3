@@ -9,7 +9,7 @@ type DoctorHolderProps = Readonly<{
   setDoctor: (value: string) => void;
 }>;
 
-export default function DoctorHolder({
+export function DoctorHolder({
   doctors,
   selectedDoctor,
   setDoctor,

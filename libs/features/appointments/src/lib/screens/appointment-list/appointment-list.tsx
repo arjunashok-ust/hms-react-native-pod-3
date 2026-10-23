@@ -9,22 +9,18 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
-import { AppointmentCard } from "../components/appointment/appointment-card.component";
 import { useCallback, useMemo, useState } from "react";
 import { AppointmentItem } from "@hms/trpc-client";
-import { useStoredPatientId } from "@hms/data-access";
 import { ProfileButton } from "@hms/shared-ui";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationModel } from "@hms/models";
-import { useNavigation } from "@react-navigation/native";
 import { FormHeader } from "@hms/shared-ui";
 import { SearchBox } from "@hms/shared-ui";
-import { useAppointments } from "../hooks/useAppointments";
-import { useDebouncedValue } from "@hms/shared-util";
+import { AppointmentCard } from "../../components/appointment-card.component";
+import { useAppointments } from "../../hooks/use-appointments";
+import { useDebouncedValue, useHost } from "@hms/shared-util";
+import { AppointmentScreenProps } from "../../navigation/navigation-types";
 
-export default function ViewAppointmentScreen() {
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
-  const patientId = useStoredPatientId();
+export default function ViewAppointmentScreen({navigation}: AppointmentScreenProps<"appointmentList">) {
+  const { patientId } = useHost();
 
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebouncedValue(searchText);
@@ -39,16 +35,19 @@ export default function ViewAppointmentScreen() {
     [data],
   );
 
-  const renderItem: ListRenderItem<AppointmentItem> = useCallback(
-    ({ item }) => <AppointmentCard appointment={item} />,
-    [],
+  const goToEdit = useCallback(
+    (appointment: AppointmentItem) => 
+      navigation.navigate("appointmentEdit", {appointment}),
+    [navigation],
   );
 
-  const goToHome = () => {
-    navigator.navigate("tabs", {
-      screen: "appointment",
-      params: {},
-    });
+  const renderItem: ListRenderItem<AppointmentItem> = useCallback(
+    ({ item }) => <AppointmentCard appointment={item} onEdit={goToEdit} />,
+    [goToEdit],
+  );
+
+  const goToForm = () => {
+    navigation.navigate("appointmentForm");
   };
 
   const onPageEnd = () => {
@@ -57,7 +56,11 @@ export default function ViewAppointmentScreen() {
   };
 
   return (
-    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground
+      source={coverImage}
+      resizeMode="cover"
+      style={styles.wrapper}
+    >
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="View your,"
@@ -69,10 +72,13 @@ export default function ViewAppointmentScreen() {
         <ProfileButton
           title="GO BACK"
           iconName="arrow-back-outline"
-          onAction={goToHome}
+          onAction={goToForm}
         />
 
-        <SearchBox placeholder="Search appointment" onChangeText={setSearchText} />
+        <SearchBox
+          placeholder="Search appointment"
+          onChangeText={setSearchText}
+        />
 
         <View style={styles.container}>
           <FormHeader title="SCHEDULE" value="Your Appointments" />

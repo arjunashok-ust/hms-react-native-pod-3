@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import { TimeSlotHolder } from "../profile/time-slot-holder";
+import { TimeSlotHolder } from "@hms/shared-ui";
 
 type TimeSlotPropsType = Readonly<{
   availableSlots: string[];
@@ -7,7 +7,7 @@ type TimeSlotPropsType = Readonly<{
   timeSlot: string;
 }>;
 
-export default function TimeSlotComponent({
+export function TimeSlotComponent({
   availableSlots,
   setTimeSlot,
   timeSlot,

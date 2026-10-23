@@ -6,23 +6,24 @@ import { ProfileButton } from "@hms/shared-ui";
 import Toast from "react-native-toast-message";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationModel } from "@hms/models";
+import { AppointmentStackParamList } from "../../navigation/navigation-types"; 
 import { trpc } from "@hms/trpc-client";
-import { useAppointmentForm } from "../hooks/useAppointmentForm";
-import { useInvalidateAppointments } from "../hooks/useAppointments";
-import { AppointmentFormBody } from "../components/appointment/appointment-form-body-component";
+import { maxDateLimit,useAppointmentForm} from "../../hooks/use-appointment-form";
+import { useInvalidateAppointments } from "../../hooks/use-appointments";
+import {AppointmentFormBody} from "../../components/appointment-form-body.component"; 
 
 export default function EditAppointmentScreen() {
-  const route = useRoute<RouteProp<NavigationModel, "editAppointment">>();
+  const route = useRoute<RouteProp<AppointmentStackParamList, "appointmentEdit">>();
   const { appointment } = route.params;
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+  const navigator = useNavigation<NativeStackNavigationProp<AppointmentStackParamList>>();
 
   const {
     doctors, isShow, setIsShow, isDateSet,
     patientId, doctorId, date, availableSlots, timeSlot, setTimeSlot, errors,
-    onDateChange, setDoctor, validateAppointment, showValidationError,
-    maxDateLimit, goToAppointments,
+    onDateChange, setDoctor, validate, showValidationError,
   } = useAppointmentForm({ initialAppointment: appointment });
+
+  const goToAppointments = () => navigator.navigate("appointmentList");
 
   const utils = trpc.useUtils();
   const invalidateAppointments = useInvalidateAppointments();
@@ -34,7 +35,7 @@ export default function EditAppointmentScreen() {
       utils.user.getAvailableTimeSlots.invalidate(),
       invalidateAppointments(),
     ]);
-    navigator.navigate("viewAppointment");
+    navigator.navigate("appointmentList");
   };
 
   const editAppointment = trpc.appointment.editAppointment.useMutation({
@@ -46,7 +47,7 @@ export default function EditAppointmentScreen() {
   });
 
   const saveAppointment = () => {
-    if (!validateAppointment()) {
+    if (!validate()) {
       showValidationError();
       return;
     }
@@ -89,6 +90,7 @@ export default function EditAppointmentScreen() {
             setTimeSlot={setTimeSlot}
             errors={errors}
             primaryLabel={editAppointment.isPending ? "SAVING..." : "SAVE"}
+            primaryIcon="save-outline"
             onPrimaryAction={saveAppointment}
           />
         </ScrollView>

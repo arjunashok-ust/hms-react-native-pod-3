@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, StyleSheet } from "react-native";
 
-export const SectionDivider = (props: any) => {
+export function SectionDivider(props: any) {
   return (
     <View style={styles.sectionDivider}>
       <Ionicons name={props.iconName} color={"rgb(92, 23, 113)"} size={20} />
@@ -9,7 +9,7 @@ export const SectionDivider = (props: any) => {
       <View style={styles.divider}></View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   sectionDivider: {

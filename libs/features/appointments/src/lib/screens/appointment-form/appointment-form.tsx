@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { coverImage } from "@hms/shared-ui";
 import { View, ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
@@ -5,18 +6,15 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { ProfileButton } from "@hms/shared-ui";
 import Toast from "react-native-toast-message";
 import { trpc } from "@hms/trpc-client";
-import { useAppointmentForm } from "../hooks/useAppointmentForm";
-import { useInvalidateAppointments } from "../hooks/useAppointments";
-import { AppointmentFormBody } from "../components/appointment/appointment-form-body-component";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { TabParamList } from "@hms/models";
+import { AppointmentFormBody } from "../../components/appointment-form-body.component";
+import { maxDateLimit,useAppointmentForm} from "../../hooks/use-appointment-form";
+import { useInvalidateAppointments } from "../../hooks/use-appointments";
+import { AppointmentScreenProps } from "../../navigation/navigation-types";
 
-type AppointmentRouteProp = RouteProp<TabParamList, "appointment">;
 
-export default function AppointmentScreen() {
-  const router = useRoute<AppointmentRouteProp>();
-  const initialDoctorId = router.params?.doctorId;
+type Props = AppointmentScreenProps<"appointmentForm"> & { initialDoctorId?: string };
 
+export function AppointmentScreen({ navigation, initialDoctorId }: Props) {
   const {
     doctors,
     isShow,
@@ -32,13 +30,20 @@ export default function AppointmentScreen() {
     onDateChange,
     setDoctor,
     clearFields,
-    validateAppointment,
+    validate,
     showValidationError,
-    maxDateLimit,
-    goToAppointments,
   } = useAppointmentForm({
     initialDoctorId,
   });
+
+  // The host remounts the micro app for every new launch (key = launchId), but React Navigation
+  // restores the stack from the tab route's saved state, so the list or edit screen can still sit on top.
+  // This screen mounts below them: drop anything above it so a launch always shows the form.
+  useEffect(() => {
+    if (navigation.getState().routes.length > 1) navigation.popToTop();
+  }, [navigation]);
+
+  const goToAppointments = () => navigation.navigate("appointmentList");
 
   const utils = trpc.useUtils();
   const invalidateAppointments = useInvalidateAppointments();
@@ -56,7 +61,7 @@ export default function AppointmentScreen() {
   });
 
   const sendAppointment = () => {
-    if (!validateAppointment()) {
+    if (!validate()) {
       showValidationError();
       return;
     }
@@ -87,7 +92,7 @@ export default function AppointmentScreen() {
           <AppointmentFormBody
             formTitle="NEW ENTRY"
             formSubtitle="Book Appointment"
-            patientId={patientId}
+            patientId={patientId??''}
             date={date}
             isDateSet={isDateSet}
             setIsShow={setIsShow}

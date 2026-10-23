@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export const TimeSlotHolder = (props: any) => {
+export function TimeSlotHolder(props: any){
   return (
     <TouchableOpacity
       style={[styles.slotHolder, props.isSelected && styles.slotHolderSelected]}

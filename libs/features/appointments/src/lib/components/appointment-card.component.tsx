@@ -4,19 +4,17 @@ import { ProfileButton } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { memo } from "react";
 import { AppointmentItem, trpc } from "@hms/trpc-client";
-import { useInvalidateAppointments } from "../../hooks/useAppointments";
-import { AppointmentStatus, NavigationModel } from "@hms/models";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
+import { useInvalidateAppointments } from "../hooks/use-appointments";
 
 interface AppointmentCardProps {
   appointment: AppointmentItem;
+  onEdit: (appointment: AppointmentItem) => void;
 }
 
 export const AppointmentCardComponent = ({
   appointment,
+  onEdit,
 }: AppointmentCardProps) => {
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
   const invalidateAppointments = useInvalidateAppointments();
 
   // Cached per doctor, so cards sharing a doctor trigger a single request.
@@ -30,20 +28,6 @@ export const AppointmentCardComponent = ({
       Toast.show({ type: "success", text1: "Success", text2: message });
     },
   });
-
-  const goToEdit = () => {
-    navigator.navigate("editAppointment", {
-      appointment: {
-        appointmentId: appointment.appointmentId,
-        patientId: appointment.patientId,
-        doctorEmployeeId: appointment.doctorEmployeeId,
-        date: new Date(appointment.date),
-        timeSlot: appointment.timeSlot,
-        status: appointment.status as AppointmentStatus,
-        createdByEmployeeId: appointment.createdByEmployeeId ?? "",
-      },
-    });
-  };
 
   const confirmCancel = () => {
     Alert.alert(
@@ -132,7 +116,7 @@ export const AppointmentCardComponent = ({
             <ProfileButton
               iconName="create-outline"
               title="Edit"
-              onAction={goToEdit}
+              onAction={() => onEdit(appointment)}
             />
           )}
           {appointment.status === "Pending" && (

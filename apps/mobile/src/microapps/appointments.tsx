@@ -1,9 +1,17 @@
 import { AppointmentMicroApp } from "@hms/feature-appointments";
-import { useStoredPatientId } from "@hms/data-access";
-import type { HostContext } from "@hms/models";
+import type { TabParamList } from "@hms/models";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { useHostContext } from "./use-host-context";
 
-export default function AppointmentHost(){
-    const patientId = useStoredPatientId();
-    const host: HostContext = { patientId: patientId ?? null};
-    return <AppointmentMicroApp host={host} />
+export default function AppointmentHost() {
+  const route = useRoute<RouteProp<TabParamList, "appointment">>();
+  const host = useHostContext();
+  // a new launchId remounts the micro app, so its nested stack restarts on the form
+  return (
+    <AppointmentMicroApp
+      key={route.params?.launchId}
+      host={host}
+      initialDoctorId={route.params?.doctorId}
+    />
+  );
 }
