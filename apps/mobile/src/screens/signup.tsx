@@ -1,5 +1,5 @@
 import { coverImage } from "@hms/shared-ui";
-import { createElement, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -7,15 +7,11 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 import { AuthInputText } from "../components/auth/auth-input-text";
 import { AuthSubmitButton } from "../components/auth/auth-submit-button";
-import { WelcomeTextContainer } from "@hms/shared-ui";
+import { DatePicker, WelcomeTextContainer } from "@hms/shared-ui";
 import { Picker } from "@react-native-picker/picker";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
 import { BLOOD_GROUPS, GENDERS } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -51,7 +47,6 @@ export default function SignUpScreen() {
   const [emergencyContact, setEmergencyContact] = useState("");
   const [status, setStatus] = useState("Active");
 
-  const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     name: "",
@@ -68,18 +63,8 @@ export default function SignUpScreen() {
 
   const signUpMutation = trpc.auth.patientSignUp.useMutation();
 
-  const onDateChange = (event: DateTimePickerEvent, selectedDob?: any) => {
-    setShow(false);
-    setIsDobSet(true);
-    if (selectedDob) setDob(selectedDob);
-  };
-
-  // The native picker is unavailable on web, so web uses an HTML date input.
-  const toInputDate = (d: Date) => d.toISOString().split("T")[0];
-
-  const onWebDateChange = (value: string) => {
-    if (!value) return;
-    setDob(new Date(value));
+  const onDobChange = (selectedDob: Date) => {
+    setDob(selectedDob);
     setIsDobSet(true);
   };
 
@@ -263,43 +248,14 @@ export default function SignUpScreen() {
             {!!errors.address && (
               <Text style={styles.errorText}>{errors.address}</Text>
             )}
-            {Platform.OS === "web" ? (
-              <View style={styles.dropdownHolder}>
-                {createElement("input", {
-                  type: "date",
-                  value: isDobSet ? toInputDate(dob) : "",
-                  min: toInputDate(minDobLimit()),
-                  max: toInputDate(maxDobLimit()),
-                  onChange: (e: any) => onWebDateChange(e.target.value),
-                  style: {
-                    flex: 1,
-                    border: "none",
-                    background: "transparent",
-                    fontSize: 16,
-                    fontFamily: "inherit",
-                    outline: "none",
-                  },
-                })}
-              </View>
-            ) : (
-              <TouchableOpacity
-                onPress={() => setShow(true)}
-                style={styles.dropdownHolder}
-              >
-                <Text style={styles.dobText}>
-                  {isDobSet ? dob.toDateString() : "DOB"}
-                </Text>
-                {show && (
-                  <DateTimePicker
-                    value={dob}
-                    mode="date"
-                    minimumDate={minDobLimit()}
-                    maximumDate={maxDobLimit()}
-                    onChange={onDateChange}
-                  />
-                )}
-              </TouchableOpacity>
-            )}
+            <DatePicker
+              value={isDobSet ? dob : null}
+              onChange={onDobChange}
+              placeholder="DOB"
+              minimumDate={minDobLimit()}
+              maximumDate={maxDobLimit()}
+              style={styles.dobField}
+            />
             {!!errors.dob && <Text style={styles.errorText}>{errors.dob}</Text>}
             <AuthInputText
               innerText="Emergency Contact"
@@ -404,12 +360,14 @@ const styles = StyleSheet.create({
     fontFamily: "Sans",
     fontSize: 14,
   },
-  dobText: {
-    fontFamily: "Sans",
-    fontSize: 12,
-    color: "#828282",
-    paddingHorizontal: 10,
-    marginTop: 10,
+  dobField: {
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    borderColor: "rgba(0,0,0,0.2)",
+    width: "80%",
+    height: 50,
+    marginHorizontal: 0,
   },
   signUpFooter: {
     marginTop: 40,

@@ -4,11 +4,12 @@ import {
   SectionDivider,
   ProfileButton,
   FormHeader,
+  DatePicker,
 } from "@hms/shared-ui";
-import { DateHolder } from "./date-holder.component";
 import { DoctorHolder } from "./doctor-holder.component";
 import { TimeSlotComponent } from "./time-slot.component";
 import { Doctor } from "@hms/trpc-client";
+import { maxDateLimit } from "../hooks/use-appointment-form";
 import type { AppointmentFormErrors } from "../validation/appointment-form.validation";
 
 interface AppointmentFormBodyProps {
@@ -18,7 +19,7 @@ interface AppointmentFormBodyProps {
   patientId: string;
   date: Date;
   isDateSet: boolean;
-  setIsShow: (v: boolean) => void;
+  onDateChange: (date: Date) => void;
   doctors: Doctor[];
   doctorId: string;
   setDoctor: (id: string) => void;
@@ -42,7 +43,7 @@ export function AppointmentFormBody({
   patientId,
   date,
   isDateSet,
-  setIsShow,
+  onDateChange,
   doctors,
   doctorId,
   setDoctor,
@@ -73,7 +74,14 @@ export function AppointmentFormBody({
 
       <SectionDivider title="SCHEDULE" iconName="calendar-outline" />
 
-      <DateHolder date={date} isDateSet={isDateSet} setIsShow={setIsShow} />
+      <DatePicker
+        value={isDateSet ? date : null}
+        onChange={onDateChange}
+        placeholder="Date"
+        iconName="alarm-outline"
+        minimumDate={new Date()}
+        maximumDate={maxDateLimit()}
+      />
       {!!errors.date && (
         <Text style={[styles.text, styles.errorText]}>{errors.date}</Text>
       )}

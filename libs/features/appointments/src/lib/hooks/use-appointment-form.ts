@@ -28,7 +28,6 @@ export function useAppointmentForm({
   initialAppointment,
   initialDoctorId,
 }: UseAppointmentFormOptions = {}) {
-  const [isShow, setIsShow] = useState(false);
   const [isDateSet, setIsDateSet] = useState(Boolean(initialAppointment));
   const [doctorId, setDoctorId] = useState(
     initialAppointment?.doctorEmployeeId ?? initialDoctorId ?? "",
@@ -81,7 +80,6 @@ export function useAppointmentForm({
 
   const onDateChange = (newDate: Date) => {
     const errorMessage = validateDate(newDate);
-    setIsShow(false);
     if (errorMessage === "") {
       setDate(newDate);
       setIsDateSet(true);
@@ -124,8 +122,6 @@ export function useAppointmentForm({
 
   return {
     doctors,
-    isShow,
-    setIsShow,
     isDateSet,
     patientId,
     doctorId,

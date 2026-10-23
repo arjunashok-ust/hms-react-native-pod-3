@@ -1,14 +1,13 @@
 import { coverImage } from "@hms/shared-ui";
 import { View, ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { ProfileButton } from "@hms/shared-ui";
 import Toast from "react-native-toast-message";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppointmentStackParamList } from "../../navigation/navigation-types"; 
 import { trpc } from "@hms/trpc-client";
-import { maxDateLimit,useAppointmentForm} from "../../hooks/use-appointment-form";
+import { useAppointmentForm } from "../../hooks/use-appointment-form";
 import { useInvalidateAppointments } from "../../hooks/use-appointments";
 import {AppointmentFormBody} from "../../components/appointment-form-body.component"; 
 
@@ -18,7 +17,7 @@ export default function EditAppointmentScreen() {
   const navigator = useNavigation<NativeStackNavigationProp<AppointmentStackParamList>>();
 
   const {
-    doctors, isShow, setIsShow, isDateSet,
+    doctors, isDateSet,
     patientId, doctorId, date, availableSlots, timeSlot, setTimeSlot, errors,
     onDateChange, setDoctor, validate, showValidationError,
   } = useAppointmentForm({ initialAppointment: appointment });
@@ -81,7 +80,7 @@ export default function EditAppointmentScreen() {
             patientId={patientId}
             date={date}
             isDateSet={isDateSet}
-            setIsShow={setIsShow}
+            onDateChange={onDateChange}
             doctors={doctors}
             doctorId={doctorId}
             setDoctor={setDoctor}
@@ -101,16 +100,6 @@ export default function EditAppointmentScreen() {
           onAction={cancel}
         />
         <ProfileButton title="VIEW APPOINTMENTS" iconName="eye-outline" onAction={goToAppointments} />
-
-        {isShow && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            minimumDate={new Date()}
-            maximumDate={maxDateLimit()}
-            onChange={(_, value) => { if (value) onDateChange(value); }}
-          />
-        )}
       </View>
     </ImageBackground>
   );

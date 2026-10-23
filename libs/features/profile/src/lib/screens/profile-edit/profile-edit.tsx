@@ -1,6 +1,7 @@
 import {
   AppointmentInputCard,
   coverImage,
+  DatePicker,
   ProfileButton,
   SectionDivider,
   WelcomeTextContainer,
@@ -11,16 +12,13 @@ import {
   ImageBackground,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { createElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PatientProfile, trpc } from "@hms/trpc-client";
 import { Gender } from "@hms/models";
 import { maxDobLimit, minDobLimit } from "@hms/shared-util";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Toast from "react-native-toast-message";
 import { usePatientProfile } from "../../hooks/use-patient-profile";
 import type { ProfileScreenProps } from "../../navigation/navigation-types";
@@ -41,8 +39,6 @@ export default function ProfileEditScreen({
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
-
-  const [isShow, setIsShow] = useState<boolean>(false);
 
   const [errors, setErrors] = useState(EMPTY_ERRORS);
 
@@ -78,14 +74,6 @@ export default function ProfileEditScreen({
     setPhone(data.phone ?? "");
     setEmergencyContact(data.emergencyContact ?? "");
   };
-
-  const onDateChange = (date: Date) => {
-    setDob(date);
-    setIsShow(false);
-  };
-
-  // The native picker is unavailable on web, so web uses an HTML date input.
-  const toInputDate = (d: Date) => d.toISOString().split("T")[0];
 
   const updateProfile = () => {
     const newErrors = validateProfile({
@@ -198,53 +186,14 @@ export default function ProfileEditScreen({
               </Text>
             )}
             <Text style={[styles.text, styles.placeholderText]}>DOB</Text>
-            {Platform.OS === "web" ? (
-              <View style={styles.dateHolder}>
-                {createElement("input", {
-                  type: "date",
-                  value: toInputDate(dob),
-                  min: toInputDate(minDobLimit()),
-                  max: toInputDate(maxDobLimit()),
-                  onChange: (e: any) => {
-                    if (e.target.value) onDateChange(new Date(e.target.value));
-                  },
-                  style: {
-                    flex: 1,
-                    border: "none",
-                    background: "transparent",
-                    fontSize: 16,
-                    fontFamily: "inherit",
-                    outline: "none",
-                    marginLeft: 13,
-                  },
-                })}
-              </View>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  setIsShow(true);
-                }}
-                style={styles.dateHolder}
-              >
-                <View style={styles.dateHeader}>
-                  <Ionicons
-                    name="alarm-outline"
-                    size={22}
-                    color={"#cfcfcf"}
-                    style={styles.dateIcon}
-                  />
-                  <Text style={[styles.dateTitle, styles.text]}>
-                    {dob ? dob?.toDateString() : "DOB"}
-                  </Text>
-                </View>
-                <Ionicons
-                  name="chevron-down-outline"
-                  size={15}
-                  color={"black"}
-                  style={{ marginRight: 13 }}
-                />
-              </TouchableOpacity>
-            )}
+            <DatePicker
+              value={dob}
+              onChange={setDob}
+              placeholder="DOB"
+              iconName="alarm-outline"
+              minimumDate={minDobLimit()}
+              maximumDate={maxDobLimit()}
+            />
             {!!errors.dob && (
               <Text style={[styles.text, styles.errorText]}>{errors.dob}</Text>
             )}
@@ -325,17 +274,6 @@ export default function ProfileEditScreen({
           </View>
         </ScrollView>
       </View>
-      {isShow && (
-        <DateTimePicker
-          value={dob}
-          mode="date"
-          maximumDate={maxDobLimit()}
-          minimumDate={minDobLimit()}
-          onChange={(event, value) => {
-            if (value) onDateChange(value);
-          }}
-        />
-      )}
     </ImageBackground>
   );
 }
@@ -428,36 +366,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 5,
     paddingHorizontal: 10,
-  },
-  dateHolder: {
-    flexDirection: "row",
-    backgroundColor: "rgb(222, 222, 222)",
-    borderWidth: 1,
-    borderColor: "rgba(83, 11, 107, 0.3)",
-    borderRadius: 10,
-    padding: 8,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dateHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  dateTitle: {
-    color: "rgb(39, 39, 39)",
-    fontFamily: "Sans",
-    fontSize: 14,
-    lineHeight: 14,
-    marginLeft: 10,
-  },
-  dateIcon: {
-    backgroundColor: "rgb(108, 19, 109)",
-    borderWidth: 1,
-    borderColor: "rgba(198, 53, 255, 0.2)",
-    borderRadius: 10,
-    padding: 10,
   },
   placeholderText: {
     color: "rgb(139, 139, 139)",

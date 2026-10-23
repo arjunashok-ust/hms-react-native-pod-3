@@ -2,12 +2,11 @@ import { useEffect } from "react";
 import { coverImage } from "@hms/shared-ui";
 import { View, ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { ProfileButton } from "@hms/shared-ui";
 import Toast from "react-native-toast-message";
 import { trpc } from "@hms/trpc-client";
 import { AppointmentFormBody } from "../../components/appointment-form-body.component";
-import { maxDateLimit,useAppointmentForm} from "../../hooks/use-appointment-form";
+import { useAppointmentForm } from "../../hooks/use-appointment-form";
 import { useInvalidateAppointments } from "../../hooks/use-appointments";
 import { AppointmentScreenProps } from "../../navigation/navigation-types";
 
@@ -17,8 +16,6 @@ type Props = AppointmentScreenProps<"appointmentForm"> & { initialDoctorId?: str
 export function AppointmentScreen({ navigation, initialDoctorId }: Props) {
   const {
     doctors,
-    isShow,
-    setIsShow,
     isDateSet,
     patientId,
     doctorId,
@@ -95,7 +92,7 @@ export function AppointmentScreen({ navigation, initialDoctorId }: Props) {
             patientId={patientId??''}
             date={date}
             isDateSet={isDateSet}
-            setIsShow={setIsShow}
+            onDateChange={onDateChange}
             doctors={doctors}
             doctorId={doctorId}
             setDoctor={setDoctor}
@@ -118,18 +115,6 @@ export function AppointmentScreen({ navigation, initialDoctorId }: Props) {
           iconName="eye-outline"
           onAction={goToAppointments}
         />
-
-        {isShow && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            minimumDate={new Date()}
-            maximumDate={maxDateLimit()}
-            onChange={(_, value) => {
-              if (value) onDateChange(value);
-            }}
-          />
-        )}
       </View>
     </ImageBackground>
   );
