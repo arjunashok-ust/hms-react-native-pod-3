@@ -6,15 +6,11 @@ import { ActivityIndicator, View } from "react-native";
 import LoginScreen from "../screens/login";
 import SignUpScreen from "../screens/signup";
 import TabNavigator from "../navigation/TabNavigator";
-import EditProfileScreen from "../screens/edit-profile";
 import { NavigationModel } from "@hms/models";
-import { HostProvider } from "@hms/shared-util";
-import { useHostContext } from "../microapps/use-host-context";
 
 const Stack = createNativeStackNavigator<NavigationModel>();
 
 export const App = () => {
-  const host = useHostContext();
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState<string | null>(null);
 
@@ -39,23 +35,20 @@ export const App = () => {
   }
 
   return (
-    <HostProvider host={host}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {userToken == null ? (
-            <>
-              <Stack.Screen name="login" component={LoginScreen} />
-              <Stack.Screen name="signup" component={SignUpScreen} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="tabs" component={TabNavigator} />
-              <Stack.Screen name="editProfile" component={EditProfileScreen} />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </HostProvider>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {userToken == null ? (
+          <>
+            <Stack.Screen name="login" component={LoginScreen} />
+            <Stack.Screen name="signup" component={SignUpScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="tabs" component={TabNavigator} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

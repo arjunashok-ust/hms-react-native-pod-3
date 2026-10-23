@@ -8,8 +8,8 @@ import {
   QueryCache,
   QueryClient,
   QueryClientProvider,
-} from '@tanstack/react-query';
-import {createTrpcClient, trpc} from "@hms/trpc-client";
+} from "@tanstack/react-query";
+import { createTrpcClient, trpc } from "@hms/trpc-client";
 import { useState } from "react";
 
 const showApiError = (error: Error) => {
@@ -19,7 +19,6 @@ const showApiError = (error: Error) => {
     text2: error.message || "Something went wrong",
   });
 };
-
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -34,7 +33,7 @@ export default function App() {
         mutationCache: new MutationCache({ onError: showApiError }),
       }),
   );
-  const [trpcClient] = useState(()=>createTrpcClient());
+  const [trpcClient] = useState(() => createTrpcClient());
 
   if (!fontsLoaded) {
     return null;
@@ -43,14 +42,14 @@ export default function App() {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar barStyle="dark-content" />
-        <AppNavigator />
-        <Toast />
-      </SafeAreaView>
-    </SafeAreaProvider>
-    </QueryClientProvider>
+        <SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar barStyle="dark-content" />
+            <AppNavigator />
+            <Toast />
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </QueryClientProvider>
     </trpc.Provider>
   );
 }

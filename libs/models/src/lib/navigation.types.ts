@@ -5,7 +5,6 @@ export type NavigationModel = {
   login: undefined;
   signup: undefined;
   tabs: NavigatorScreenParams<TabParamList>;
-  editProfile: undefined;
 };
 
 export type TabParamList = {

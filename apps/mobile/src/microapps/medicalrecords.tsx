@@ -1,9 +1,7 @@
 import { MedicalRecordMicroApp } from "@hms/feature-medical-records";
-import { useStoredPatientId } from "@hms/data-access";
-import type { HostContext } from "@hms/models";
+import { useHostContext } from "./use-host-context";
 
-export default function MedicalRecordsHost(){
-    const patientId = useStoredPatientId();
-    const host: HostContext = { patientId: patientId ?? null};
-    return <MedicalRecordMicroApp host={host} />
+export default function MedicalRecordsHost() {
+  const host = useHostContext();
+  return <MedicalRecordMicroApp host={host} />;
 }

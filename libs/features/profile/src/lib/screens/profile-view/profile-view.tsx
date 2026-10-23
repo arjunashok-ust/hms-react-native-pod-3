@@ -1,15 +1,10 @@
-import { coverImage } from "@hms/shared-ui";
+import { coverImage, ProfileButton, SectionDivider } from "@hms/shared-ui";
 import { StyleSheet, View, ImageBackground, ScrollView } from "react-native";
-import { SectionDivider } from "@hms/shared-ui";
-import { InfoCard } from "../components/profile/info-card.component";
-import { ProfileCard } from "../components/profile/profile-card.component";
-import { clearSession, useStoredEmail } from "@hms/data-access";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationModel } from "@hms/models";
-import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "@hms/trpc-client";
-import { ProfileButton } from "@hms/shared-ui";
+import { useHost } from "@hms/shared-util";
+import { InfoCard } from "../../components/info-card.component";
+import { ProfileCard } from "../../components/profile-card.component";
+import { usePatientProfile } from "../../hooks/use-patient-profile";
+import type { ProfileScreenProps } from "../../navigation/navigation-types";
 
 const formatDate = (date?: Date | string | null) => {
   if (!date) return "";
@@ -22,34 +17,13 @@ const formatDate = (date?: Date | string | null) => {
   });
 };
 
-export default function ProfileScreen() {
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
-  const queryClient = useQueryClient();
-  const email = useStoredEmail();
+export default function ProfileViewScreen({
+  navigation,
+}: ProfileScreenProps<"profileView">) {
+  const { actions } = useHost();
+  const { data: patientData } = usePatientProfile();
 
-  const { data: patientData } = trpc.user.getPatientProfile.useQuery(
-    { email: email ?? "" },
-    { enabled: !!email },
-  );
-
-  const logoutMutation = trpc.auth.logout.useMutation();
-
-  // Local session is cleared even if the server call fails (the failure is already toasted).
-  const logout = async () => {
-    try {
-      await logoutMutation.mutateAsync();
-    } catch {
-      // handled by the global mutation error handler
-    } finally {
-      await clearSession();
-      queryClient.clear();
-      navigator.replace("login");
-    }
-  };
-
-  const goToEditProfile = () => {
-    navigator.navigate("editProfile");
-  }
+  const goToEditProfile = () => navigation.navigate("profileEdit");
 
   return (
     <ImageBackground source={coverImage} style={styles.wrapper} resizeMode="cover">
@@ -113,7 +87,7 @@ export default function ProfileScreen() {
             <ProfileButton
               iconName="exit-outline"
               title="LOGOUT"
-              onAction={logout}
+              onAction={actions.signOut}
             />
           </ScrollView>
         </View>

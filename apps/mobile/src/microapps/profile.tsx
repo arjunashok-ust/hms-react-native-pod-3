@@ -1,9 +1,7 @@
-import type { HostContext } from "@hms/models";
 import { ProfileMicroApp } from "@hms/feature-profile";
-import { useStoredPatientId } from "@hms/data-access";
+import { useHostContext } from "./use-host-context";
 
-export default function ProfileHost(){
-    const patientId = useStoredPatientId();
-    const host: HostContext = { patientId: patientId ?? null};
-    return <ProfileMicroApp host={host} />
+export default function ProfileHost() {
+  const host = useHostContext();
+  return <ProfileMicroApp host={host} />;
 }

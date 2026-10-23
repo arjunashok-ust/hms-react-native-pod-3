@@ -1,4 +1,10 @@
-import { coverImage } from "@hms/shared-ui";
+import {
+  AppointmentInputCard,
+  coverImage,
+  ProfileButton,
+  SectionDivider,
+  WelcomeTextContainer,
+} from "@hms/shared-ui";
 import {
   Text,
   View,
@@ -8,34 +14,25 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { WelcomeTextContainer } from "@hms/shared-ui";
 import { Ionicons } from "@expo/vector-icons";
-import { AppointmentInputCard } from "@hms/shared-ui";
-import { SectionDivider } from "@hms/shared-ui";
 import { Picker } from "@react-native-picker/picker";
 import { createElement, useEffect, useState } from "react";
-import { useStoredEmail } from "@hms/data-access";
 import { PatientProfile, trpc } from "@hms/trpc-client";
 import { Gender } from "@hms/models";
+import { maxDobLimit, minDobLimit } from "@hms/shared-util";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { ProfileButton }  from "@hms/shared-ui";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationModel } from "@hms/models";
-import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-
+import { usePatientProfile } from "../../hooks/use-patient-profile";
+import type { ProfileScreenProps } from "../../navigation/navigation-types";
 import {
-  validateName,
-  validateEmail,
-  validatePhone,
-  validateDob,
-  validateRequired,
-  maxDobLimit,
-  minDobLimit,
-  validateAddress,
-} from "@hms/shared-util";
+  EMPTY_ERRORS,
+  hasErrors,
+  validateProfile,
+} from "../../validation/profile-form.validation";
 
-export default function EditProfileScreen() {
+export default function ProfileEditScreen({
+  navigation,
+}: ProfileScreenProps<"profileEdit">) {
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -47,25 +44,12 @@ export default function EditProfileScreen() {
 
   const [isShow, setIsShow] = useState<boolean>(false);
 
-  const [errors, setErrors] = useState({
-    name: "",
-    gender: "",
-    dob: "",
-    phone: "",
-    email: "",
-    address: "",
-    emergencyContact: "",
-  });
-
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+  const [errors, setErrors] = useState(EMPTY_ERRORS);
 
   const utils = trpc.useUtils();
-  const storedEmail = useStoredEmail();
+  const { data: profile } = usePatientProfile();
 
-  const { data: profile } = trpc.user.getPatientProfile.useQuery(
-    { email: storedEmail ?? "" },
-    { enabled: !!storedEmail },
-  );
+  const goToProfile = () => navigation.navigate("profileView");
 
   const updateProfileMutation = trpc.user.updatePatientProfile.useMutation({
     onSuccess: async () => {
@@ -75,9 +59,7 @@ export default function EditProfileScreen() {
         text1: "Success",
         text2: "Patient profile updated successfully",
       });
-      navigator.navigate("tabs", {
-        screen: "profile",
-      });
+      goToProfile();
     },
   });
 
@@ -97,12 +79,6 @@ export default function EditProfileScreen() {
     setEmergencyContact(data.emergencyContact ?? "");
   };
 
-  const goToProfile = () => {
-    navigator.navigate("tabs", {
-      screen: "profile",
-    });
-  };
-
   const onDateChange = (date: Date) => {
     setDob(date);
     setIsShow(false);
@@ -111,25 +87,19 @@ export default function EditProfileScreen() {
   // The native picker is unavailable on web, so web uses an HTML date input.
   const toInputDate = (d: Date) => d.toISOString().split("T")[0];
 
-  const validateUpdateProfile = () => {
-    const newErrors = {
-      name: validateName(name),
-      gender: validateRequired(gender, "Gender"),
-      dob: validateDob(dob),
-      email: validateEmail(email),
-      address: validateAddress(address),
-      phone: validatePhone(phone),
-      emergencyContact: validatePhone(emergencyContact, phone),
-    };
-
+  const updateProfile = () => {
+    const newErrors = validateProfile({
+      name,
+      gender,
+      dob,
+      email,
+      address,
+      phone,
+      emergencyContact,
+    });
     setErrors(newErrors);
 
-    const valid = Object.values(newErrors).every((error) => error === "");
-    return valid;
-  };
-
-  const updateProfile = () => {
-    if (!validateUpdateProfile()) {
+    if (hasErrors(newErrors)) {
       Toast.show({
         type: "error",
         text1: "Validation Failed",
