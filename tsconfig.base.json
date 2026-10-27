@@ -30,6 +30,9 @@
       ],
       "@hms/feature-profile": [
         "./libs/features/profile/src/index.ts"
+      ],
+      "@hms/feature-home": [
+        "./libs/features/home/src/index.ts"
       ]
     }
   }

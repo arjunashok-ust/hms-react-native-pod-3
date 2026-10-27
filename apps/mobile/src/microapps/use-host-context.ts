@@ -31,7 +31,15 @@ export function useHostContext(): HostContext {
     navigation.reset({ index: 0, routes: [{ name: "login" }] });
   }, [logout, queryClient, navigation]);
 
-  const actions = useMemo<HostActions>(() => ({ signOut }), [signOut]);
+  const bookAppointment = useCallback(
+    (doctorId: string) => navigation.navigate("tabs", {
+      screen: "appointment",
+      params: {doctorId, launchId: Date.now()},
+    }),
+    [navigation],
+  );
+
+  const actions = useMemo<HostActions>(() => ({ signOut,bookAppointment }), [signOut,bookAppointment]);
 
   return useMemo(
     () => ({ patientId: patientId ?? null, email: email ?? null, actions }),

@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/home";
+import HomeHost from "../microapps/home";
 import { Ionicons } from "@expo/vector-icons";
 import ProfileHost from "../microapps/profile";
 import AppointmentHost from "../microapps/appointments";
@@ -103,7 +103,7 @@ export default function TabNavigator() {
     >
       <Tab.Screen
         name="home"
-        component={HomeScreen}
+        component={HomeHost}
         options={{
           tabBarIcon: HomeTabIcon,
           tabBarLabel: "HOME",

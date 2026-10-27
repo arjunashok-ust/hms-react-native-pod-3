@@ -3,7 +3,9 @@
   "analytics": false,
   "sync": {
     "applyChanges": false,
-    "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"]
+    "disabledTaskSyncGenerators": [
+      "@nx/js:typescript-sync"
+    ]
   },
   "targetDefaults": {
     "android": {

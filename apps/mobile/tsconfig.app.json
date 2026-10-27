@@ -31,5 +31,5 @@
     "**/*.jsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "../../libs/features/home/src/lib/screens/home/home.tsx", "../../libs/features/home/src/lib/components/doctor-card.component.tsx", "../../libs/features/home/src/lib/components/select-holder.component.tsx", "../../libs/features/home/src/lib/components/stat-card.component.tsx"  ]
 }

@@ -8,40 +8,29 @@ import {
   FlatList,
 } from "react-native";
 import { WelcomeTextContainer } from "@hms/shared-ui";
-import { DoctorCard } from "../components/home/doctor-card.component";
+import { DoctorCard } from "../../components/doctor-card.component";
 import { useCallback, useMemo, useState } from "react";
 import { Doctor, Specialization, trpc } from "@hms/trpc-client";
 import { SearchBox } from "@hms/shared-ui";
-import SelectHolder from "../components/home/select-holder.component";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
-import { NavigationModel } from "@hms/models";
+import SelectHolder from "../../components/select-holder.component";
+import { useFilteredDoctors } from "../../hooks/filter-doctors";
+import { useDoctorSearch } from "../../hooks/use-doctor-search";
+import { useHost } from "@hms/shared-util";
 
 const NO_DOCTORS: Doctor[] = [];
 const NO_SPECIALIZATIONS: Specialization[] = [];
 
-const normalize = (text: string) => text.toLowerCase().trim();
-
-export default function HomeScreen() {
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+export function Home() {
+  const { actions } = useHost();
+  const { filterText, setFilterText, selectedSpecialization, setSelectedSpecialization } = useDoctorSearch();
 
   const { data: doctors = NO_DOCTORS } = trpc.appointment.getDoctors.useQuery();
   const { data: specializations = NO_SPECIALIZATIONS } =
     trpc.ui.getSpecializations.useQuery();
 
   // Free-text search and the specialization chips share one filter, last input wins.
-  const [filterText, setFilterText] = useState("");
-  const [selectedSpecialization, setSelectedSpecialization] = useState("");
 
-  const filteredDoctors = useMemo(() => {
-    const query = normalize(filterText);
-    if (!query) return doctors;
-    return doctors.filter(
-      (doctor) =>
-        normalize(doctor.name).includes(query) ||
-        normalize(doctor.specialization ?? "").includes(query),
-    );
-  }, [doctors, filterText]);
+  const filteredDoctors = useFilteredDoctors(doctors, filterText);
 
   const renderItem: ListRenderItem<Doctor> = useCallback(
     ({ item }) => (
@@ -50,19 +39,10 @@ export default function HomeScreen() {
         name={item.name}
         designation={item.designation ?? ""}
         specialization={item.specialization ?? ""}
-        onPress={() => {
-          navigator.navigate("tabs", {
-            screen: "appointment",
-            params: {
-              doctorId: item.employeeCode,
-              // a fresh launch id resets the appointments stack, even for the same doctor
-              launchId: Date.now(),
-            },
-          });
-        }}
+        onPress={() => actions.bookAppointment(item.employeeCode)}
       />
     ),
-    [],
+    [actions.bookAppointment],
   );
 
   const renderSpecialization: ListRenderItem<Specialization> = useCallback(
@@ -84,7 +64,11 @@ export default function HomeScreen() {
   );
 
   return (
-    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground
+      source={coverImage}
+      resizeMode="cover"
+      style={styles.wrapper}
+    >
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="Find Experienced,"
