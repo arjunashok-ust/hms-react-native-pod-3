@@ -8,14 +8,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { AuthInputText } from "../components/auth/auth-input-text";
-import { AuthSubmitButton } from "../components/auth/auth-submit-button";
+import { AuthInputText } from "../../components/auth-input-text";
+import { AuthSubmitButton } from "../../components/auth-submit-button";
 import { DatePicker, WelcomeTextContainer } from "@hms/shared-ui";
 import { Picker } from "@react-native-picker/picker";
 import { BLOOD_GROUPS, GENDERS } from "@hms/models";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationModel } from "@hms/models";
 import Toast from "react-native-toast-message";
 import { trpc } from "@hms/trpc-client";
 
@@ -30,9 +29,10 @@ import {
   maxDobLimit,
   minDobLimit,
 } from "@hms/shared-util";
+import { AuthStackParamList } from "../../navigation/navigation-types";
 
-export default function SignUpScreen() {
-  const navigator = useNavigation<NativeStackNavigationProp<NavigationModel>>();
+export default function SignUp() {
+  const navigator = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -115,7 +115,7 @@ export default function SignUpScreen() {
         });
         navigator.navigate("login");
       } catch (err) {
-        console.error(err);
+        // global mutation cache already toasts the error
       } finally {
         setIsLoading(false);
       }
@@ -129,7 +129,11 @@ export default function SignUpScreen() {
   };
 
   return (
-    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground
+      source={coverImage}
+      resizeMode="cover"
+      style={styles.wrapper}
+    >
       <View style={styles.overlay}>
         <WelcomeTextContainer
           text1="New To,"
@@ -237,7 +241,7 @@ export default function SignUpScreen() {
                 <Picker.Item label="O-" value="O-" style={styles.picker} />
               </Picker>
             </View>
-            {!!errors.gender && (
+            {!!errors.bloodGroup && (
               <Text style={styles.errorText}>{errors.bloodGroup}</Text>
             )}
             <AuthInputText
@@ -245,9 +249,6 @@ export default function SignUpScreen() {
               getData={(value: string) => setAllergies(value)}
               iconName="medkit-outline"
             />
-            {!!errors.address && (
-              <Text style={styles.errorText}>{errors.address}</Text>
-            )}
             <DatePicker
               value={isDobSet ? dob : null}
               onChange={onDobChange}

@@ -1,9 +1,7 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { AppointmentModel } from "./appointment.schema";
 
 export type NavigationModel = {
-  login: undefined;
-  signup: undefined;
+  auth: undefined;
   tabs: NavigatorScreenParams<TabParamList>;
 };
 

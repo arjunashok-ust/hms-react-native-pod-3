@@ -1,13 +1,23 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MicroAppProps } from "@hms/models";
-import { Login } from "./screens/login/login";
+import Login from "./screens/login/login";
+import SignUp from "./screens/signup/signup";
+import { AuthenticationMicroAppProps } from "./micro-app.types";
+import { AuthStackParamList } from "./navigation/navigation-types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 
-export function AuthenticationMicroApp({ host }: MicroAppProps) {
+export function AuthenticationMicroApp({
+  onSignedIn,
+}: AuthenticationMicroAppProps) {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="login">{() => <Login host={host} />}</Stack.Screen>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="login"
+    >
+      <Stack.Screen name="login">
+        {() => <Login onSignedIn={onSignedIn} />}
+      </Stack.Screen>
+      <Stack.Screen name="signup">{() => <SignUp />}</Stack.Screen>
     </Stack.Navigator>
   );
 }

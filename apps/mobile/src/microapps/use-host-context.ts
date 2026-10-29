@@ -28,7 +28,7 @@ export function useHostContext(): HostContext {
     }
     await clearSession();
     queryClient.clear();
-    navigation.reset({ index: 0, routes: [{ name: "login" }] });
+    navigation.reset({ index: 0, routes: [{ name: "auth" }] });
   }, [logout, queryClient, navigation]);
 
   const bookAppointment = useCallback(
