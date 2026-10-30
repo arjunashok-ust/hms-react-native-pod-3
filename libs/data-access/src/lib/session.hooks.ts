@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getStoredEmail, getStoredPatientId } from "./session.service";
+import {
+  getStoredEmail,
+  getStoredPatientId,
+  hasStoredSession,
+} from "./session.service";
 
 // undefined while loading, null when nothing is stored.
 const useStoredValue = (read: () => Promise<string | null>) => {
@@ -21,3 +25,20 @@ const useStoredValue = (read: () => Promise<string | null>) => {
 export const useStoredEmail = () => useStoredValue(getStoredEmail);
 
 export const useStoredPatientId = () => useStoredValue(getStoredPatientId);
+
+export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
+
+export const useSessionStatus = (): SessionStatus => {
+  const [status, setStatus] = useState<SessionStatus>("loading");
+  useEffect(() => {
+    let cancelled = false;
+    hasStoredSession().then((hasSession) => {
+      if (!cancelled)
+        setStatus(hasSession ? "authenticated" : "unauthenticated");
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return status;
+};
