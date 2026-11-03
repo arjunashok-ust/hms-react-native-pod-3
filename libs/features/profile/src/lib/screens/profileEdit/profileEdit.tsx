@@ -6,13 +6,7 @@ import {
   SectionDivider,
   WelcomeTextContainer,
 } from "@hms/shared-ui";
-import {
-  Text,
-  View,
-  ImageBackground,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { Text, View, ImageBackground, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
@@ -20,17 +14,19 @@ import { PatientProfile, trpc } from "@hms/trpc-client";
 import { Gender } from "@hms/models";
 import { maxDobLimit, minDobLimit } from "@hms/shared-util";
 import Toast from "react-native-toast-message";
-import { usePatientProfile } from "../../hooks/use-patient-profile";
-import type { ProfileScreenProps } from "../../navigation/navigation-types";
+import { usePatientProfile } from "../../hooks/usePatientProfile";
+import type { ProfileScreenProps } from "../../navigation/navigationTypes";
 import {
   EMPTY_ERRORS,
   hasErrors,
   validateProfile,
-} from "../../validation/profile-form.validation";
+} from "./profileEdit.validation";
+import { useProfileContext } from "../../hooks/useProfileContext";
 
 export default function ProfileEditScreen({
   navigation,
 }: ProfileScreenProps<"profileEdit">) {
+  const { styles, content } = useProfileContext("profileEditContent");
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -114,13 +110,13 @@ export default function ProfileEditScreen({
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
-          text1="Edit your,"
-          text2="PROFILE"
-          text3="here."
+          text1={content.welcome.text1}
+          text2={content.welcome.text2}
+          text3={content.welcome.text3}
         ></WelcomeTextContainer>
 
         <ProfileButton
-          title="GO BACK"
+          title={content.profileButton.goBack}
           iconName="arrow-back-outline"
           onAction={goToProfile}
         />
@@ -136,20 +132,20 @@ export default function ProfileEditScreen({
               />
               <View style={styles.formHeaderTextHolder}>
                 <Text style={[styles.text, styles.formHeaderTitle]}>
-                  UPDATE ENTRY
+                  {content.formHeaderTextHolder.formHeaderTitle}
                 </Text>
                 <Text style={[styles.text, styles.formHeaderValue]}>
-                  Edit Profile
+                  {content.formHeaderTextHolder.formHeaderValue}
                 </Text>
               </View>
             </View>
             <SectionDivider
-              title="PERSONAL INFO"
+              title={content.sectionDivider}
               iconName="person-outline"
             ></SectionDivider>
             <AppointmentInputCard
               iconName="card-outline"
-              title="Name"
+              title={content.fieldLabels.name}
               value={name}
               getData={(value: string) => {
                 setName(value);
@@ -159,7 +155,9 @@ export default function ProfileEditScreen({
             {!!errors.name && (
               <Text style={[styles.text, styles.errorText]}>{errors.name}</Text>
             )}
-            <Text style={[styles.text, styles.placeholderText]}>Gender</Text>
+            <Text style={[styles.text, styles.placeholderText]}>
+              {content.placeHolderText.gender}
+            </Text>
             <View style={styles.dropdownHolder}>
               <Ionicons
                 name="person-outline"
@@ -185,7 +183,9 @@ export default function ProfileEditScreen({
                 {errors.gender}
               </Text>
             )}
-            <Text style={[styles.text, styles.placeholderText]}>DOB</Text>
+            <Text style={[styles.text, styles.placeholderText]}>
+              {content.placeHolderText.dateOfBirth}
+            </Text>
             <DatePicker
               value={dob}
               onChange={setDob}
@@ -198,12 +198,12 @@ export default function ProfileEditScreen({
               <Text style={[styles.text, styles.errorText]}>{errors.dob}</Text>
             )}
             <SectionDivider
-              title="CONTACT INFO"
+              title={content.sectionDivider.contactInfo}
               iconName="call-outline"
             ></SectionDivider>
             <AppointmentInputCard
               iconName="mail-outline"
-              title="Email"
+              title={content.fieldLabels.email}
               value={email}
               getData={(value: string) => {
                 setEmail(value);
@@ -217,7 +217,7 @@ export default function ProfileEditScreen({
             )}
             <AppointmentInputCard
               iconName="location-outline"
-              title="Address"
+              title={content.fieldLabels.address}
               value={address}
               getData={(value: string) => {
                 setAddress(value);
@@ -231,7 +231,7 @@ export default function ProfileEditScreen({
             )}
             <AppointmentInputCard
               iconName="call-outline"
-              title="Phone"
+              title={content.fieldLabels.phone}
               value={phone}
               getData={() => {
                 /* noop */
@@ -245,7 +245,7 @@ export default function ProfileEditScreen({
             )}
             <AppointmentInputCard
               iconName="medical-outline"
-              title="Emergency Contact"
+              title={content.fieldLabels.emergencyContact}
               value={emergencyContact}
               getData={(value: string) => {
                 setEmergencyContact(value);
@@ -260,14 +260,14 @@ export default function ProfileEditScreen({
             <ProfileButton
               title={
                 updateProfileMutation.isPending
-                  ? "UPDATING..."
-                  : "UPDATE PROFILE"
+                  ? content.profileButton.updating
+                  : content.profileButton.updateProfile
               }
               iconName="arrow-back-outline"
               onAction={updateProfile}
             />
             <ProfileButton
-              title="CANCEL"
+              title={content.profileButton.cancel}
               iconName="close-outline"
               onAction={goToProfile}
             />
@@ -277,108 +277,3 @@ export default function ProfileEditScreen({
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-  },
-  scrollView: {
-    height: 450,
-  },
-  container: {
-    flex: 1,
-    borderRadius: 35,
-    margin: 20,
-    backgroundColor: "#f2f2f2",
-    borderColor: "rgba(207, 75, 255, 0.2)",
-    borderWidth: 1,
-    paddingBottom: 20,
-  },
-  formHeader: {
-    padding: 20,
-    flexDirection: "row",
-  },
-  formHeaderIcon: {
-    padding: 15,
-    backgroundColor: "rgb(108, 19, 109)",
-    borderRadius: 100,
-  },
-  formHeaderTextHolder: {
-    flexDirection: "column",
-    marginLeft: 10,
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  formHeaderTitle: {
-    fontSize: 10,
-    lineHeight: 18,
-    color: "#909090",
-  },
-  formHeaderValue: {
-    fontSize: 18,
-    lineHeight: 18,
-    color: "#505050",
-  },
-  text: {
-    fontFamily: "Sans",
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "white",
-  },
-  dropdownHolder: {
-    backgroundColor: "rgb(222, 222, 222)",
-    borderWidth: 1,
-    borderColor: "rgba(83, 11, 107, 0.3)",
-    borderRadius: 10,
-    marginVertical: 10,
-    margin: 20,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  picker: {
-    flex: 1,
-    color: "rgb(39, 39, 39)",
-    fontFamily: "Sans",
-    fontSize: 14,
-    lineHeight: 14,
-    marginLeft: 3,
-  },
-  dropDownIcon: {
-    padding: 10,
-    backgroundColor: "rgba(119, 119, 119, 0.4)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-    borderRadius: 10,
-  },
-  errorText: {
-    color: "#ef2121",
-    fontSize: 13,
-    width: "80%",
-    borderLeftWidth: 4,
-    borderColor: "#cd1717",
-    borderRadius: 4,
-    marginTop: 5,
-    paddingHorizontal: 10,
-  },
-  placeholderText: {
-    color: "rgb(139, 139, 139)",
-    fontSize: 12,
-    lineHeight: 12,
-    marginHorizontal: 20,
-  },
-  appointmentIcon: {
-    backgroundColor: "rgb(108, 19, 109)",
-    borderWidth: 1,
-    borderColor: "rgba(198, 53, 255, 0.2)",
-    borderRadius: 10,
-    padding: 10,
-    marginLeft: 5,
-  },
-});

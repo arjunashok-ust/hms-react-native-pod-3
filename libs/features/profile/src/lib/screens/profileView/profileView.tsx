@@ -1,10 +1,11 @@
 import { coverImage, ProfileButton, SectionDivider } from "@hms/shared-ui";
 import { StyleSheet, View, ImageBackground, ScrollView } from "react-native";
 import { useHost } from "@hms/shared-util";
-import { InfoCard } from "../../components/info-card.component";
-import { ProfileCard } from "../../components/profile-card.component";
-import { usePatientProfile } from "../../hooks/use-patient-profile";
-import type { ProfileScreenProps } from "../../navigation/navigation-types";
+import { InfoCard } from "../../components/infoCard/infoCard";
+import { ProfileCard } from "../../components/profileCard/profileCard";
+import { usePatientProfile } from "../../hooks/usePatientProfile";
+import type { ProfileScreenProps } from "../../navigation/navigationTypes";
+import { useProfileContext } from "../../hooks/useProfileContext";
 
 const formatDate = (date?: Date | string | null) => {
   if (!date) return "";
@@ -20,13 +21,19 @@ const formatDate = (date?: Date | string | null) => {
 export default function ProfileViewScreen({
   navigation,
 }: ProfileScreenProps<"profileView">) {
+  const { styles, content } = useProfileContext("profileViewContent");
+
   const { actions } = useHost();
   const { data: patientData } = usePatientProfile();
 
   const goToEditProfile = () => navigation.navigate("profileEdit");
 
   return (
-    <ImageBackground source={coverImage} style={styles.wrapper} resizeMode="cover">
+    <ImageBackground
+      source={coverImage}
+      style={styles.wrapper}
+      resizeMode="cover"
+    >
       <View style={styles.overlay}>
         <ProfileCard
           prefix={patientData?.name.slice(0, 2).toUpperCase()}
@@ -34,59 +41,66 @@ export default function ProfileViewScreen({
           designation={patientData?.role}
           id={patientData?.uhid}
         />
-        <View
-          style={styles.container}
-        >
+        <View style={styles.container}>
           <ScrollView>
-            <SectionDivider iconName="person-outline" title="PERSONAL INFO" />
+            <SectionDivider
+              iconName="person-outline"
+              title={content.sectionDivider.personalInfo}
+            />
             <InfoCard
               iconName="person-outline"
-              title="NAME"
+              title={content.infoCard.title.name}
               value={patientData?.name}
             />
             <InfoCard
               iconName="male-outline"
-              title="GENDER"
+              title={content.infoCard.title.gender}
               value={patientData?.gender ?? ""}
             />
             <InfoCard
               iconName="calendar-outline"
-              title="DOB"
+              title={content.infoCard.title.dateOfBirth}
               value={formatDate(patientData?.dob)}
             />
-            <SectionDivider iconName="call-outline" title="CONTACT INFO" />
+            <SectionDivider
+              iconName="call-outline"
+              title={content.sectionDivider.contactInfo}
+            />
             <InfoCard
               iconName="call-outline"
-              title="PHONE"
+              title={content.infoCard.title.phone}
               value={patientData?.phone ?? ""}
             />
             <InfoCard
               iconName="mail-outline"
-              title="EMAIL"
+              title={content.infoCard.title.email}
               value={patientData?.email}
             />
             <InfoCard
               iconName="location-outline"
-              title="ADDRESS"
+              title={content.infoCard.title.address}
               value={patientData?.address ?? ""}
             />
             <InfoCard
               iconName="alert-circle-outline"
-              title="EMERGENCY CONTACT"
-              value={patientData?.emergencyContact || "No Emergency Contact"}
+              title={content.infoCard.title.emergencyContact}
+              value={
+                patientData?.emergencyContact ||
+                content.infoCard.value.noEmergencyContact
+              }
             />
             <SectionDivider
               iconName="settings-outline"
-              title="ACCOUNT SETTINGS"
+              title={content.sectionDivider.accountSettings}
             />
             <ProfileButton
               iconName="pencil-outline"
-              title="EDIT PROFILE"
+              title={content.profileButton.editProfile}
               onAction={goToEditProfile}
             />
             <ProfileButton
               iconName="exit-outline"
-              title="LOGOUT"
+              title={content.profileButton.logout}
               onAction={actions.signOut}
             />
           </ScrollView>
@@ -95,61 +109,3 @@ export default function ProfileViewScreen({
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-  },
-  text: {
-    fontFamily: "Sans",
-  },
-
-  subHeader: {
-    marginHorizontal: 20,
-    marginTop: 12,
-    marginBottom: 0,
-    padding: 10,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    flexDirection: "row",
-    backgroundColor: "rgba(121, 89, 89, 0.4)",
-    borderColor: "rgba(205, 69, 255, 0.3)",
-    borderWidth: 1,
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  subHeaderItem: {
-    flexDirection: "row",
-  },
-  labelText: {
-    fontSize: 16,
-    lineHeight: 18,
-    color: "white",
-    marginHorizontal: 10,
-  },
-  valueText: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: "white",
-    backgroundColor: "rgba(207, 75, 255, 0.6)",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderRadius: 8,
-  },
-
-  container: {
-    flex: 1,
-    borderRadius: 19,
-    marginTop: 13,
-    marginHorizontal: 20,
-    backgroundColor: "#f2f2f2",
-    borderColor: "rgba(207, 75, 255, 0.2)",
-    borderWidth: 1,
-    marginBottom: 30,
-    padding:20,
-  },
-});
