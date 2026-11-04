@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { ProfileContext } from "../context/profileContext";
-import { ProfileStyles, profileStyles } from "../context/profileStyles";
+import { ProfileStyles} from "../context/profileStyles";
 import { ProfileContent } from "../content/content";
 
 type ScreenKey = keyof ProfileStyles & keyof ProfileContent;

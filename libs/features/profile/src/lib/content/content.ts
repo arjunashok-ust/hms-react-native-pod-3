@@ -1,5 +1,3 @@
-import { WelcomeTextContainer } from "@hms/shared-ui";
-
 const buildEnglishContent = () => ({
   profileEditContent: {
     welcome: {
