@@ -8,7 +8,7 @@ type ScreenKey = keyof ProfileStyles & keyof ProfileContent;
 export function useProfileContext<K extends ScreenKey>(screen: K) {
   const value = useContext(ProfileContext);
   if (!value) {
-    throw new Error("useProfileContext must be used withing ProfileProvider");
+    throw new Error("useProfileContext must be used within ProfileProvider");
   }
   const factory = value.styles[screen];
   const styles = useMemo(

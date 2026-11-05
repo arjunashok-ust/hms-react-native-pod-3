@@ -1,15 +1,14 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MicroAppProps } from "@hms/models";
-import { ViewMedicalRecord } from "./screens/view-medical-record/view-medical-record";
+import { HostProvider } from "@hms/shared-util";
+import { SecureNavigator } from "./navigation/secureNavigator";
+import { MedicalRecordProvider } from "./providers/medicalRecordProviders";
 
-const Stack = createNativeStackNavigator();
-
-export function MedicalRecordMicroApp({host} : MicroAppProps){
-    return (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="medicalRecords">
-                {() => <ViewMedicalRecord host={host} />}
-            </Stack.Screen>
-        </Stack.Navigator>
-    );
+export function MedicalRecordMicroApp({ host }: MicroAppProps) {
+  return (
+    <HostProvider host={host}>
+      <MedicalRecordProvider>
+        <SecureNavigator></SecureNavigator>
+      </MedicalRecordProvider>
+    </HostProvider>
+  );
 }
