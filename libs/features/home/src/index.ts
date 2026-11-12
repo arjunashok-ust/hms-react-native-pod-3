@@ -1,1 +1,1 @@
-export { HomeMicroApp } from "./lib/micro-app";
+export { HomeMicroApp } from "./lib/microApp";

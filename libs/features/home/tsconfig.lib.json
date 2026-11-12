@@ -5,7 +5,7 @@
     "declaration": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/lib/providers/homeProviders.tsx"],
   "exclude": [
     "jest.config.ts",
     "jest.config.cts",

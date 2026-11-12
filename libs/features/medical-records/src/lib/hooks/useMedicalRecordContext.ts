@@ -4,7 +4,6 @@ import { MedicalRecordContext } from "../context/medicalRecordContext";
 import { MedicalRecordStyles } from "../context/medicalRecordStyles";
 
 type ScreenKey = keyof MedicalRecordStyles & keyof MedicalRecordContent;
-
 export function useMedicalRecordContext<K extends ScreenKey>(screen: K) {
   const value = useContext(MedicalRecordContext);
   if (!value) {
