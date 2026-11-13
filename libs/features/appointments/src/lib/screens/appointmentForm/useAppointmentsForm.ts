@@ -4,7 +4,7 @@ import { trpc } from "@hms/trpc-client";
 import { useInvalidateAppointments } from "../../hooks/useAppointments";
 import Toast from "react-native-toast-message";
 import { useAppointmentContext } from "../../hooks/useAppointmentContext";
-import { AppointmentFormProps } from "./appointmentForm";
+import { AppointmentFormProps } from "./appointmentFormContent";
 
 type UseAppointmentsFormProps = Pick<
   AppointmentFormProps,

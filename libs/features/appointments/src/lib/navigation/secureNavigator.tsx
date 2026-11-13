@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AppointmentStackParamList } from "./navigationTypes";
-import { AppointmentScreen } from "../screens/appointmentForm/appointmentForm";
-import ViewAppointmentScreen from "../screens/appointmentList/appointmentList";
-import EditAppointmentScreen from "../screens/appointmentEdit/appointmentEdit";
+import { AppointmentList } from "../screens/appointmentList/appointmentList";
+import { AppointmentEdit } from "../screens/appointmentEdit/appointmentEdit";
+import { AppointmentForm } from "../screens/appointmentForm/appointmentForm";
 
 const Stack = createNativeStackNavigator<AppointmentStackParamList>();
 
@@ -18,12 +18,12 @@ export function SecureNavigator({
     >
       <Stack.Screen name="appointmentForm">
         {(props) => (
-          <AppointmentScreen {...props} initialDoctorId={initialDoctorId} />
+          <AppointmentForm {...props} initialDoctorId={initialDoctorId} />
         )}
       </Stack.Screen>
 
-      <Stack.Screen name="appointmentList" component={ViewAppointmentScreen} />
-      <Stack.Screen name="appointmentEdit" component={EditAppointmentScreen} />
+      <Stack.Screen name="appointmentList" component={AppointmentList} />
+      <Stack.Screen name="appointmentEdit" component={AppointmentEdit} />
     </Stack.Navigator>
   );
 }

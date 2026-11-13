@@ -1,5 +1,5 @@
-export * from "./lib/micro-app";
+export * from "./lib/microApp";
 export type {
   AuthenticationMicroAppProps,
   SignInCredentials,
-} from "./lib/micro-app.types";
+} from "./lib/microAppTypes";
