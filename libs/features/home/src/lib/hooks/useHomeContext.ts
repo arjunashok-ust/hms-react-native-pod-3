@@ -10,7 +10,10 @@ export function useHomeContext<K extends ScreenKey>(screen: K) {
     throw new Error("useHome must be used within the HomeContextProvider!");
   }
   const factory = value.styles[screen];
-  const styles = useMemo(() => factory(), [factory]);
+  const styles = useMemo(
+    () => factory() as ReturnType<HomeStyles[K]>,
+    [factory],
+  );
 
   return { styles, content: value.content[screen] };
 }

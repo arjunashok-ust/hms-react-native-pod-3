@@ -1,12 +1,12 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, View, Text } from "react-native";
+import { useHomeContext } from "../../hooks/useHomeContext";
 
 const DoctorCardComponent = (props: any) => {
+  const { styles } = useHomeContext("doctorCardContent");
   return (
     <TouchableOpacity style={styles.doctorContainer} onPress={props.onPress}>
-      <View
-        style={styles.doctorAvatar}
-      >
+      <View style={styles.doctorAvatar}>
         <Text style={[styles.text, styles.doctorPrefix]}>{props.prefix}</Text>
       </View>
       <View style={styles.doctorDetails}>
@@ -25,4 +25,3 @@ const DoctorCardComponent = (props: any) => {
 };
 
 export const DoctorCard = React.memo(DoctorCardComponent);
-

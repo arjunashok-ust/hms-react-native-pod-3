@@ -6,11 +6,12 @@ import {
   FormHeader,
   DatePicker,
 } from "@hms/shared-ui";
-import { DoctorHolder } from "./doctor-holder.component";
-import { TimeSlotComponent } from "./time-slot.component";
+import { DoctorHolder } from "../doctorHolder/doctorHolder";
+import { TimeSlotComponent } from "../timeSlot/timeSlot";
 import { Doctor } from "@hms/trpc-client";
-import { maxDateLimit } from "../hooks/use-appointment-form";
-import type { AppointmentFormErrors } from "../validation/appointment-form.validation";
+import { maxDateLimit } from "../../hooks/useAppointmentForm";
+import type { AppointmentFormErrors } from "../../validation/appointmentFormValidation";
+import { useAppointmentContext } from "../../hooks/useAppointmentContext";
 
 interface AppointmentFormBodyProps {
   formTitle: string;
@@ -58,6 +59,7 @@ export function AppointmentFormBody({
   secondaryIcon,
   onSecondaryAction,
 }: Readonly<AppointmentFormBodyProps>) {
+  const { styles } = useAppointmentContext("appointmentFormBodyContent");
   return (
     <View style={styles.container}>
       <FormHeader title={formTitle} value={formSubtitle} />
@@ -132,28 +134,3 @@ export function AppointmentFormBody({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    borderRadius: 35,
-    margin: 20,
-    backgroundColor: "#f2f2f2",
-    borderColor: "rgba(207, 75, 255, 0.2)",
-    borderWidth: 1,
-    paddingBottom: 20,
-  },
-  text: {
-    fontFamily: "Sans",
-  },
-  errorText: {
-    color: "#ef2121",
-    fontSize: 13,
-    width: "80%",
-    borderLeftWidth: 4,
-    borderColor: "#cd1717",
-    borderRadius: 4,
-    marginTop: 5,
-    paddingHorizontal: 10,
-  },
-});

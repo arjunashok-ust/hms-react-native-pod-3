@@ -1,4 +1,7 @@
 const buildEnglishContent = () => ({
+  doctorCardContent: {},
+  selectHolderContent: {},
+  statCardContent: {},
   homeContent: {
     welcome: {
       text1: "Find Experienced,",

@@ -8,7 +8,7 @@ import {
   hasErrors,
   validateAppointment,
   validateDate,
-} from "../validation/appointment-form.validation";
+} from "../validation/appointmentFormValidation";
 
 export interface UseAppointmentFormOptions {
   initialAppointment?: AppointmentItem;

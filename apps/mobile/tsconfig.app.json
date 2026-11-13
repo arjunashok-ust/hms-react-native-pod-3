@@ -1,4 +1,4 @@
-{
+npm exec nx -- run-many -t lint --skip-nx-cache{
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
