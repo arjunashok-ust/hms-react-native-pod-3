@@ -28,3 +28,13 @@ export const clearSession = async () => {
 export const getStoredEmail = () => AsyncStorage.getItem(EMAIL_KEY);
 
 export const getStoredPatientId = () => AsyncStorage.getItem(PATIENT_ID_KEY);
+
+export const hasStoredSession = async (): Promise<boolean> => {
+  const [token,email,patientId] = await Promise.all([
+    tokenStorage.getItem(TOKEN_KEY),
+    getStoredEmail(),
+    getStoredPatientId(),
+  ]);
+  return Boolean(token && email && patientId);
+}
+

@@ -2,13 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "files": [
-    "../../node_modules/@nx/expo/typings/svg.d.ts"
-  ],
+  "files": ["../../node_modules/@nx/expo/typings/svg.d.ts"],
   "exclude": [
     "**/*.test.ts",
     "**/*.spec.ts",
@@ -30,6 +26,10 @@
     "**/*.js",
     "**/*.jsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "../../libs/features/home/src/lib/screens/home/home.tsx",
+    "../../libs/features/home/src/lib/components/doctor-card.component.tsx",
+    "../../libs/features/home/src/lib/components/select-holder.component.tsx",
+    "../../libs/features/home/src/lib/components/stat-card.component.tsx"
   ]
 }
