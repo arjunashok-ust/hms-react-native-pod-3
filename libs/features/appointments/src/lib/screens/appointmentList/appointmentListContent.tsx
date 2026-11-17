@@ -28,6 +28,7 @@ export default function AppointmentListContent({
   const {
     styles,
     content,
+    testId,
     goToEdit,
     goToForm,
     setSearchText,
@@ -46,6 +47,7 @@ export default function AppointmentListContent({
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -59,27 +61,33 @@ export default function AppointmentListContent({
           title={content.profileButton.title.goBack}
           iconName="arrow-back-outline"
           onAction={goToForm}
+          testID={testId`goBack`}
         />
 
         <SearchBox
           placeholder={content.searchBox.placeHolder.searchAppointment}
           onChangeText={setSearchText}
+          testID={testId`search`}
         />
 
         <View style={styles.container}>
           <FormHeader
-            title={content.formHeader.title}
+            title={content.formHeader.title.schedule}
             value={content.formHeader.value.yourAppointments}
           />
 
           {appointments.length === 0 && !isFetching && (
-            <Text style={[styles.noAppointmentsText, styles.text]}>
+            <Text
+              style={[styles.noAppointmentsText, styles.text]}
+              testID={testId`noAppointments`}
+            >
               {content.errors.noAppointmentsScheduled}
             </Text>
           )}
 
           <FlatList
             data={appointments}
+            testID={testId`list`}
             keyExtractor={(item) => item.appointmentId}
             renderItem={renderItem}
             initialNumToRender={1}
@@ -89,7 +97,11 @@ export default function AppointmentListContent({
             onEndReachedThreshold={0.3}
             ListFooterComponent={
               isFetching ? (
-                <ActivityIndicator size="small" color="rgb(108, 19, 109)" />
+                <ActivityIndicator
+                  size="small"
+                  color="rgb(108, 19, 109)"
+                  testID={testId`loading`}
+                />
               ) : null
             }
           ></FlatList>

@@ -15,7 +15,7 @@ export function DoctorHolder({
   selectedDoctor,
   setDoctor,
 }: DoctorHolderProps) {
-  const { styles } = useAppointmentContext("doctorHolderContent");
+  const { styles, testId } = useAppointmentContext("doctorHolderContent");
   return (
     <View style={styles.dropdownHolder}>
       <Ionicons
@@ -25,6 +25,7 @@ export function DoctorHolder({
         style={styles.dropDownIcon}
       />
       <Picker
+        testID={testId`doctor`}
         style={styles.picker}
         dropdownIconColor="white"
         onValueChange={(value: string) => setDoctor(value)}

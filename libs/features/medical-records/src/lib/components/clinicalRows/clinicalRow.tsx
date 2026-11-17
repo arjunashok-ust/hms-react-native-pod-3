@@ -11,14 +11,19 @@ export const ClinicalRow = ({
   label: string;
   value?: string | null;
 }) => {
-  const { styles } = useMedicalRecordContext("clinicalRowContent");
+  const { styles, testId } = useMedicalRecordContext("clinicalRowContent");
   return (
-    <View style={styles.clinicalRow}>
+    <View style={styles.clinicalRow} testID={testId`row.${label}`}>
       <View style={styles.clinicalLabelRow}>
         <Ionicons name={icon} size={13} style={styles.appointmentIcon} />
         <Text style={[styles.text, styles.clinicalLabel]}>{label}</Text>
       </View>
-      <Text style={[styles.text, styles.clinicalValue]}>{value || "—"}</Text>
+      <Text
+        style={[styles.text, styles.clinicalValue]}
+        testID={testId`value.${label}`}
+      >
+        {value || "—"}
+      </Text>
     </View>
   );
 };

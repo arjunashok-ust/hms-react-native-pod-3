@@ -25,7 +25,7 @@ const EMPTY_VALUES: ProfileFormValues = {
 };
 
 export function useProfileEditContent(navigation: Navigation) {
-  const { styles, content } = useProfileContext("profileEditContent");
+  const { styles, content, testId } = useProfileContext("profileEditContent");
   const [patientId, setPatientId] = useState("");
   const [values, setValues] = useState<ProfileFormValues>(EMPTY_VALUES);
   const [errors, setErrors] = useState(EMPTY_ERRORS);
@@ -93,6 +93,7 @@ export function useProfileEditContent(navigation: Navigation) {
   return {
     styles,
     content,
+    testId,
     values,
     errors,
     setField,

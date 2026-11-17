@@ -2,6 +2,9 @@ import { useMemo, ReactNode } from "react";
 import { ProfileContext } from "../context/profileContext";
 import { profileStyles } from "../context/profileStyles";
 import { defaultContent, ProfileLanguage } from "../content/content";
+import { createTestId } from "@hms/shared-util";
+
+const testId = createTestId("profile");
 
 interface ProfileProviderProps {
   language?: ProfileLanguage;
@@ -13,7 +16,7 @@ export function ProfileProvider({
   children,
 }: ProfileProviderProps) {
   const value = useMemo(
-    () => ({ styles: profileStyles, content: defaultContent[language]() }),
+    () => ({ styles: profileStyles, content: defaultContent[language](), testId }),
     [language],
   );
   return (

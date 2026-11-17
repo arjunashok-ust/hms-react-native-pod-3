@@ -2,6 +2,9 @@ import { ReactNode, useMemo } from "react";
 import { defaultContent, MedicalRecordLanguage } from "../content/content";
 import { medicalRecordStyles } from "../context/medicalRecordStyles";
 import { MedicalRecordContext } from "../context/medicalRecordContext";
+import { createTestId } from "@hms/shared-util";
+
+const testId = createTestId("medical-records");
 
 export interface MedicalRecordProviderProps {
   language?: MedicalRecordLanguage;
@@ -16,6 +19,7 @@ export function MedicalRecordProvider({
     () => ({
       styles: medicalRecordStyles,
       content: defaultContent[language](),
+      testId,
     }),
     [language],
   );

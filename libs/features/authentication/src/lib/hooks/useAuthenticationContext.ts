@@ -17,5 +17,10 @@ export function useAuthenticationContext<K extends ScreenKey>(screen: K) {
     () => factory() as ReturnType<AuthenticationStylesType[K]>,
     [factory],
   );
-  return { styles, content: value.content[screen] };
+  const componentName = String(screen).replace(/Content$/, "");
+  const testId = useMemo(
+    () => value.testId(componentName),
+    [value, componentName],
+  );
+  return { styles, content: value.content[screen], testId };
 }

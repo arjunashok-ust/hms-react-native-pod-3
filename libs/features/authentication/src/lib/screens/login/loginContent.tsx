@@ -1,20 +1,18 @@
 import { coverImage } from "@hms/shared-ui";
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ImageBackground, TouchableOpacity } from "react-native";
 import { AuthInputText } from "../../components/authInputText/authInputText";
 import { AuthSubmitButton } from "../../components/authSubmitText/authSubmitText";
 import { WelcomeTextContainer } from "@hms/shared-ui";
 import { AuthenticationMicroAppProps } from "../../microAppTypes";
 import { useLogin } from "./useLogin";
 
-export default function LoginContent({ onSignedIn }: AuthenticationMicroAppProps) {
+export default function LoginContent({
+  onSignedIn,
+}: AuthenticationMicroAppProps) {
   const {
     styles,
     content,
+    testId,
     errors,
     setEmail,
     setPassword,
@@ -28,6 +26,7 @@ export default function LoginContent({ onSignedIn }: AuthenticationMicroAppProps
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -43,9 +42,12 @@ export default function LoginContent({ onSignedIn }: AuthenticationMicroAppProps
               setEmail(value);
             }}
             iconName="mail-outline"
+            testId={testId`email`}
           />
           {!!errors.emailError && (
-            <Text style={styles.errorText}>{errors.emailError}</Text>
+            <Text style={styles.errorText} testID={testId`emailError`}>
+              {errors.emailError}
+            </Text>
           )}
           <AuthInputText
             innerText={content.fields.password}
@@ -54,9 +56,12 @@ export default function LoginContent({ onSignedIn }: AuthenticationMicroAppProps
             }}
             isPassword={true}
             iconName="key-outline"
+            testId={testId`password`}
           />
           {!!errors.passwordError && (
-            <Text style={styles.errorText}>{errors.passwordError}</Text>
+            <Text style={styles.errorText} testID={testId`passwordError`}>
+              {errors.passwordError}
+            </Text>
           )}
           <AuthSubmitButton
             titleText={
@@ -65,8 +70,10 @@ export default function LoginContent({ onSignedIn }: AuthenticationMicroAppProps
                 : content.submitButton.login
             }
             onSubmit={sendLogin}
+            testId={testId`submit`}
           />
           <TouchableOpacity
+            testID={testId`signupLink`}
             style={styles.loginFooter}
             onPress={() => navigator.navigate("signup")}
           >

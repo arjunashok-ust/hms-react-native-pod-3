@@ -19,6 +19,7 @@ export default function ProfileEditContent({ navigation }: Props) {
   const {
     styles,
     content,
+    testId,
     values,
     errors,
     setField,
@@ -32,6 +33,7 @@ export default function ProfileEditContent({ navigation }: Props) {
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -44,6 +46,7 @@ export default function ProfileEditContent({ navigation }: Props) {
           title={content.profileButton.goBack}
           iconName="arrow-back-outline"
           onAction={goToProfile}
+          testID={testId`goBack`}
         />
 
         <ScrollView style={styles.scrollView}>
@@ -71,14 +74,18 @@ export default function ProfileEditContent({ navigation }: Props) {
             <AppointmentInputCard
               iconName="card-outline"
               title={content.fieldLabels.name}
-              value={name}
+              value={values.name}
               getData={(value: string) => {
                 setField("name", value);
               }}
               isDisabled={false}
+              testID={testId`name`}
             />
             {!!errors.name && (
-              <Text style={[styles.text, styles.errorText]}>{errors.name}</Text>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`nameError`}
+              >{errors.name}</Text>
             )}
             <Text style={[styles.text, styles.placeholderText]}>
               {content.placeHolderText.gender}
@@ -91,6 +98,7 @@ export default function ProfileEditContent({ navigation }: Props) {
                 style={styles.appointmentIcon}
               />
               <Picker
+                testID={testId`gender`}
                 selectedValue={values.gender}
                 onValueChange={(value) => {
                   setField("gender", value);
@@ -104,23 +112,33 @@ export default function ProfileEditContent({ navigation }: Props) {
               </Picker>
             </View>
             {!!errors.gender && (
-              <Text style={[styles.text, styles.errorText]}>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`genderError`}
+              >
                 {errors.gender}
               </Text>
             )}
             <Text style={[styles.text, styles.placeholderText]}>
               {content.placeHolderText.dateOfBirth}
             </Text>
-            <DatePicker
-              value={values.dob}
-              onChange={(value) => setField("dob", value)}
-              placeholder="DOB"
-              iconName="alarm-outline"
-              minimumDate={minDobLimit()}
-              maximumDate={maxDobLimit()}
-            />
+            <View testID={testId`dob`}>
+              <DatePicker
+                value={values.dob}
+                onChange={(value) => setField("dob", value)}
+                placeholder="DOB"
+                iconName="alarm-outline"
+                minimumDate={minDobLimit()}
+                maximumDate={maxDobLimit()}
+              />
+            </View>
             {!!errors.dob && (
-              <Text style={[styles.text, styles.errorText]}>{errors.dob}</Text>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`dobError`}
+              >
+                {errors.dob}
+              </Text>
             )}
             <SectionDivider
               title={content.sectionDivider.contactInfo}
@@ -134,9 +152,13 @@ export default function ProfileEditContent({ navigation }: Props) {
                 setField("email", value);
               }}
               isDisabled={true}
+              testID={testId`email`}
             />
             {!!errors.email && (
-              <Text style={[styles.text, styles.errorText]}>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`emailError`}
+              >
                 {errors.email}
               </Text>
             )}
@@ -148,9 +170,13 @@ export default function ProfileEditContent({ navigation }: Props) {
                 setField("address", value);
               }}
               isDisabled={false}
+              testID={testId`address`}
             />
             {!!errors.address && (
-              <Text style={[styles.text, styles.errorText]}>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`addressError`}
+              >
                 {errors.address}
               </Text>
             )}
@@ -162,9 +188,13 @@ export default function ProfileEditContent({ navigation }: Props) {
                 /* noop */
               }}
               isDisabled={true}
+              testID={testId`phone`}
             />
             {!!errors.phone && (
-              <Text style={[styles.text, styles.errorText]}>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`phoneError`}
+              >
                 {errors.phone}
               </Text>
             )}
@@ -176,9 +206,13 @@ export default function ProfileEditContent({ navigation }: Props) {
                 setField("emergencyContact", value);
               }}
               isDisabled={false}
+              testID={testId`emergencyContact`}
             />
             {!!errors.emergencyContact && (
-              <Text style={[styles.text, styles.errorText]}>
+              <Text
+                style={[styles.text, styles.errorText]}
+                testID={testId`emergencyContactError`}
+              >
                 {errors.emergencyContact}
               </Text>
             )}
@@ -190,11 +224,13 @@ export default function ProfileEditContent({ navigation }: Props) {
               }
               iconName="arrow-back-outline"
               onAction={updateProfile}
+              testID={testId`updateProfile`}
             />
             <ProfileButton
               title={content.profileButton.cancel}
               iconName="close-outline"
               onAction={goToProfile}
+              testID={testId`cancel`}
             />
           </View>
         </ScrollView>

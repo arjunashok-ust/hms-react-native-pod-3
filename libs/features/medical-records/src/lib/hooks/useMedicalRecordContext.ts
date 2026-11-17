@@ -16,5 +16,10 @@ export function useMedicalRecordContext<K extends ScreenKey>(screen: K) {
     () => factory() as ReturnType<MedicalRecordStyles[K]>,
     [factory],
   );
-  return { styles, content: value.content[screen] };
+  const componentName = String(screen).replace(/Content$/, "");
+  const testId = useMemo(
+    () => value.testId(componentName),
+    [value, componentName],
+  );
+  return { styles, content: value.content[screen], testId };
 }

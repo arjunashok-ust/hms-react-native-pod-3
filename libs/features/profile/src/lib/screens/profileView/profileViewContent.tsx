@@ -11,6 +11,7 @@ export default function ProfileViewContent({ navigation }: Props) {
   const {
     styles,
     content,
+    testId,
     patientData,
     formattedDob,
     goToEditProfile,
@@ -22,9 +23,11 @@ export default function ProfileViewContent({ navigation }: Props) {
       source={coverImage}
       style={styles.wrapper}
       resizeMode="cover"
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <ProfileCard
+          testId={testId`profileCard`}
           prefix={patientData?.name.slice(0, 2).toUpperCase()}
           name={patientData?.name}
           designation={patientData?.role}
@@ -37,16 +40,19 @@ export default function ProfileViewContent({ navigation }: Props) {
               title={content.sectionDivider.personalInfo}
             />
             <InfoCard
+              testId={testId`name`}
               iconName="person-outline"
               title={content.infoCard.title.name}
               value={patientData?.name}
             />
             <InfoCard
+              testId={testId`gender`}
               iconName="male-outline"
               title={content.infoCard.title.gender}
               value={patientData?.gender ?? ""}
             />
             <InfoCard
+              testId={testId`dob`}
               iconName="calendar-outline"
               title={content.infoCard.title.dateOfBirth}
               value={formattedDob}
@@ -56,21 +62,25 @@ export default function ProfileViewContent({ navigation }: Props) {
               title={content.sectionDivider.contactInfo}
             />
             <InfoCard
+              testId={testId`phone`}
               iconName="call-outline"
               title={content.infoCard.title.phone}
               value={patientData?.phone ?? ""}
             />
             <InfoCard
+              testId={testId`email`}
               iconName="mail-outline"
               title={content.infoCard.title.email}
               value={patientData?.email}
             />
             <InfoCard
+              testId={testId`address`}
               iconName="location-outline"
               title={content.infoCard.title.address}
               value={patientData?.address ?? ""}
             />
             <InfoCard
+              testId={testId`emergencyContact`}
               iconName="alert-circle-outline"
               title={content.infoCard.title.emergencyContact}
               value={
@@ -86,11 +96,13 @@ export default function ProfileViewContent({ navigation }: Props) {
               iconName="pencil-outline"
               title={content.profileButton.editProfile}
               onAction={goToEditProfile}
+              testID={testId`editProfile`}
             />
             <ProfileButton
               iconName="exit-outline"
               title={content.profileButton.logout}
               onAction={signOut}
+              testID={testId`logout`}
             />
           </ScrollView>
         </View>

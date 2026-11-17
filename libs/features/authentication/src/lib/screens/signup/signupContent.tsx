@@ -16,6 +16,7 @@ export default function SignUpContent() {
   const {
     styles,
     content,
+    testId,
     errors,
     setName,
     setEmail,
@@ -44,6 +45,7 @@ export default function SignUpContent() {
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -61,46 +63,65 @@ export default function SignUpContent() {
               innerText={content.fields.name}
               getData={(value: string) => setName(value)}
               iconName="person-outline"
+              testId={testId`name`}
             />
             {!!errors.name && (
-              <Text style={styles.errorText}>{errors.name}</Text>
+              <Text style={styles.errorText} testID={testId`nameError`}>
+                {errors.name}
+              </Text>
             )}
             <AuthInputText
               innerText={content.fields.email}
               getData={(value: string) => setEmail(value)}
               iconName="mail-outline"
+              testId={testId`email`}
             />
             {!!errors.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
+              <Text style={styles.errorText} testID={testId`emailError`}>
+                {errors.email}
+              </Text>
             )}
             <AuthInputText
               innerText={content.fields.password}
               isPassword={true}
               getData={(value: string) => setPassword(value)}
               iconName="key-outline"
+              testId={testId`password`}
             />
             {!!errors.password && (
-              <Text style={styles.errorText}>{errors.password}</Text>
+              <Text style={styles.errorText} testID={testId`passwordError`}>
+                {errors.password}
+              </Text>
             )}
             <AuthInputText
               innerText={content.fields.confirmPassword}
               isPassword={true}
               getData={(value: string) => setConfirmPassword(value)}
               iconName="lock-closed-outline"
+              testId={testId`confirmPassword`}
             />
             {!!errors.confirmPassword && (
-              <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+              <Text
+                style={styles.errorText}
+                testID={testId`confirmPasswordError`}
+              >
+                {errors.confirmPassword}
+              </Text>
             )}
             <AuthInputText
               innerText={content.fields.phone}
               getData={(value: string) => setPhone(value)}
               iconName="call-outline"
+              testId={testId`phone`}
             />
             {!!errors.phone && (
-              <Text style={styles.errorText}>{errors.phone}</Text>
+              <Text style={styles.errorText} testID={testId`phoneError`}>
+                {errors.phone}
+              </Text>
             )}
             <View style={styles.dropdownHolder}>
               <Picker
+                testID={testId`gender`}
                 selectedValue={gender}
                 onValueChange={(value) => {
                   if (value != "") setGender(value);
@@ -126,18 +147,24 @@ export default function SignUpContent() {
               </Picker>
             </View>
             {!!errors.gender && (
-              <Text style={styles.errorText}>{errors.gender}</Text>
+              <Text style={styles.errorText} testID={testId`genderError`}>
+                {errors.gender}
+              </Text>
             )}
             <AuthInputText
               innerText={content.fields.address}
               getData={(value: string) => setAddress(value)}
               iconName="location-outline"
+              testId={testId`address`}
             />
             {!!errors.address && (
-              <Text style={styles.errorText}>{errors.address}</Text>
+              <Text style={styles.errorText} testID={testId`addressError`}>
+                {errors.address}
+              </Text>
             )}
             <View style={styles.dropdownHolder}>
               <Picker
+                testID={testId`bloodGroup`}
                 selectedValue={bloodGroup}
                 onValueChange={(value) => {
                   if (value != "") setBloodGroup(value);
@@ -161,29 +188,44 @@ export default function SignUpContent() {
               </Picker>
             </View>
             {!!errors.bloodGroup && (
-              <Text style={styles.errorText}>{errors.bloodGroup}</Text>
+              <Text style={styles.errorText} testID={testId`bloodGroupError`}>
+                {errors.bloodGroup}
+              </Text>
             )}
             <AuthInputText
               innerText={content.fields.allergies}
               getData={(value: string) => setAllergies(value)}
               iconName="medkit-outline"
+              testId={testId`allergies`}
             />
-            <DatePicker
-              value={isDobSet ? dob : null}
-              onChange={onDobChange}
-              placeholder={content.fields.dob}
-              minimumDate={minDobLimit()}
-              maximumDate={maxDobLimit()}
-              style={styles.dobField}
-            />
-            {!!errors.dob && <Text style={styles.errorText}>{errors.dob}</Text>}
+            <View testID={testId`dob`}>
+              <DatePicker
+                value={isDobSet ? dob : null}
+                onChange={onDobChange}
+                placeholder={content.fields.dob}
+                minimumDate={minDobLimit()}
+                maximumDate={maxDobLimit()}
+                style={styles.dobField}
+              />
+            </View>
+            {!!errors.dob && (
+              <Text style={styles.errorText} testID={testId`dobError`}>
+                {errors.dob}
+              </Text>
+            )}
             <AuthInputText
               innerText={content.fields.emergencyContact}
               getData={(value: string) => setEmergencyContact(value)}
               iconName="call-outline"
+              testId={testId`emergencyContact`}
             />
             {!!errors.emergencyContact && (
-              <Text style={styles.errorText}>{errors.emergencyContact}</Text>
+              <Text
+                style={styles.errorText}
+                testID={testId`emergencyContactError`}
+              >
+                {errors.emergencyContact}
+              </Text>
             )}
             <AuthSubmitButton
               titleText={
@@ -192,8 +234,10 @@ export default function SignUpContent() {
                   : content.submitButton.signup
               }
               onSubmit={sendSignUp}
+              testId={testId`submit`}
             />
             <TouchableOpacity
+              testID={testId`loginLink`}
               style={styles.signUpFooter}
               onPress={() => navigator.navigate("login")}
             >

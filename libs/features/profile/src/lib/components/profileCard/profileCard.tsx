@@ -6,6 +6,7 @@ export const ProfileCard = (props: any) => {
   return (
     <LinearGradient
       style={styles.profileHeader}
+      testID={props.testId}
       colors={["rgba(81, 14, 122, 0.9)", "rgb(79, 62, 67)"]}
     >
       <LinearGradient

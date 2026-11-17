@@ -13,11 +13,11 @@ export function TimeSlotComponent({
   setTimeSlot,
   timeSlot,
 }: TimeSlotPropsType) {
-  const { styles } = useAppointmentContext("timeSlotContent");
+  const { styles, testId } = useAppointmentContext("timeSlotContent");
   return (
     <View style={styles.timeSlotContainer}>
       {availableSlots.length === 0 ? (
-        <Text style={[styles.text, styles.slotText]}>
+        <Text style={[styles.text, styles.slotText]} testID={testId`noSlots`}>
           No slot available at this moment
         </Text>
       ) : (
@@ -27,6 +27,7 @@ export function TimeSlotComponent({
               slot={slot}
               onAction={setTimeSlot}
               id={slot}
+              testID={testId`slot.${slot}`}
               key={slot}
               isSelected={timeSlot === slot}
             />

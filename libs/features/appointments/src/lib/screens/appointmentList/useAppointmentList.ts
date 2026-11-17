@@ -9,7 +9,7 @@ import { AppointmentScreenProps } from "../../navigation/navigationTypes";
 export function useAppointmentList({
   navigation,
 }: Pick<AppointmentScreenProps<"appointmentList">, "navigation">) {
-  const { styles, content } = useAppointmentContext("appointmentListContent");
+  const { styles, content, testId } = useAppointmentContext("appointmentListContent");
   const { patientId } = useHost();
 
   const [searchText, setSearchText] = useState("");
@@ -43,6 +43,7 @@ export function useAppointmentList({
   return {
     styles,
     content,
+    testId,
     goToEdit,
     goToForm,
     setSearchText,

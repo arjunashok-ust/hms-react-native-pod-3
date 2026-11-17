@@ -15,7 +15,7 @@ export function useAppointmentsForm({
   initialDoctorId,
   navigation,
 }: UseAppointmentsFormProps) {
-  const { styles, content } = useAppointmentContext("appointmentFormContent");
+  const { styles, content, testId } = useAppointmentContext("appointmentFormContent");
   const {
     doctors,
     isDateSet,
@@ -76,6 +76,7 @@ export function useAppointmentsForm({
   return {
     styles,
     content,
+    testId,
     patientId,
     date,
     isDateSet,

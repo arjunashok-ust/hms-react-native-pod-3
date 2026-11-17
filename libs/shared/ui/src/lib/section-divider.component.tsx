@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 export function SectionDivider(props: any) {
   return (
-    <View style={styles.sectionDivider}>
+    <View style={styles.sectionDivider} testID={props.testID}>
       <Ionicons name={props.iconName} color={"rgb(92, 23, 113)"} size={20} />
       <Text style={[styles.sectionTitle, styles.text]}>{props.title}</Text>
       <View style={styles.divider}></View>

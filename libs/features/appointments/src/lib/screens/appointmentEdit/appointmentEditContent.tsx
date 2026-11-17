@@ -9,6 +9,7 @@ export default function appointmentEditContent() {
   const {
     styles,
     content,
+    testId,
     patientId,
     date,
     isDateSet,
@@ -28,11 +29,11 @@ export default function appointmentEditContent() {
   } = useAppointmentEdit();
   
   return (
-    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={coverImage} resizeMode="cover" style={styles.wrapper} testID={testId`screen`}>
       <View style={styles.overlay}>
         <WelcomeTextContainer text1={content.welcome.text1} text2={content.welcome.text2} text3={content.welcome.text3} />
 
-        <ProfileButton title={content.profileButton.title.goBack} iconName="arrow-back-outline" onAction={goToAppointments} />
+        <ProfileButton title={content.profileButton.title.goBack} iconName="arrow-back-outline" onAction={goToAppointments} testID={testId`goBack`} />
 
         <ScrollView style={styles.scrollView}>
           <AppointmentFormBody
@@ -49,7 +50,7 @@ export default function appointmentEditContent() {
             timeSlot={timeSlot}
             setTimeSlot={setTimeSlot}
             errors={errors}
-            primaryLabel={editAppointment.isPending ? content.appointmentFormBodyProps.primaryLabel.save : content.appointmentFormBodyProps.primaryLabel.saving}
+            primaryLabel={editAppointment.isPending ? content.appointmentFormBodyProps.primaryLabel.saving : content.appointmentFormBodyProps.primaryLabel.save}
             primaryIcon="save-outline"
             onPrimaryAction={saveAppointment}
           />
@@ -59,8 +60,9 @@ export default function appointmentEditContent() {
           title={cancelAppointment.isPending ? content.profileButton.title.canceling : content.profileButton.title.cancelAppointment}
           iconName="close-outline"
           onAction={cancel}
+          testID={testId`cancel`}
         />
-        <ProfileButton title={content.profileButton.title.viewAppointments} iconName="eye-outline" onAction={goToAppointments} />
+        <ProfileButton title={content.profileButton.title.viewAppointments} iconName="eye-outline" onAction={goToAppointments} testID={testId`viewAppointments`} />
       </View>
     </ImageBackground>
   );

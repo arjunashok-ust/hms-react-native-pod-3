@@ -5,7 +5,11 @@ import { useHomeContext } from "../../hooks/useHomeContext";
 const DoctorCardComponent = (props: any) => {
   const { styles } = useHomeContext("doctorCardContent");
   return (
-    <TouchableOpacity style={styles.doctorContainer} onPress={props.onPress}>
+    <TouchableOpacity
+      style={styles.doctorContainer}
+      onPress={props.onPress}
+      testID={props.testId}
+    >
       <View style={styles.doctorAvatar}>
         <Text style={[styles.text, styles.doctorPrefix]}>{props.prefix}</Text>
       </View>
