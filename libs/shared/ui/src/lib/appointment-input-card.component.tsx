@@ -21,6 +21,7 @@ export const AppointmentInputCard = (props: any) => {
           style={styles.appointmentIcon}
         />
         <TextInput
+          testID={props.testID}
           value={props.value}
           style={styles.appointmentTextField}
           placeholderTextColor={"rgba(111, 111, 111, 0.8)"}

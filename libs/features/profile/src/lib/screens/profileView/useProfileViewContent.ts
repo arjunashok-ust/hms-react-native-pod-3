@@ -7,7 +7,7 @@ import { formatDate } from "../../utils/formatDate";
 type Navigation = ProfileScreenProps<"profileView">["navigation"];
 
 export function useProfileViewContent(navigation: Navigation) {
-  const { styles, content } = useProfileContext("profileViewContent");
+  const { styles, content, testId } = useProfileContext("profileViewContent");
   const { actions } = useHost();
   const { data: patientData } = usePatientProfile();
 
@@ -16,6 +16,7 @@ export function useProfileViewContent(navigation: Navigation) {
   return {
     styles,
     content,
+    testId,
     patientData,
     formattedDob: formatDate(patientData?.dob),
     goToEditProfile,

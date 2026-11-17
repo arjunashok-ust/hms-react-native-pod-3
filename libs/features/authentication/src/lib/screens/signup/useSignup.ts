@@ -19,7 +19,7 @@ import Toast from "react-native-toast-message";
 import { useAuthenticationContext } from "../../hooks/useAuthenticationContext";
 
 export function useSignUp() {
-  const { styles, content } = useAuthenticationContext("signupContent");
+  const { styles, content, testId } = useAuthenticationContext("signupContent");
   const navigator =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const [name, setName] = useState("");
@@ -71,7 +71,7 @@ export function useSignUp() {
         content.requiredLabels.bloodGroup,
       ),
       dob: validateDob(dob),
-      emergencyContact: validatePhone(phone, emergencyContact),
+      emergencyContact: validatePhone(emergencyContact, phone),
     };
 
     setErrors(newErrors);
@@ -123,6 +123,7 @@ export function useSignUp() {
   return {
     styles,
     content,
+    testId,
     errors,
     setName,
     setEmail,
@@ -143,6 +144,6 @@ export function useSignUp() {
     isDobSet,
     dob,
     onDobChange,
-    sendSignUp
+    sendSignUp,
   };
 }

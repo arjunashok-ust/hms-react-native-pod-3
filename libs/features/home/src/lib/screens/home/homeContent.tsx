@@ -18,6 +18,7 @@ export function HomeContent() {
   const {
     styles,
     content,
+    testId,
     actions,
     selectedSpecialization,
     onSelectedSpecialization,
@@ -29,6 +30,7 @@ export function HomeContent() {
   const renderItem: ListRenderItem<Doctor> = useCallback(
     ({ item }) => (
       <DoctorCard
+        testId={testId`doctor.${item.employeeCode}`}
         prefix={item.name.slice(0, 2).toUpperCase()}
         name={item.name}
         designation={item.designation ?? ""}
@@ -36,12 +38,13 @@ export function HomeContent() {
         onPress={() => actions.bookAppointment(item.employeeCode)}
       />
     ),
-    [actions],
+    [actions, testId],
   );
 
   const renderSpecialization: ListRenderItem<Specialization> = useCallback(
     ({ item }) => (
       <SelectHolder
+        testId={testId`specialization.${item.specialization_name}`}
         name={item.specialization_name}
         onPress={() => {
           const newValue =
@@ -54,7 +57,7 @@ export function HomeContent() {
         isSelected={selectedSpecialization === item.specialization_name}
       />
     ),
-    [selectedSpecialization],
+    [selectedSpecialization, testId],
   );
 
   return (
@@ -62,6 +65,7 @@ export function HomeContent() {
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -73,6 +77,7 @@ export function HomeContent() {
         <SearchBox
           placeholder={content.search.placeHolder}
           onChangeText={onSetFilterText}
+          testID={testId`search`}
         />
         <View style={styles.container}>
           <View style={styles.contentHolder}>
@@ -85,6 +90,7 @@ export function HomeContent() {
               keyExtractor={(item) => item._id}
               renderItem={renderSpecialization}
               numColumns={3}
+              testID={testId`specializationList`}
             ></FlatList>
           </View>
           <View style={styles.contentHolder}>
@@ -94,6 +100,7 @@ export function HomeContent() {
             <FlatList
               horizontal
               data={filteredDoctors}
+              testID={testId`doctorList`}
               keyExtractor={(item) => item.employeeCode}
               renderItem={renderItem}
             />

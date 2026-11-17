@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 export const InfoCard = (props: any) => {
   return (
-    <View style={styles.infoCard}>
+    <View style={styles.infoCard} testID={props.testId}>
       <Ionicons
         name={props.iconName}
         color="rgb(224, 224, 224)"

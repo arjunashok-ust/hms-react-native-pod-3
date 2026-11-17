@@ -16,7 +16,8 @@ export const AppointmentCardComponent = ({
   appointment,
   onEdit,
 }: AppointmentCardProps) => {
-  const { styles } = useAppointmentContext("appointmentCardContent");
+  const { styles, testId } = useAppointmentContext("appointmentCardContent");
+  const key = appointment.appointmentId;
   const invalidateAppointments = useInvalidateAppointments();
 
   // Cached per doctor, so cards sharing a doctor trigger a single request.
@@ -51,7 +52,7 @@ export const AppointmentCardComponent = ({
   };
 
   return (
-    <View style={styles.appointmentContainer}>
+    <View style={styles.appointmentContainer} testID={testId`${key}.card`}>
       <View style={styles.appointmentHeader}>
         <View style={styles.appointmentIconAndText}>
           <View style={styles.avatarIcon}>
@@ -62,6 +63,7 @@ export const AppointmentCardComponent = ({
 
           <View style={styles.appointmentTextHolder}>
             <Text
+              testID={testId`${key}.doctor`}
               style={[styles.text, styles.doctorText]}
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -87,7 +89,10 @@ export const AppointmentCardComponent = ({
             appointment.status === "Pending" && styles.pending,
           ]}
         >
-          <Text style={[styles.text, styles.appointmentStatusText]}>
+          <Text
+            style={[styles.text, styles.appointmentStatusText]}
+            testID={testId`${key}.status`}
+          >
             {appointment.status}
           </Text>
         </View>
@@ -121,6 +126,7 @@ export const AppointmentCardComponent = ({
               iconName="create-outline"
               title="Edit"
               onAction={() => onEdit(appointment)}
+              testID={testId`${key}.edit`}
             />
           )}
           {appointment.status === "Pending" && (
@@ -128,6 +134,7 @@ export const AppointmentCardComponent = ({
               iconName="close-outline"
               title="Cancel"
               onAction={confirmCancel}
+              testID={testId`${key}.cancel`}
             />
           )}
         </View>

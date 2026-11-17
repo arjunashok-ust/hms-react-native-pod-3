@@ -9,7 +9,7 @@ const NO_DOCTORS: Doctor[] = [];
 const NO_SPECIALIZATIONS: Specialization[] = [];
 
 export function useHome() {
-  const { styles, content } = useHomeContext("homeContent");
+  const { styles, content, testId } = useHomeContext("homeContent");
   const { actions } = useHost();
   const {
     filterText,
@@ -34,6 +34,7 @@ export function useHome() {
   return {
     styles,
     content,
+    testId,
     actions,
     filterText,
     onSetFilterText,

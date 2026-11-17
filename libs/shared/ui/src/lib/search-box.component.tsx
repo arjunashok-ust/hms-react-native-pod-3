@@ -12,6 +12,7 @@ export function SearchBox(props: any) {
       />
       <TextInput
         style={styles.searchInput}
+        testID={props.testID}
         placeholder={props.placeholder}
         onChangeText={props.onChangeText}
       />

@@ -15,14 +15,21 @@ export const MedicalRecordCardComponent = ({
   onToggle: () => void;
 }) => {
 
-  const { styles } = useMedicalRecordContext("medicalRecordCardContent");
+  const { styles, testId } = useMedicalRecordContext(
+    "medicalRecordCardContent",
+  );
   const { formatDate } = formatDateAndTime();
   
   return (
-    <View style={styles.appointmentContainer}>
+    <View
+      style={styles.appointmentContainer}
+      testID={testId`card.${record.medicalRecordId}`}
+    >
       <TouchableOpacity
         style={styles.appointmentHeader}
         onPress={onToggle}
+        testID={testId`toggle.${record.medicalRecordId}`}
+        accessibilityState={{ expanded: isExpanded }}
         activeOpacity={0.75}
       >
         <View style={styles.appointmentIconAndText}>

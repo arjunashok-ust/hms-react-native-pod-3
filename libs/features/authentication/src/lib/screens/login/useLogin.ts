@@ -13,7 +13,7 @@ import { AuthenticationMicroAppProps } from "../../microAppTypes";
 import { useAuthenticationContext } from "../../hooks/useAuthenticationContext";
 
 export function useLogin({ onSignedIn }: AuthenticationMicroAppProps) {
-  const { styles, content } = useAuthenticationContext("loginContent");
+  const { styles, content, testId} = useAuthenticationContext("loginContent");
   const navigator =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const [email, setEmail] = useState("");
@@ -61,6 +61,7 @@ export function useLogin({ onSignedIn }: AuthenticationMicroAppProps) {
   return {
     styles,
     content,
+    testId,
     errors,
     setEmail,
     setPassword,

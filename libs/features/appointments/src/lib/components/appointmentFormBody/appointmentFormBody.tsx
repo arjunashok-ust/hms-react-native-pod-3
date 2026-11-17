@@ -59,7 +59,9 @@ export function AppointmentFormBody({
   secondaryIcon,
   onSecondaryAction,
 }: Readonly<AppointmentFormBodyProps>) {
-  const { styles } = useAppointmentContext("appointmentFormBodyContent");
+  const { styles, testId } = useAppointmentContext(
+    "appointmentFormBodyContent",
+  );
   return (
     <View style={styles.container}>
       <FormHeader title={formTitle} value={formSubtitle} />
@@ -68,6 +70,7 @@ export function AppointmentFormBody({
         iconName="card-outline"
         title="PATIENT ID"
         value={patientId}
+        testID={testId`patientId`}
         getData={() => {
           /* noop */
         }}
@@ -76,6 +79,7 @@ export function AppointmentFormBody({
 
       <SectionDivider title="SCHEDULE" iconName="calendar-outline" />
 
+      <View testID={testId`date`}>
       <DatePicker
         value={isDateSet ? date : null}
         onChange={onDateChange}
@@ -84,8 +88,14 @@ export function AppointmentFormBody({
         minimumDate={new Date()}
         maximumDate={maxDateLimit()}
       />
+      </View>
       {!!errors.date && (
-        <Text style={[styles.text, styles.errorText]}>{errors.date}</Text>
+        <Text
+          style={[styles.text, styles.errorText]}
+          testID={testId`dateError`}
+        >
+          {errors.date}
+        </Text>
       )}
 
       {isDateSet && (
@@ -98,7 +108,10 @@ export function AppointmentFormBody({
             selectedDoctor={doctorId}
           />
           {!!errors.doctorEmployeeId && (
-            <Text style={[styles.text, styles.errorText]}>
+            <Text
+              style={[styles.text, styles.errorText]}
+              testID={testId`doctorError`}
+            >
               {errors.doctorEmployeeId}
             </Text>
           )}
@@ -111,7 +124,10 @@ export function AppointmentFormBody({
             setTimeSlot={setTimeSlot}
           />
           {!!errors.timeSlot && (
-            <Text style={[styles.text, styles.errorText]}>
+            <Text
+              style={[styles.text, styles.errorText]}
+              testID={testId`timeSlotError`}
+            >
               {errors.timeSlot}
             </Text>
           )}
@@ -120,6 +136,7 @@ export function AppointmentFormBody({
             title={primaryLabel}
             iconName={primaryIcon}
             onAction={onPrimaryAction}
+            testID={testId`primary`}
           />
 
           {secondaryLabel && onSecondaryAction && (
@@ -127,6 +144,7 @@ export function AppointmentFormBody({
               title={secondaryLabel}
               iconName={secondaryIcon ?? "close-outline"}
               onAction={onSecondaryAction}
+              testID={testId`secondary`}
             />
           )}
         </View>

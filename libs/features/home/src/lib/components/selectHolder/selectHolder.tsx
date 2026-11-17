@@ -4,7 +4,12 @@ import { useHomeContext } from "../../hooks/useHomeContext";
 const SelectHolder = (props: any) => {
   const {styles} = useHomeContext("selectHolderContent");
   return (
-    <TouchableOpacity style={[styles.selectHolder,props.isSelected && styles.selectedStyle]} onPress={props.onPress}>
+    <TouchableOpacity
+      style={[styles.selectHolder, props.isSelected && styles.selectedStyle]}
+      onPress={props.onPress}
+      testID={props.testId}
+      accessibilityState={{ selected: !!props.isSelected }}
+    >
       <Text style={[styles.text, styles.selectHolderText]}>{props.name}</Text>
     </TouchableOpacity>
   );

@@ -1,5 +1,3 @@
-import { M } from "node_modules/@trpc/server/dist/unstable-core-do-not-import-B9ZnrQAU.cjs";
-
 export const buildEnglishContent = () => ({
   // components
   appointmentCardContent: {},

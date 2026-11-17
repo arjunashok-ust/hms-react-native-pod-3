@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useMedicalRecords } from "../../hooks/useMedicalRecords";
 
 export function useViewMedicalRecord() {
-  const { styles, content } = useMedicalRecordContext(
+  const { styles, content, testId } = useMedicalRecordContext(
     "viewMedicalRecordContent",
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -29,6 +29,7 @@ export function useViewMedicalRecord() {
   return {
     styles,
     content,
+    testId,
     expandedId,
     isFetching,
     records,

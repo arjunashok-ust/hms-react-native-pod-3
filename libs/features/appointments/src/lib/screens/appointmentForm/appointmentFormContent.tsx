@@ -17,6 +17,7 @@ export function AppointmentFormContent({
   const {
     styles,
     content,
+    testId,
     patientId,
     date,
     isDateSet,
@@ -38,6 +39,7 @@ export function AppointmentFormContent({
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -76,6 +78,7 @@ export function AppointmentFormContent({
           title={content.profileButton.title.viewAppointments}
           iconName="eye-outline"
           onAction={goToAppointments}
+          testID={testId`viewAppointments`}
         />
       </View>
     </ImageBackground>

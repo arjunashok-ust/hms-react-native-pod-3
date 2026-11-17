@@ -5,6 +5,7 @@ export function TimeSlotHolder(props: any){
   return (
     <TouchableOpacity
       style={[styles.slotHolder, props.isSelected && styles.slotHolderSelected]}
+      testID={props.testID}
       onPress={() => props.onAction(props.slot)}
     >
       <Ionicons name="alarm-outline" color={"rgb(89, 27, 111)"} size={22} />

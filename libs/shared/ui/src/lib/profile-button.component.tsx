@@ -3,7 +3,11 @@ import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 export function ProfileButton(props: any) {
   return (
-    <TouchableOpacity style={styles.buttonHolder} onPress={props.onAction}>
+    <TouchableOpacity
+      style={styles.buttonHolder}
+      onPress={props.onAction}
+      testID={props.testID}
+    >
       <Ionicons
         name={props.iconName}
         color={"rgb(221, 221, 221)"}

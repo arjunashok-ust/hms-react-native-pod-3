@@ -19,6 +19,7 @@ export function ViewMedicalRecordContent() {
   const {
     styles,
     content,
+    testId,
     handleToggle,
     expandedId,
     records,
@@ -42,6 +43,7 @@ export function ViewMedicalRecordContent() {
       source={coverImage}
       resizeMode="cover"
       style={styles.wrapper}
+      testID={testId`screen`}
     >
       <View style={styles.overlay}>
         <WelcomeTextContainer
@@ -51,13 +53,21 @@ export function ViewMedicalRecordContent() {
           isHome={true}
         />
         <View style={styles.container}>
-          <FormHeader title={content.header.title} value={content.header.value} />
+          <FormHeader
+            title={content.header.title}
+            value={content.header.value}
+            testID={testId`header`}
+          />
           {records.length === 0 && !isFetching && (
-            <Text style={[styles.noRecordsText, styles.text]}>
+            <Text
+              style={[styles.noRecordsText, styles.text]}
+              testID={testId`noRecords`}
+            >
               {content.errors.noRecordsFound}
             </Text>
           )}
           <FlatList
+            testID={testId`list`}
             data={records}
             keyExtractor={(item) => item.medicalRecordId}
             renderItem={renderItem}
@@ -68,7 +78,9 @@ export function ViewMedicalRecordContent() {
             onEndReachedThreshold={0.5}
             ListFooterComponent={
               isFetching ? (
-                <Text style={{ textAlign: "center" }}>{content.loaders.loading}</Text>
+                <Text style={{ textAlign: "center" }} testID={testId`loading`}>
+                  {content.loaders.loading}
+                </Text>
               ) : null
             }
           />

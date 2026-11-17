@@ -8,7 +8,7 @@ import Toast from "react-native-toast-message";
 import { useAppointmentContext } from "../../hooks/useAppointmentContext";
 
 export function useAppointmentEdit() {
-  const { styles, content } = useAppointmentContext("appointmentEditContent");
+  const { styles, content, testId } = useAppointmentContext("appointmentEditContent");
   const route =
     useRoute<RouteProp<AppointmentStackParamList, "appointmentEdit">>();
   const { appointment } = route.params;
@@ -78,6 +78,7 @@ export function useAppointmentEdit() {
   return {
     styles,
     content,
+    testId,
     patientId,
     date,
     isDateSet,
