@@ -60,18 +60,65 @@
   "fileMap": {
     "nonProjectFiles": [],
     "projectFileMap": {
+      "feature-medical-records": [
+        {
+          "file": "libs/features/medical-records/README.md",
+          "hash": "15676459181954134451"
+        },
+        {
+          "file": "libs/features/medical-records/eslint.config.mjs",
+          "hash": "3026081421420007998"
+        },
+        {
+          "file": "libs/features/medical-records/jest.config.cts",
+          "hash": "7790277630517926991"
+        },
+        {
+          "file": "libs/features/medical-records/project.json",
+          "hash": "9093448445196945920"
+        },
+        {
+          "file": "libs/features/medical-records/src/index.ts",
+          "hash": "12560091048215795317"
+        },
+        {
+          "file": "libs/features/medical-records/src/lib/screens/view-medical-record/view-medical-record.tsx",
+          "hash": "8267790577778425360",
+          "deps": [
+            "shared-ui",
+            "npm:react-native",
+            "npm:react",
+            "npm:@expo/vector-icons",
+            "models",
+            "npm:@react-native-async-storage/async-storage",
+            "data-access"
+          ]
+        },
+        {
+          "file": "libs/features/medical-records/tsconfig.json",
+          "hash": "8666751250685471268"
+        },
+        {
+          "file": "libs/features/medical-records/tsconfig.lib.json",
+          "hash": "5643312766104029606"
+        },
+        {
+          "file": "libs/features/medical-records/tsconfig.spec.json",
+          "hash": "2351082736050882301"
+        }
+      ],
       "hms_app": [
         {
           "file": ".claude/settings.json",
-          "hash": "17184328634339478725"
+          "hash": "1495124668575695853"
         },
         {
           "file": ".gitignore",
-          "hash": "14528075770261013338"
+          "hash": "13573054773134329681"
         },
         {
           "file": "CLAUDE.md",
-          "hash": "3693179293707062853"
+          "hash": "15979950418397166476"
         },
         {
           "file": "assets/adaptive-icon.png",
@@ -91,7 +138,7 @@
         },
         {
           "file": "eslint.config.mjs",
-          "hash": "9002143704707986394",
+          "hash": "9317581657613938650",
           "deps": [
             "npm:@nx/eslint-plugin"
           ]
@@ -109,42 +156,37 @@
           ]
         },
         {
-          "file": "jest.config.ts",
-          "hash": "14236175072743533737",
+          "file": "jest.config.js",
+          "hash": "5704094412961389403",
           "deps": [
-            "npm:jest",
             "npm:@nx/jest"
           ]
         },
         {
           "file": "jest.preset.js",
-          "hash": "13737983450217408137",
+          "hash": "17884145015805651112",
           "deps": [
             "npm:@nx/jest"
           ]
         },
         {
           "file": "metro.config.js",
-          "hash": "8550731250757442881",
+          "hash": "7006608168663017162",
           "deps": [
             "npm:expo"
           ]
         },
         {
-          "file": "migration-rn.md",
-          "hash": "3067756937441759297"
-        },
-        {
           "file": "nx.json",
-          "hash": "16328396916797936596"
+          "hash": "16906300465082548608"
         },
         {
           "file": "package-lock.json",
-          "hash": "17214281285993353110"
+          "hash": "16850246715539412867"
         },
         {
           "file": "package.json",
-          "hash": "17929566397707600578",
+          "hash": "6178069306564779633",
           "deps": [
             "npm:@eslint/js",
             "npm:@expo/cli",
@@ -219,103 +261,68 @@
           ]
         },
         {
+          "file": "pnpm-lock.yaml",
+          "hash": "138400684969407906"
+        },
+        {
+          "file": "pnpm-workspace.yaml",
+          "hash": "10864097668173968910"
+        },
+        {
+          "file": "test.txt",
+          "hash": "12592299988846603326"
+        },
+        {
           "file": "tools/scripts/eas-build-post-install.mjs",
-          "hash": "3303477969536030668"
+          "hash": "95867149899079021"
         },
         {
           "file": "tsconfig.base.json",
-          "hash": "7424687467880116013"
+          "hash": "12779462932526067885"
         },
         {
           "file": "tsconfig.json",
           "hash": "8423900185019299371"
         }
       ],
-      "feature-medical-records": [
-        {
-          "file": "libs/features/medical-records/README.md",
-          "hash": "4291419919488708532"
-        },
-        {
-          "file": "libs/features/medical-records/eslint.config.mjs",
-          "hash": "14856556188239126082"
-        },
-        {
-          "file": "libs/features/medical-records/jest.config.cts",
-          "hash": "5521186001115802635"
-        },
-        {
-          "file": "libs/features/medical-records/project.json",
-          "hash": "2043066299020300018"
-        },
-        {
-          "file": "libs/features/medical-records/src/index.ts",
-          "hash": "12560091048215795317"
-        },
-        {
-          "file": "libs/features/medical-records/src/lib/screens/view-medical-record/view-medical-record.tsx",
-          "hash": "8267790577778425360",
-          "deps": [
-            "shared-ui",
-            "npm:react-native",
-            "npm:react",
-            "npm:@expo/vector-icons",
-            "models",
-            "npm:@react-native-async-storage/async-storage",
-            "data-access"
-          ]
-        },
-        {
-          "file": "libs/features/medical-records/tsconfig.json",
-          "hash": "9505886339790543345"
-        },
-        {
-          "file": "libs/features/medical-records/tsconfig.lib.json",
-          "hash": "7738733248058862540"
-        },
-        {
-          "file": "libs/features/medical-records/tsconfig.spec.json",
-          "hash": "5293637104839449688"
-        }
-      ],
       "models": [
         {
           "file": "libs/models/README.md",
-          "hash": "493054618624579235"
+          "hash": "9673307226038337302"
         },
         {
           "file": "libs/models/eslint.config.mjs",
-          "hash": "1965792974734046140"
+          "hash": "12378539064855211396"
         },
         {
           "file": "libs/models/jest.config.cts",
-          "hash": "587635923723931227"
+          "hash": "13091988855016500982"
         },
         {
           "file": "libs/models/project.json",
-          "hash": "10464582542208427445"
+          "hash": "8117043260945037168"
         },
         {
           "file": "libs/models/src/index.ts",
-          "hash": "11436687209582188320"
+          "hash": "15366729817736039293"
         },
         {
           "file": "libs/models/src/lib/appointment.schema.ts",
-          "hash": "15970564112981719833",
+          "hash": "4970323712224086138",
           "deps": [
             "npm:zod"
           ]
         },
         {
           "file": "libs/models/src/lib/auth.schema.ts",
-          "hash": "4221018185199364123",
+          "hash": "8859418730612467339",
           "deps": [
             "npm:zod"
           ]
         },
         {
           "file": "libs/models/src/lib/medical-record.schema.ts",
-          "hash": "3971358640081406957",
+          "hash": "10298236644440423929",
           "deps": [
             "npm:zod"
           ]
@@ -329,51 +336,51 @@
         },
         {
           "file": "libs/models/src/lib/ui.schema.ts",
-          "hash": "14524938873130274147",
+          "hash": "4673884267521415227",
           "deps": [
             "npm:zod"
           ]
         },
         {
           "file": "libs/models/src/lib/user.schema.ts",
-          "hash": "7871593304203738319",
+          "hash": "7915240932433085338",
           "deps": [
             "npm:zod"
           ]
         },
         {
           "file": "libs/models/tsconfig.json",
-          "hash": "5070021987914214887"
+          "hash": "17873889835201339628"
         },
         {
           "file": "libs/models/tsconfig.lib.json",
-          "hash": "3269066908872457000"
+          "hash": "12542581914407533023"
         },
         {
           "file": "libs/models/tsconfig.spec.json",
-          "hash": "17313960998716361382"
+          "hash": "16884627583091382214"
         }
       ],
       "data-access": [
         {
           "file": "libs/data-access/README.md",
-          "hash": "5712561892401178510"
+          "hash": "1043175311183175491"
         },
         {
           "file": "libs/data-access/eslint.config.mjs",
-          "hash": "1965792974734046140"
+          "hash": "12378539064855211396"
         },
         {
           "file": "libs/data-access/jest.config.cts",
-          "hash": "8683077013477860852"
+          "hash": "7974813419455534484"
         },
         {
           "file": "libs/data-access/project.json",
-          "hash": "5970509469451152247"
+          "hash": "5874025320131907343"
         },
         {
           "file": "libs/data-access/src/index.ts",
-          "hash": "1351977092584513653"
+          "hash": "11673995921222513012"
         },
         {
           "file": "libs/data-access/src/lib/appointment.service.ts",
@@ -413,21 +420,123 @@
         },
         {
           "file": "libs/data-access/tsconfig.json",
-          "hash": "5070021987914214887"
+          "hash": "17873889835201339628"
         },
         {
           "file": "libs/data-access/tsconfig.lib.json",
-          "hash": "3269066908872457000"
+          "hash": "12542581914407533023"
         },
         {
           "file": "libs/data-access/tsconfig.spec.json",
-          "hash": "17313960998716361382"
+          "hash": "16884627583091382214"
+        }
+      ],
+      "utils": [
+        {
+          "file": "libs/shared/utils/README.md",
+          "hash": "12540549419807370810"
+        },
+        {
+          "file": "libs/shared/utils/eslint.config.mjs",
+          "hash": "3026081421420007998"
+        },
+        {
+          "file": "libs/shared/utils/jest.config.js",
+          "hash": "1620023874356680525"
+        },
+        {
+          "file": "libs/shared/utils/project.json",
+          "hash": "12835904444778542758"
+        },
+        {
+          "file": "libs/shared/utils/src/index.ts",
+          "hash": "16935017316785613315"
+        },
+        {
+          "file": "libs/shared/utils/src/lib/analytics.spec.ts",
+          "hash": "11348673229323429285"
+        },
+        {
+          "file": "libs/shared/utils/src/lib/analytics.ts",
+          "hash": "15395785149230996513",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/shared/utils/src/lib/validators.ts",
+          "hash": "4465968599551409199"
+        },
+        {
+          "file": "libs/shared/utils/tsconfig.json",
+          "hash": "8666751250685471268"
+        },
+        {
+          "file": "libs/shared/utils/tsconfig.lib.json",
+          "hash": "394137377832477524"
+        },
+        {
+          "file": "libs/shared/utils/tsconfig.spec.json",
+          "hash": "7162157209716206499"
+        }
+      ],
+      "shared-ui": [
+        {
+          "file": "libs/shared/ui/README.md",
+          "hash": "11864345613422501252"
+        },
+        {
+          "file": "libs/shared/ui/assets/img/cover.jpg",
+          "hash": "7737710123914626386"
+        },
+        {
+          "file": "libs/shared/ui/eslint.config.mjs",
+          "hash": "3026081421420007998"
+        },
+        {
+          "file": "libs/shared/ui/jest.config.cts",
+          "hash": "10265774792276180593"
+        },
+        {
+          "file": "libs/shared/ui/project.json",
+          "hash": "17788954332894923345"
+        },
+        {
+          "file": "libs/shared/ui/src/index.ts",
+          "hash": "10540365863314182007"
+        },
+        {
+          "file": "libs/shared/ui/src/lib/form-header.component.tsx",
+          "hash": "12656246160034531958",
+          "deps": [
+            "npm:@expo/vector-icons",
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/src/lib/welcome-text-container.tsx",
+          "hash": "11498661133864176948",
+          "deps": [
+            "npm:react-native"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.json",
+          "hash": "8666751250685471268"
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.lib.json",
+          "hash": "5643312766104029606"
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.spec.json",
+          "hash": "7301972714305604125"
         }
       ],
       "mobile": [
         {
           "file": "apps/mobile/.babelrc.js",
-          "hash": "5102923069046491571"
+          "hash": "2146426021128075518"
         },
         {
           "file": "apps/mobile/App.tsx",
@@ -441,11 +550,11 @@
         },
         {
           "file": "apps/mobile/android/.gitignore",
-          "hash": "4781979786618174016"
+          "hash": "13046440045095617814"
         },
         {
           "file": "apps/mobile/android/app/build.gradle",
-          "hash": "17361354098967678898"
+          "hash": "6917872720331849042"
         },
         {
           "file": "apps/mobile/android/app/debug.keystore",
@@ -453,27 +562,27 @@
         },
         {
           "file": "apps/mobile/android/app/proguard-rules.pro",
-          "hash": "4481275573118336055"
+          "hash": "7296072263462693749"
         },
         {
           "file": "apps/mobile/android/app/src/debug/AndroidManifest.xml",
-          "hash": "1585159791921382059"
+          "hash": "2141330111804896981"
         },
         {
           "file": "apps/mobile/android/app/src/debugOptimized/AndroidManifest.xml",
-          "hash": "1585159791921382059"
+          "hash": "2141330111804896981"
         },
         {
           "file": "apps/mobile/android/app/src/main/AndroidManifest.xml",
-          "hash": "4642323046439789632"
+          "hash": "4064052258781409990"
         },
         {
           "file": "apps/mobile/android/app/src/main/java/com/anonymous/mobile/MainActivity.kt",
-          "hash": "6154740210329269614"
+          "hash": "15422232691795176002"
         },
         {
           "file": "apps/mobile/android/app/src/main/java/com/anonymous/mobile/MainApplication.kt",
-          "hash": "8018431916741334263"
+          "hash": "9495511768449048318"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/drawable-hdpi/splashscreen_logo.png",
@@ -497,19 +606,19 @@
         },
         {
           "file": "apps/mobile/android/app/src/main/res/drawable/ic_launcher_background.xml",
-          "hash": "14022140464391464271"
+          "hash": "8548866399100044781"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/drawable/rn_edit_text_material.xml",
-          "hash": "4466596183044014152"
+          "hash": "10034437182348528253"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
-          "hash": "4058617789617427507"
+          "hash": "4013879280015490563"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
-          "hash": "4058617789617427507"
+          "hash": "4013879280015490563"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.webp",
@@ -577,23 +686,23 @@
         },
         {
           "file": "apps/mobile/android/app/src/main/res/values/colors.xml",
-          "hash": "16368569479117383245"
+          "hash": "15543976558377464073"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/values/strings.xml",
-          "hash": "15964258265823516054"
+          "hash": "18236503301568224600"
         },
         {
           "file": "apps/mobile/android/app/src/main/res/values/styles.xml",
-          "hash": "11392698839532041665"
+          "hash": "14614767721904462001"
         },
         {
           "file": "apps/mobile/android/build.gradle",
-          "hash": "9610523714574692084"
+          "hash": "1289733391551983668"
         },
         {
           "file": "apps/mobile/android/gradle.properties",
-          "hash": "8340627410217576497"
+          "hash": "17662976919233382319"
         },
         {
           "file": "apps/mobile/android/gradle/wrapper/gradle-wrapper.jar",
@@ -601,11 +710,11 @@
         },
         {
           "file": "apps/mobile/android/gradle/wrapper/gradle-wrapper.properties",
-          "hash": "926483970941658266"
+          "hash": "17673217249704239850"
         },
         {
           "file": "apps/mobile/android/gradlew",
-          "hash": "2514925563185432526"
+          "hash": "853532950245265270"
         },
         {
           "file": "apps/mobile/android/gradlew.bat",
@@ -613,11 +722,11 @@
         },
         {
           "file": "apps/mobile/android/settings.gradle",
-          "hash": "16727938275519962626"
+          "hash": "17946254656260961729"
         },
         {
           "file": "apps/mobile/app.json",
-          "hash": "4394350960835713959"
+          "hash": "10492881365786523237"
         },
         {
           "file": "apps/mobile/assets/fonts/GoogleSans.ttf",
@@ -645,36 +754,36 @@
         },
         {
           "file": "apps/mobile/babel.config.json",
-          "hash": "13918569489643201829"
+          "hash": "10289731367602391419"
         },
         {
           "file": "apps/mobile/eas.json",
-          "hash": "6330161018993400891"
+          "hash": "17291467154462455149"
         },
         {
           "file": "apps/mobile/eslint.base.config.mjs",
-          "hash": "9002143704707986394",
+          "hash": "9317581657613938650",
           "deps": [
             "npm:@nx/eslint-plugin"
           ]
         },
         {
           "file": "apps/mobile/eslint.config.mjs",
-          "hash": "6404992339276933123",
+          "hash": "15571442921560969407",
           "deps": [
             "npm:@nx/eslint-plugin"
           ]
         },
         {
           "file": "apps/mobile/index.js",
-          "hash": "1184010334168630581",
+          "hash": "2867506315025384511",
           "deps": [
             "npm:expo"
           ]
         },
         {
           "file": "apps/mobile/jest.config.cts",
-          "hash": "817122142246331321",
+          "hash": "5139834911704963006",
           "deps": [
             [
               "npm:jest-expo",
@@ -684,7 +793,7 @@
         },
         {
           "file": "apps/mobile/metro.config.js",
-          "hash": "8108629579745375001",
+          "hash": "1562983950094628246",
           "deps": [
             "npm:@nx/expo",
             "npm:@expo/metro-config",
@@ -694,7 +803,7 @@
         },
         {
           "file": "apps/mobile/package.json",
-          "hash": "561893725504461974",
+          "hash": "17535239905008135501",
           "deps": [
             "npm:@expo/vector-icons",
             "npm:@expo/metro-config",
@@ -728,11 +837,11 @@
         },
         {
           "file": "apps/mobile/project.json",
-          "hash": "1635971388740467770"
+          "hash": "3558487564368614351"
         },
         {
           "file": "apps/mobile/src/app/App.spec.tsx",
-          "hash": "4230139627563221101",
+          "hash": "14034581577879430642",
           "deps": [
             "npm:react",
             "npm:@testing-library/react-native"
@@ -1039,113 +1148,22 @@
         },
         {
           "file": "apps/mobile/src/test-setup.ts",
-          "hash": "3379590947864820804"
+          "hash": "5660414060356334732"
         },
         {
           "file": "apps/mobile/tsconfig.app.json",
-          "hash": "2968697786543422834"
+          "hash": "6732850199096176723"
         },
         {
           "file": "apps/mobile/tsconfig.json",
-          "hash": "7555827017988728897"
+          "hash": "15454881440831581441"
         },
         {
           "file": "apps/mobile/tsconfig.spec.json",
-          "hash": "13207781208490614934"
-        }
-      ],
-      "utils": [
-        {
-          "file": "libs/shared/utils/README.md",
-          "hash": "14342862180974447819"
-        },
-        {
-          "file": "libs/shared/utils/eslint.config.mjs",
-          "hash": "14856556188239126082"
-        },
-        {
-          "file": "libs/shared/utils/jest.config.cts",
-          "hash": "12251520988127128191"
-        },
-        {
-          "file": "libs/shared/utils/project.json",
-          "hash": "12209198749366689120"
-        },
-        {
-          "file": "libs/shared/utils/src/index.ts",
-          "hash": "9203006912709042603"
-        },
-        {
-          "file": "libs/shared/utils/src/lib/validators.ts",
-          "hash": "4465968599551409199"
-        },
-        {
-          "file": "libs/shared/utils/tsconfig.json",
-          "hash": "9505886339790543345"
-        },
-        {
-          "file": "libs/shared/utils/tsconfig.lib.json",
-          "hash": "8313728930318913154"
-        },
-        {
-          "file": "libs/shared/utils/tsconfig.spec.json",
-          "hash": "506429930721730329"
-        }
-      ],
-      "shared-ui": [
-        {
-          "file": "libs/shared/ui/README.md",
-          "hash": "1173670062938964454"
-        },
-        {
-          "file": "libs/shared/ui/assets/img/cover.jpg",
-          "hash": "7737710123914626386"
-        },
-        {
-          "file": "libs/shared/ui/eslint.config.mjs",
-          "hash": "14856556188239126082"
-        },
-        {
-          "file": "libs/shared/ui/jest.config.cts",
-          "hash": "16863150161260245185"
-        },
-        {
-          "file": "libs/shared/ui/project.json",
-          "hash": "11474857336960766532"
-        },
-        {
-          "file": "libs/shared/ui/src/index.ts",
-          "hash": "14491046984558449615"
-        },
-        {
-          "file": "libs/shared/ui/src/lib/form-header.component.tsx",
-          "hash": "12656246160034531958",
-          "deps": [
-            "npm:@expo/vector-icons",
-            "npm:react-native"
-          ]
-        },
-        {
-          "file": "libs/shared/ui/src/lib/welcome-text-container.tsx",
-          "hash": "11498661133864176948",
-          "deps": [
-            "npm:react-native"
-          ]
-        },
-        {
-          "file": "libs/shared/ui/tsconfig.json",
-          "hash": "9505886339790543345"
-        },
-        {
-          "file": "libs/shared/ui/tsconfig.lib.json",
-          "hash": "7738733248058862540"
-        },
-        {
-          "file": "libs/shared/ui/tsconfig.spec.json",
-          "hash": "17362963146207982380"
+          "hash": "684387454877813131"
         }
       ]
     }
   },
-  "externalNodesHash": "9709998373158235242"
+  "externalNodesHash": "1355816562785422507"
 }

@@ -324,91 +324,11 @@
       "apps/mobile/tsconfig.json",
       "@nx/js/typescript"
     ],
-    "targets.typecheck.inputs.12": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.13": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.14": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.15": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.16": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.17": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.18": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.19": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.20": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.21": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.22": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.23": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.24": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.25": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.26": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.27": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.28": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
     "targets.typecheck.inputs": [
       "apps/mobile/tsconfig.json",
       "@nx/js/typescript"
     ],
     "targets.typecheck.outputs.0": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.1": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.2": [
-      "apps/mobile/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.3": [
       "apps/mobile/tsconfig.json",
       "@nx/js/typescript"
     ],
@@ -866,51 +786,11 @@
       "libs/data-access/tsconfig.json",
       "@nx/js/typescript"
     ],
-    "targets.typecheck.inputs.12": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.13": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.14": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.15": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.16": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.17": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.18": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
     "targets.typecheck.inputs": [
       "libs/data-access/tsconfig.json",
       "@nx/js/typescript"
     ],
     "targets.typecheck.outputs.0": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.1": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.2": [
-      "libs/data-access/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.3": [
       "libs/data-access/tsconfig.json",
       "@nx/js/typescript"
     ],
@@ -1244,63 +1124,11 @@
       "libs/features/medical-records/tsconfig.json",
       "@nx/js/typescript"
     ],
-    "targets.typecheck.inputs.12": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.13": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.14": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.15": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.16": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.17": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.18": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.19": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.20": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.21": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
     "targets.typecheck.inputs": [
       "libs/features/medical-records/tsconfig.json",
       "@nx/js/typescript"
     ],
     "targets.typecheck.outputs.0": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.1": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.2": [
-      "libs/features/medical-records/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.3": [
       "libs/features/medical-records/tsconfig.json",
       "@nx/js/typescript"
     ],
@@ -1634,51 +1462,11 @@
       "libs/models/tsconfig.json",
       "@nx/js/typescript"
     ],
-    "targets.typecheck.inputs.12": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.13": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.14": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.15": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.16": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.17": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.18": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
     "targets.typecheck.inputs": [
       "libs/models/tsconfig.json",
       "@nx/js/typescript"
     ],
     "targets.typecheck.outputs.0": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.1": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.2": [
-      "libs/models/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.3": [
       "libs/models/tsconfig.json",
       "@nx/js/typescript"
     ],
@@ -2012,63 +1800,11 @@
       "libs/shared/ui/tsconfig.json",
       "@nx/js/typescript"
     ],
-    "targets.typecheck.inputs.12": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.13": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.14": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.15": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.16": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.17": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.18": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.19": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.20": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.21": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
     "targets.typecheck.inputs": [
       "libs/shared/ui/tsconfig.json",
       "@nx/js/typescript"
     ],
     "targets.typecheck.outputs.0": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.1": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.2": [
-      "libs/shared/ui/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.3": [
       "libs/shared/ui/tsconfig.json",
       "@nx/js/typescript"
     ],
@@ -2402,51 +2138,11 @@
       "libs/shared/utils/tsconfig.json",
       "@nx/js/typescript"
     ],
-    "targets.typecheck.inputs.12": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.13": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.14": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.15": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.16": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.17": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.inputs.18": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
     "targets.typecheck.inputs": [
       "libs/shared/utils/tsconfig.json",
       "@nx/js/typescript"
     ],
     "targets.typecheck.outputs.0": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.1": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.2": [
-      "libs/shared/utils/tsconfig.json",
-      "@nx/js/typescript"
-    ],
-    "targets.typecheck.outputs.3": [
       "libs/shared/utils/tsconfig.json",
       "@nx/js/typescript"
     ],
@@ -2595,91 +2291,91 @@
       "@nx/eslint/plugin"
     ],
     "targets.test": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.cache": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.inputs.0": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.inputs.1": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.inputs.2": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.inputs.3": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.inputs.4": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.inputs": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.outputs.0": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.outputs": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.executor": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.options.cwd": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.options.env": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.options.command": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.options": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata.technologies": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata.technologies.0": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata.description": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata.help": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata.help.command": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "targets.test.metadata.help.example": [
-      "libs/shared/utils/jest.config.cts",
+      "libs/shared/utils/jest.config.js",
       "@nx/jest/plugin"
     ],
     "name": [
